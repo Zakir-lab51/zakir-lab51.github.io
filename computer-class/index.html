@@ -191,6 +191,113 @@
     transition: color 0.2s, transform 0.3s;
   }
   .chapter-card:hover .ch-arrow { color: var(--accent); transform: translateX(3px); }
+
+  .full-length-section {
+    margin-top: 42px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.48s;
+  }
+  .full-length-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 24px;
+    text-decoration: none;
+    color: #F5F0E8;
+    background: var(--ink);
+    border: 1px solid rgba(26,23,20,0.12);
+    border-radius: 4px;
+    padding: 32px 34px;
+    overflow: hidden;
+    min-height: 190px;
+    box-shadow: 0 24px 60px rgba(26,23,20,0.16);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease;
+  }
+  .full-length-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 76px rgba(26,23,20,0.24);
+  }
+  .full-length-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 0%;
+    background: var(--gold);
+    transition: height 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .full-length-card:hover::after {
+    height: 100%;
+  }
+  .full-length-card::before {
+    content: "FULL";
+    position: absolute;
+    right: -18px;
+    bottom: -34px;
+    font-family: 'Syne', sans-serif;
+    font-size: 112px;
+    font-weight: 800;
+    line-height: 1;
+    color: rgba(245,240,232,0.055);
+    pointer-events: none;
+  }
+  .full-tag {
+    display: inline-block;
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .full-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    letter-spacing: -1.2px;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .full-desc {
+    color: rgba(245,240,232,0.62);
+    line-height: 1.6;
+    max-width: 590px;
+    font-weight: 300;
+  }
+  .full-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .full-pill {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.82);
+    border: 1px solid rgba(245,240,232,0.22);
+    border-radius: 999px;
+    padding: 5px 10px;
+  }
+  .full-arrow {
+    position: relative;
+    z-index: 2;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 1px solid rgba(245,240,232,0.32);
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    background: var(--gold);
+    font-size: 24px;
+    transition: transform 0.35s ease;
+  }
+  .full-length-card:hover .full-arrow {
+    transform: translateX(5px) rotate(-45deg);
+  }
+
   footer {
     margin-top: 56px;
     display: flex; align-items: center;
@@ -212,6 +319,17 @@
     .chapters-grid { grid-template-columns: 1fr; }
     nav { align-items:flex-start; gap:16px; }
   }
+
+  @media (max-width: 700px) {
+    .full-length-card {
+      grid-template-columns: 1fr;
+      padding: 28px 24px;
+    }
+    .full-arrow {
+      justify-self: start;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -317,6 +435,28 @@
         <span>36 questions</span>
         <span class="ch-arrow">→</span>
       </div>
+    </a>
+  </div>
+
+
+  <div class="full-length-section">
+    <div class="section-header">
+      <span class="section-title">Full Length Test</span>
+      <span class="section-count">428 questions</span>
+    </div>
+
+    <a class="full-length-card" href="../full-length-test/">
+      <div>
+        <span class="full-tag">Complete Mock Test</span>
+        <div class="full-title">Full Length<br>Computer Application Test</div>
+        <p class="full-desc">All chapters mixed together in one exam-style test with timer, instant result, review answers, retry, and smooth option animations.</p>
+        <div class="full-meta">
+          <span class="full-pill">428 Qs</span>
+          <span class="full-pill">Custom Timer</span>
+          <span class="full-pill">All Chapters</span>
+        </div>
+      </div>
+      <div class="full-arrow">→</div>
     </a>
   </div>
 

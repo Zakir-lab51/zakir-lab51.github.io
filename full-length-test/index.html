@@ -1,0 +1,5126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Full Length Computer Application Test — Zakir Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root {
+    --cream:#F5F0E8;
+    --ink:#1A1714;
+    --accent:#C84B2F;
+    --gold:#D4A847;
+    --muted:#7A7068;
+    --card-bg:#FDFAF5;
+    --correct:#3f9b5f;
+    --wrong:#C84B2F;
+    --skip:#D4A847;
+    --line:rgba(26,23,20,0.10);
+  }
+  html { scroll-behavior:smooth; }
+  body {
+    min-height:100vh;
+    font-family:'DM Sans', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow-x:hidden;
+    cursor:none;
+  }
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  }
+  .cursor {
+    position:fixed;
+    width:10px;
+    height:10px;
+    background:var(--accent);
+    border-radius:50%;
+    pointer-events:none;
+    z-index:9999;
+    transform:translate(-50%,-50%);
+    transition:width .3s,height .3s,opacity .3s;
+    mix-blend-mode:multiply;
+  }
+  .cursor.big { width:38px; height:38px; opacity:.25; }
+
+  #home, #test-screen, #result-screen, #review-modal, #timer-modal { position:relative; z-index:1; }
+  .page { max-width:1080px; margin:0 auto; padding:0 40px 80px; }
+  nav {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:32px 0 0;
+  }
+  .logo, .back-link {
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .logo {
+    font-family:'Syne',sans-serif;
+    font-weight:800;
+    font-size:18px;
+    letter-spacing:-.5px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .back-link {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--muted);
+    transition:color .2s;
+  }
+  .back-link:hover { color:var(--accent); }
+  .back-arrow {
+    width:26px;
+    height:26px;
+    border:1px solid currentColor;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+  }
+  .hero {
+    padding:70px 0 42px;
+    animation:fadeUp .8s ease both;
+  }
+  .eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .eyebrow-line { width:36px; height:1px; background:var(--accent); }
+  .eyebrow-text { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); }
+  .hero h1 {
+    font-family:'Syne', sans-serif;
+    font-size:clamp(42px,7vw,82px);
+    line-height:.94;
+    letter-spacing:-3px;
+    margin-bottom:18px;
+  }
+  .hero h1 span { color:var(--accent); font-style:italic; }
+  .hero p {
+    color:var(--muted);
+    max-width:590px;
+    line-height:1.7;
+    font-weight:300;
+  }
+  .start-panel {
+    margin-top:24px;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:30px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:center;
+    gap:24px;
+    box-shadow:0 24px 60px rgba(26,23,20,.08);
+    position:relative;
+    overflow:hidden;
+  }
+  .start-panel::after {
+    content:"100";
+    position:absolute;
+    right:-16px;
+    bottom:-28px;
+    font-family:'Syne',sans-serif;
+    font-size:118px;
+    font-weight:800;
+    line-height:1;
+    color:rgba(26,23,20,.035);
+  }
+  .start-kicker { color:var(--accent); letter-spacing:2px; text-transform:uppercase; font-size:11px; font-weight:800; }
+  .start-panel h2 {
+    font-family:'Syne',sans-serif;
+    font-size:30px;
+    letter-spacing:-.8px;
+    margin:8px 0;
+  }
+  .start-panel p { color:var(--muted); line-height:1.55; font-weight:300; }
+  .primary-btn, .secondary-btn, .submit-btn, .review-close, .timer-chip, .timer-start-btn, .timer-cancel-btn {
+    position:relative;
+    border:1px solid rgba(26,23,20,.12);
+    border-radius:999px;
+    background:var(--card-bg);
+    color:var(--ink);
+    padding:12px 20px;
+    cursor:pointer;
+    font-weight:700;
+    font-family:'DM Sans',sans-serif;
+    transition:transform .25s, background .25s, color .25s, box-shadow .25s;
+    text-decoration:none;
+    z-index:2;
+  }
+  .primary-btn, .submit-btn, .timer-start-btn {
+    background:var(--ink);
+    color:var(--cream);
+    border-color:var(--ink);
+  }
+  .primary-btn:hover, .submit-btn:hover, .timer-start-btn:hover, .secondary-btn:hover, .review-close:hover, .timer-chip:hover, .timer-cancel-btn:hover {
+    transform:translateY(-2px);
+    box-shadow:0 16px 34px rgba(26,23,20,.12);
+  }
+
+  #test-screen { display:none; min-height:100vh; padding-bottom:90px; }
+  .test-header {
+    position:sticky;
+    top:12px;
+    z-index:100;
+    width:min(1180px,calc(100% - 32px));
+    margin:12px auto 0;
+    padding:12px 16px;
+    border-radius:4px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
+    background:rgba(253,250,245,.92);
+    border:1px solid rgba(26,23,20,.10);
+    box-shadow:0 16px 42px rgba(26,23,20,.10);
+    backdrop-filter:blur(18px);
+  }
+  .header-left, .progress-wrap { display:flex; align-items:center; gap:12px; min-width:0; }
+  .test-title-bar {
+    font-family:'Syne',sans-serif;
+    font-weight:800;
+    font-size:15px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .progress-wrap { flex:1; justify-content:flex-end; }
+  .progress-bar-outer {
+    width:180px;
+    height:7px;
+    border-radius:999px;
+    overflow:hidden;
+    background:rgba(26,23,20,.10);
+  }
+  .progress-bar-inner {
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--gold));
+    transition:width .35s cubic-bezier(.16,1,.3,1);
+  }
+  .progress-label, .timer-pill {
+    color:var(--muted);
+    font-size:12px;
+    white-space:nowrap;
+    font-weight:700;
+  }
+  .timer-pill.low { color:var(--wrong); animation:pulse 1s infinite; }
+  .timer-pill.done { color:var(--wrong); }
+
+  .questions-wrap {
+    max-width:1180px;
+    margin:0 auto;
+    padding:38px 32px 90px;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+  }
+  .q-card {
+    position:relative;
+    overflow:hidden;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:26px;
+    box-shadow:0 18px 45px rgba(26,23,20,.07);
+    opacity:0;
+    transform:translateY(18px);
+    animation:cardIn .42s ease forwards;
+  }
+  .q-card::after {
+    content:'';
+    position:absolute;
+    left:0;
+    top:0;
+    width:3px;
+    height:0;
+    background:var(--accent);
+    transition:height .35s cubic-bezier(.16,1,.3,1);
+  }
+  .q-card:hover::after { height:100%; }
+  .q-num {
+    display:block;
+    color:var(--accent);
+    font-size:11px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .q-text { font-weight:700; line-height:1.6; margin-bottom:18px; letter-spacing:-.1px; }
+  .options-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .opt-btn, .review-opt {
+    position:relative;
+    overflow:hidden;
+    min-height:58px;
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:13px 14px;
+    border-radius:4px;
+    border:1px solid rgba(26,23,20,.10);
+    color:var(--ink);
+    background:#fffaf2;
+    text-align:left;
+    font-family:'DM Sans',sans-serif;
+    line-height:1.42;
+    cursor:pointer;
+    transition:transform .32s cubic-bezier(.16,1,.3,1), box-shadow .32s, border-color .32s, background .32s;
+  }
+  .opt-btn:hover:not(:disabled) {
+    transform:translateY(-2px);
+    border-color:rgba(200,75,47,.22);
+    box-shadow:0 13px 28px rgba(26,23,20,.09);
+  }
+  .opt-label, .review-opt-label {
+    position:relative;
+    z-index:2;
+    flex-shrink:0;
+    min-width:24px;
+    height:24px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    color:var(--accent);
+    font-size:11px;
+    font-weight:800;
+    border:1px solid rgba(200,75,47,.22);
+    background:#fff;
+  }
+  .opt-text { position:relative; z-index:2; overflow-wrap:anywhere; }
+  .fill-layer {
+    position:absolute;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    background:rgba(200,75,47,.12);
+    clip-path:inset(0 100% 0 0);
+    transition:none;
+  }
+  .opt-btn.selected .fill-layer { animation:sweepIn .72s linear forwards; }
+  .opt-btn.draining .fill-layer { animation:sweepOut .62s linear forwards; }
+  .opt-btn.selected { border-color:rgba(200,75,47,.34); background:#fff6ec; }
+  .opt-btn.selected .opt-label { background:var(--accent); color:white; }
+  .opt-btn.correct { border-color:rgba(63,155,95,.55); background:rgba(63,155,95,.10); animation:pop .45s; }
+  .opt-btn.correct .opt-label, .review-opt.right .review-opt-label { background:var(--correct); color:white; border-color:var(--correct); }
+  .opt-btn.wrong { border-color:rgba(200,75,47,.65); background:rgba(200,75,47,.10); animation:shake .38s; }
+  .opt-btn.wrong .opt-label, .review-opt.yours .review-opt-label { background:var(--wrong); color:white; border-color:var(--wrong); }
+  .opt-btn.skipped-correct { border-color:rgba(212,168,71,.65); background:rgba(212,168,71,.14); animation:pop .45s; }
+  .opt-btn.skipped-correct .opt-label { background:var(--skip); color:var(--ink); border-color:var(--skip); }
+  .opt-btn:disabled { cursor:default; }
+  .ripple {
+    position:absolute;
+    z-index:3;
+    pointer-events:none;
+    border-radius:50%;
+    background:rgba(200,75,47,.18);
+    transform:scale(0);
+    opacity:1;
+    animation:ripple .85s linear forwards;
+  }
+
+  #result-screen { display:none; min-height:100vh; padding:70px 24px; }
+  .result-inner {
+    max-width:760px;
+    margin:0 auto;
+    text-align:center;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:36px 28px;
+    box-shadow:0 24px 60px rgba(26,23,20,.10);
+  }
+  .result-badge { color:var(--accent); font-size:11px; letter-spacing:3px; text-transform:uppercase; font-weight:800; }
+  .result-title { font-family:'Syne',sans-serif; font-size:clamp(32px,5vw,52px); letter-spacing:-1.5px; margin:10px 0; }
+  .score-big { font-family:'Syne',sans-serif; font-size:72px; font-weight:800; color:var(--accent); margin:24px 0 6px; }
+  .score-msg { color:var(--muted); margin-bottom:26px; }
+  .stats-row { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-bottom:30px; }
+  .stat-pill { min-width:120px; padding:16px 22px; background:#fffaf2; border:1px solid var(--line); border-radius:4px; }
+  .stat-pill .val { display:block; font-family:'Syne'; font-size:28px; font-weight:800; }
+  .stat-pill .lbl { display:block; color:var(--muted); font-size:11px; letter-spacing:1px; text-transform:uppercase; }
+  .correct-val { color:var(--correct); }
+  .wrong-val { color:var(--wrong); }
+  .skip-val { color:var(--skip); }
+  .result-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; }
+
+  #review-modal, #timer-modal {
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:250;
+    overflow:auto;
+    padding:38px 20px 80px;
+    background:rgba(245,240,232,.92);
+    backdrop-filter:blur(12px);
+  }
+  .review-inner { max-width:980px; margin:0 auto; }
+  .review-header {
+    position:sticky;
+    top:12px;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    background:rgba(253,250,245,.94);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:14px 16px;
+    box-shadow:0 16px 42px rgba(26,23,20,.08);
+    backdrop-filter:blur(18px);
+    margin-bottom:22px;
+  }
+  .review-title { font-family:'Syne'; font-size:22px; font-weight:800; }
+  .review-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+  .review-card {
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:22px;
+    box-shadow:0 16px 42px rgba(26,23,20,.07);
+  }
+  .review-q-text { font-weight:700; line-height:1.55; margin-bottom:14px; }
+  .review-opts { display:grid; gap:8px; }
+  .review-opt { cursor:default; min-height:auto; background:#fffaf2; color:var(--muted); }
+  .review-opt.right, .review-opt.yours { color:var(--ink); }
+  .review-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .tag { font-size:10px; letter-spacing:1px; text-transform:uppercase; border:1px solid var(--line); padding:5px 9px; border-radius:999px; color:var(--muted); }
+  .tag.correct { color:var(--correct); border-color:rgba(63,155,95,.35); }
+  .tag.wrong { color:var(--wrong); border-color:rgba(200,75,47,.35); }
+  .tag.skip { color:var(--skip); border-color:rgba(212,168,71,.45); }
+
+  .timer-box {
+    max-width:520px;
+    margin:70px auto 0;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:30px;
+    box-shadow:0 26px 70px rgba(26,23,20,.16);
+    animation:timerPop .35s cubic-bezier(.16,1,.3,1) both;
+  }
+  .timer-kicker { color:var(--accent); letter-spacing:3px; text-transform:uppercase; font-size:11px; font-weight:800; }
+  .timer-title { font-family:'Syne'; font-size:34px; letter-spacing:-1px; margin:8px 0; }
+  .timer-sub { color:var(--muted); line-height:1.6; margin-bottom:18px; }
+  .timer-presets { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .timer-chip.selected { background:var(--accent); color:white; border-color:var(--accent); }
+  .timer-custom-row { display:grid; grid-template-columns:1fr 120px; gap:10px; align-items:center; margin-bottom:18px; color:var(--muted); }
+  .timer-input {
+    width:100%;
+    border:1px solid var(--line);
+    background:#fffaf2;
+    border-radius:4px;
+    padding:12px;
+    font:inherit;
+    color:var(--ink);
+  }
+  .timer-actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+  .confetti-layer { position:fixed; inset:0; z-index:500; pointer-events:none; overflow:hidden; }
+  .confetti-piece {
+    position:absolute;
+    top:-20px;
+    width:8px;
+    height:14px;
+    background:var(--accent);
+    animation:fall var(--duration) var(--delay) cubic-bezier(.15,.78,.25,1) forwards;
+    transform:rotate(var(--rot));
+  }
+  .confetti-piece:nth-child(3n) { background:var(--gold); border-radius:50%; }
+  .confetti-piece:nth-child(4n) { background:var(--ink); }
+
+  @keyframes cardIn { to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+  @keyframes pop { 50% { transform:scale(1.018); } }
+  @keyframes shake { 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
+  @keyframes ripple { 0%{transform:scale(0);opacity:0} 10%{opacity:.9} 100%{transform:scale(6);opacity:0} }
+  @keyframes sweepIn {
+    0%{clip-path:inset(0 100% 0 0)} 18%{clip-path:inset(0 67% 0 0)} 36%{clip-path:inset(0 38% 0 0)}
+    55%{clip-path:inset(0 16% 0 0)} 75%{clip-path:inset(0 4% 0 0)} 100%{clip-path:inset(0 0 0 0)}
+  }
+  @keyframes sweepOut {
+    0%{clip-path:inset(0 0 0 0)} 22%{clip-path:inset(0 0 0 26%)} 48%{clip-path:inset(0 0 0 56%)}
+    76%{clip-path:inset(0 0 0 88%)} 100%{clip-path:inset(0 0 0 100%)}
+  }
+  @keyframes timerPop { from{opacity:0;transform:translateY(18px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} }
+  @keyframes fall {
+    0% { transform:translate3d(0,-30px,0) rotate(var(--rot)); opacity:0; }
+    10% { opacity:1; }
+    100% { transform:translate3d(var(--drift),110vh,0) rotate(calc(var(--rot) + 720deg)); opacity:0; }
+  }
+
+  @media (max-width:840px) {
+    .test-header { align-items:stretch; flex-direction:column; border-radius:4px; }
+    .header-left { justify-content:space-between; }
+    .progress-wrap, .submit-btn { width:100%; }
+    .progress-bar-outer { flex:1; width:auto; }
+    .questions-wrap, .review-list { grid-template-columns:1fr; }
+    .start-panel { grid-template-columns:1fr; }
+  }
+  @media (max-width:560px) {
+    body { cursor:auto; }
+    .cursor { display:none; }
+    .page { padding:0 20px 60px; }
+    .questions-wrap { padding:24px 14px 80px; }
+    .options-grid { grid-template-columns:1fr; }
+    .q-card { padding:20px; }
+    nav { gap:16px; align-items:flex-start; }
+    .timer-custom-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+
+<section id="home">
+  <div class="page">
+    <nav>
+      <a class="back-link" href="../computer-class/"><span class="back-arrow">←</span><span>Computer Class</span></a>
+      <a class="logo" href="../"><span class="logo-dot"></span>Zakir Lab</a>
+    </nav>
+    <div class="hero">
+      <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Full Length Test</span></div>
+      <h1>Computer Application<br><span>Full Mock</span></h1>
+      <p>All chapters mixed together in one exam-style test, redesigned to match the Zakir Lab chapter pages.</p>
+      <div class="start-panel">
+        <div>
+          <div class="start-kicker">428 questions</div>
+          <h2>Ready for the full run?</h2>
+          <p>Set your timer, answer everything, submit, then review correct, wrong, and skipped answers.</p>
+        </div>
+        <button class="primary-btn" id="open-timer">Start Test →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="test-screen">
+  <div class="test-header">
+    <div class="header-left">
+      <button class="secondary-btn" onclick="goChapter()">← Class</button>
+      <div class="test-title-bar">Full Length Computer Application Test</div>
+    </div>
+    <div class="progress-wrap">
+      <span class="timer-pill" id="timer-pill">No timer</span>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar"></div></div>
+      <span class="progress-label" id="progress-label">0 / 428</span>
+      <button class="submit-btn" id="submit-btn">Submit</button>
+    </div>
+  </div>
+  <div class="questions-wrap" id="questions-wrap"></div>
+</section>
+
+<section id="result-screen">
+  <div class="result-inner">
+    <div class="result-badge">Result</div>
+    <h2 class="result-title" id="result-title">Your Score</h2>
+    <div class="score-big"><span id="score-num">0</span><span style="font-size:32px;color:var(--muted)">/428</span></div>
+    <p class="score-msg" id="score-msg"></p>
+    <div class="stats-row">
+      <div class="stat-pill"><span class="val correct-val" id="r-correct">0</span><span class="lbl">Correct</span></div>
+      <div class="stat-pill"><span class="val wrong-val" id="r-wrong">0</span><span class="lbl">Wrong</span></div>
+      <div class="stat-pill"><span class="val skip-val" id="r-skip">0</span><span class="lbl">Skipped</span></div>
+    </div>
+    <div class="result-actions">
+      <button class="secondary-btn" onclick="goChapter()">← Class</button>
+      <button class="secondary-btn" id="btn-review">Review Answers</button>
+      <button class="primary-btn" id="btn-retry">Retry Test</button>
+    </div>
+  </div>
+</section>
+
+<div id="review-modal">
+  <div class="review-inner">
+    <div class="review-header">
+      <div>
+        <div class="review-title">Review Answers</div>
+        <div style="color:var(--muted);font-size:12px">Correct answers and your selected answers are marked.</div>
+      </div>
+      <button class="review-close" id="review-close">Close</button>
+    </div>
+    <div class="review-list" id="review-list"></div>
+  </div>
+</div>
+
+<div id="timer-modal">
+  <div class="timer-box">
+    <div class="timer-kicker">Timer Setup</div>
+    <div class="timer-title">Choose time</div>
+    <p class="timer-sub">Pick a preset or set your own time. You can also start without a timer.</p>
+    <div class="timer-presets">
+      <button class="timer-chip selected" data-min="60">60 min</button>
+      <button class="timer-chip" data-min="90">90 min</button>
+      <button class="timer-chip" data-min="120">120 min</button>
+      <button class="timer-chip" data-min="0">No timer</button>
+    </div>
+    <div class="timer-custom-row">
+      <label for="timer-input">Custom minutes</label>
+      <input class="timer-input" id="timer-input" type="number" min="0" max="300" value="60"/>
+    </div>
+    <div class="timer-actions">
+      <button class="timer-cancel-btn" id="timer-cancel">Cancel</button>
+      <button class="timer-start-btn" id="timer-start">Start Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LABELS = ['A','B','C','D','E','F'];
+const QUESTIONS = [
+  {
+    "q": "______keys are present on the top row of the keyboard",
+    "o": [
+      "Function",
+      "Type writer",
+      "Numeric",
+      "Navigation"
+    ],
+    "a": 0
+  },
+  {
+    "q": "A kilobyte also referred to as KB, is equal to",
+    "o": [
+      "1000 bytes",
+      "1024 bytes",
+      "2048 bytes",
+      "512 bytes"
+    ],
+    "a": 1
+  },
+  {
+    "q": "If you begin typing an entry into a cell and then realize that you don't want your entry placed into a cell, you:",
+    "o": [
+      "Press the Erase key",
+      "Press Esc",
+      "Press the Enter button",
+      "Press the Edit Formula button"
+    ],
+    "a": 1
+  },
+  {
+    "q": "It is the default folder for many windows applications to save your file",
+    "o": [
+      "My documents",
+      "My pictures",
+      "Documents and settings",
+      "My computer"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which option can be used to set custom timings for slides in a presentation?",
+    "o": [
+      "Slider Timings",
+      "Slider Timer",
+      "Rehearsal",
+      "Slide Show Setup"
+    ],
+    "a": 2
+  },
+  {
+    "q": "To undo the last work, press ____",
+    "o": [
+      "Ctrl + U",
+      "Ctrl + Y",
+      "Ctrl + Z",
+      "Ctrl + W"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following statement is not correct about IP address?",
+    "o": [
+      "IP address is always unique for each computer.",
+      "An IP address consists of four bytes (or 32 bits) each of which can be a number from 0 to 255.",
+      "For browsing or sending an email, an IP address assigned to the computer is required.",
+      "All are correct"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What is the extension of files created in Ms-word 97-2003",
+    "o": [
+      "Dot",
+      "Doc",
+      "Dom",
+      "Txt"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Each computer on a network is recognized by a unique",
+    "o": [
+      "IP address",
+      "HTTP",
+      "HTTPS",
+      "www"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Format painter",
+    "o": [
+      "To paint pretty pictures on your slides",
+      "To copy formatting from one object or piece of text and then apply it elsewhere",
+      "To change the background color of your slides",
+      "To paint pretty pictures on background of slides"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Want a PowerPoint photo album slide show to play continuously?",
+    "o": [
+      "Use random slide transitions",
+      "Launch an online broadcast",
+      "Loop continuously",
+      "All of the above"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following is not a valid data type in Excel?",
+    "o": [
+      "Number",
+      "Character",
+      "Label",
+      "Date/Time"
+    ],
+    "a": 1
+  },
+  {
+    "q": "MS-EXCEL is based on .........?",
+    "o": [
+      "WINDOWS",
+      "DOS",
+      "JNIX",
+      "OS/2"
+    ],
+    "a": 0
+  },
+  {
+    "q": "It is acceptable to let long text flow into adjacent cells on a worksheet when",
+    "o": [
+      "Data will be entered in the adjacent cells",
+      "No data will be entered in the adjacent cells",
+      "There is no suitable abbreviation of the text",
+      "There is not time to format the next"
+    ],
+    "a": 1
+  },
+  {
+    "q": "In mid-1981, the 1st virus for apple computers with the name _____came into existence.",
+    "o": [
+      "Apple I",
+      "Apple II",
+      "Apple III",
+      "Apple virus"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Text boundary can be displayed or hidden from",
+    "o": [
+      "Customize from tools menu",
+      "auto text option from insert menu",
+      "options from tools menu",
+      "all of above"
+    ],
+    "a": 2
+  },
+  {
+    "q": "A light sensitive device that converts drawing, printed text or other images into digital form is",
+    "o": [
+      "Keyboard",
+      "Plotter",
+      "Scanner",
+      "OMR"
+    ],
+    "a": 2
+  },
+  {
+    "q": "In Excel, a Data Series is defined as what?",
+    "o": [
+      "A type of chart",
+      "A cell reference",
+      "A collection of related data",
+      "A division of results"
+    ],
+    "a": 2
+  },
+  {
+    "q": "What are the tabs that appear at the bottom of each workbook is called?",
+    "o": [
+      "Reference tabs",
+      "Position tabs",
+      "Location tabs",
+      "Sheet tabs"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is not an option when printing handouts?",
+    "o": [
+      "Six slides per page",
+      "Five slides per page",
+      "Three slides per page",
+      "Two slides per page"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which is not a font style?",
+    "o": [
+      "Bold",
+      "Superscript",
+      "Italic",
+      "Regular"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which is not the function of the operating system?",
+    "o": [
+      "Memory management",
+      "Disk management",
+      "Application management",
+      "Virus protection"
+    ],
+    "a": 3
+  },
+  {
+    "q": "When you want to view different parts of a document without moving the insertion point.",
+    "o": [
+      "Use the previous page or next page buttons",
+      "Use the keyboard",
+      "Use the vertical and horizontal scroll bar",
+      "Use the zoom button"
+    ],
+    "a": 2
+  },
+  {
+    "q": "A deadlock avoidance algorithm dynamically examines the _____ to ensure that a circular wait condition can never exist.",
+    "o": [
+      "Operating system",
+      "Resources",
+      "System storage state",
+      "Resource allocation state"
+    ],
+    "a": 3
+  },
+  {
+    "q": "______is also known as cavity virus.",
+    "o": [
+      "Non-resident virus",
+      "Overwrite virus",
+      "Polymorphic virus",
+      "Space-filler virus"
+    ],
+    "a": 3
+  },
+  {
+    "q": "By gaining access to the Trojaned system that attacker can stage different types of attack using that____ program running in the background.",
+    "o": [
+      "Trojan",
+      "Virus",
+      "Antivirus",
+      "Anti-malware"
+    ],
+    "a": 0
+  },
+  {
+    "q": "What are symbols used to identify items in a list?",
+    "o": [
+      "Icons",
+      "Markers",
+      "Bullets",
+      "Graphics"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which icon would you access in the printer window to install a printer drive?",
+    "o": [
+      "Add printer wizard",
+      "Setup",
+      "Install",
+      "None of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "A worksheet range is a",
+    "o": [
+      "A command used for data modelling",
+      "A range of values such as from 23 to 234",
+      "A group of cells",
+      "A group of worksheets"
+    ],
+    "a": 2
+  },
+  {
+    "q": "The ________ tells the computer how to use its components.",
+    "o": [
+      "Utility",
+      "Network",
+      "Operating system",
+      "Application program"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which button do you click to add up a series of numbers?",
+    "o": [
+      "The autosum button",
+      "The Formula button",
+      "The quicktotal button",
+      "The total button"
+    ],
+    "a": 0
+  },
+  {
+    "q": "To obtain a better memory utilization, dynamic loading is used. With dynamic loading, a routine is not loaded until it is called. For implementing dynamic loading____",
+    "o": [
+      "Special support from operating system is essential",
+      "Special support from the hardware is required",
+      "User programs can implement dynamic loading without any special support from the hardware or operating system",
+      "Special support from both hardware and operating system is essential"
+    ],
+    "a": 2
+  },
+  {
+    "q": "_______Infects the executables as well as the boot sectors",
+    "o": [
+      "Non-resident virus",
+      "Boot sector virus",
+      "Polymorphic virus",
+      "Multipartite virus"
+    ],
+    "a": 3
+  },
+  {
+    "q": "A computer network that is used to controlled access from outside of an organization's intranet is called",
+    "o": [
+      "Intranet",
+      "Frame",
+      "Extranet",
+      "ISP"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Using transient code, ____ the size of the operating system during program execution.",
+    "o": [
+      "Maintains",
+      "Changes",
+      "Increases",
+      "Decreases"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Gutter position can be set in following positions",
+    "o": [
+      "Left & right",
+      "Left only",
+      "Left & top",
+      "Left & bottom"
+    ],
+    "a": 2
+  },
+  {
+    "q": "____ is a compromise mode between shut down and sleep mode because it does not consume power and remembers the current state of your desktop",
+    "o": [
+      "Shut down",
+      "Restart",
+      "Sleep",
+      "Hibernate"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Comments can be added to cells using",
+    "o": [
+      "Edit > Comments",
+      "Insert > Comments",
+      "File > Comments",
+      "View > Comments"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Computers that are portable and convenient for users who travels are known as _____",
+    "o": [
+      "Supercomputers",
+      "Laptops",
+      "Mini computers",
+      "File servers"
+    ],
+    "a": 1
+  },
+  {
+    "q": "When the pointer is positioned on a ______it is shaped like a hand.",
+    "o": [
+      "Grammer error",
+      "Hyperlink",
+      "Screen tip",
+      "Spelling error"
+    ],
+    "a": 1
+  },
+  {
+    "q": "where can you find the horizontal split bar on MS Word screen?",
+    "o": [
+      "On the left of horizontal scroll bar",
+      "On the right of Horizontal scroll bar",
+      "On the top of vertical scroll bar",
+      "On the bottom of vertical scroll bar"
+    ],
+    "a": 2
+  },
+  {
+    "q": "_____works in the background and steals sensitive data.",
+    "o": [
+      "Virus",
+      "Shareware",
+      "Trojan",
+      "Adware"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following statements is not true?",
+    "o": [
+      "You can type text directly into a PowerPoint slide but typing in text box is more convenient",
+      "From Insert menu choose Picture and then From File to insert your images into slides.",
+      "You can display a PowerPoint presentation in Normal, Slide Sorter or Slide Show view",
+      "You can show or hide task pane from View >>Toolbars"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which is the first program run on a computer when the computer boots up?",
+    "o": [
+      "System software",
+      "Operating system",
+      "System operations",
+      "None"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Chip is a common nickname for a(n)?",
+    "o": [
+      "Transistor",
+      "Resistor",
+      "Integrated circuit",
+      "None of the above"
+    ],
+    "a": 2
+  },
+  {
+    "q": "One MB is equal to?",
+    "o": [
+      "1024 Byte",
+      "1024 KB",
+      "1000 KB",
+      "1024 GB"
+    ],
+    "a": 1
+  },
+  {
+    "q": "What do you mean by vertical separation between columns?",
+    "o": [
+      "Orientation",
+      "Gutter",
+      "Margin",
+      "Index"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which IP addresses are mostly used by web, email, and gaming servers?",
+    "o": [
+      "Dynamic",
+      "Static",
+      "MAC",
+      "Both a and b"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The primary purpose of an operating system is to",
+    "o": [
+      "Make computer easier to use",
+      "Keep system programmers employed",
+      "Make the most efficient use of hardware",
+      "Allow people to sue the computers"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which menu provides you options like Animation Scheme, custom Animation, Slide Transition?",
+    "o": [
+      "Insert Menu",
+      "Format Menu",
+      "Tools Menu",
+      "Slide Show Menu"
+    ],
+    "a": 3
+  },
+  {
+    "q": "A list of instructions used by the computer is called",
+    "o": [
+      "Text",
+      "CPU",
+      "Program",
+      "Output"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which is an example of a function",
+    "o": [
+      "=add (Al:A2)",
+      "=Al+A2",
+      "=SUM(Al:A2)",
+      "A1+A2"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following is a remote Trojan?",
+    "o": [
+      "Troya",
+      "DaCryptic",
+      "BankerA",
+      "Game-Troj"
+    ],
+    "a": 0
+  },
+  {
+    "q": "______ is used in operating system to separate mechanism from policy.",
+    "o": [
+      "Single level implementation",
+      "Two level implementation",
+      "Multilevel implementation",
+      "None"
+    ],
+    "a": 1
+  },
+  {
+    "q": "………controls all the main slide control tasks for your presentation.",
+    "o": [
+      "Task Pane",
+      "Task Bar",
+      "Control Panel",
+      "None of above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "What is the term used to described the separation of a clip art object into different parts so that it becomes a PowerPoint object?",
+    "o": [
+      "Embedding",
+      "Regrouping",
+      "Ungrouping",
+      "Grouping"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which type of command requires additional files to perform specific operations?",
+    "o": [
+      "Internal commands",
+      "External commands",
+      "Valuable commands",
+      "Primary commands"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Hard real time operating system has _____jitter than a soft real time operating system.",
+    "o": [
+      "Equal",
+      "More",
+      "Less",
+      "None of the mentioned"
+    ],
+    "a": 2
+  },
+  {
+    "q": "_______is collection of web pages and______is the very first page that we see on opening of a web-site.",
+    "o": [
+      "Home-page, Web-page",
+      "Web-site, Home-page",
+      "Web-page, Home-page",
+      "Web-page, Web-site"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which principle states that programs, users, and even the systems be given just enough privileges to perform their task?",
+    "o": [
+      "Principle of least privilege",
+      "Principle of process scheduling",
+      "Principles of operating system",
+      "None of the mentioned"
+    ],
+    "a": 0
+  },
+  {
+    "q": "_______are difficult to identify as they keep on changing their type and signature.",
+    "o": [
+      "Non-resident virus",
+      "Boot-sector virus",
+      "Polymorphic virus",
+      "Multipartite virus"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following views is the best view to use when setting transition effects for all slides in a presentation",
+    "o": [
+      "Slide sorter view",
+      "Notes page view",
+      "Slide view",
+      "Outline view"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which of the following is invalid statement?",
+    "o": [
+      "Sheet tabs can be colored",
+      "Some picture can be applied as a background of a sheet",
+      "You can set the column width automatically fit the amount of text",
+      "The width of a row and be specified manually or fit automatically."
+    ],
+    "a": 3
+  },
+  {
+    "q": "After moving a clip art image to a particular location on the slide, you can immediately reverse the action using the",
+    "o": [
+      "Click the not do move object command on the edit menu",
+      "Click on the undo button",
+      "Click on redo button",
+      "All of above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "What is the function of CTRL + R in MS-Word",
+    "o": [
+      "Open the print dialog box",
+      "Update the current web page",
+      "Close the current window",
+      "None of these"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The threat of backdoors started when _____&_____ OSs became widely accepted",
+    "o": [
+      "Single-user, windows",
+      "Multiuser, networked",
+      "Single-user, UNIX",
+      "Multiuser, UNIX"
+    ],
+    "a": 1
+  },
+  {
+    "q": "First generation of computer was based on which technology?",
+    "o": [
+      "Transistor",
+      "LSI",
+      "VLSI",
+      "Vacuum tube"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following cannot be toggled from View >> Toolbars?",
+    "o": [
+      "Control Toolbox",
+      "Slides",
+      "Revisions",
+      "Reviewing"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The interconnection of networks all across the world is known as",
+    "o": [
+      "Communication",
+      "Internet",
+      "Web page",
+      "Ethernet"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which menu option can be used to split windows into two",
+    "o": [
+      "Format > window",
+      "View > window > split",
+      "Window > split",
+      "View > split"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following you must first complete in order to delete an object?",
+    "o": [
+      "Double click the image",
+      "Select the image",
+      "Resize the image",
+      "Move the image to a new location"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following is not true about Find and Replace in Excel",
+    "o": [
+      "You can search for bold and replace with italics",
+      "You can decide whether to look for the whole word or not",
+      "You can search in formula too",
+      "You can search by rows or columns or sheets"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Selecting a text means, selecting?",
+    "o": [
+      "A word",
+      "An entire sentence",
+      "Whole document",
+      "Any of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The problem with ____ file is that they slow your computer’s operation",
+    "o": [
+      "Fragmented",
+      "Formatted",
+      "Program",
+      "All of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Why drop caps are used in documents?",
+    "o": [
+      "To drop all the capital letters",
+      "To automatically begin each paragraph with capital letter",
+      "To begin a paragraph with a large dropped initial capital letter",
+      "None of these"
+    ],
+    "a": 2
+  },
+  {
+    "q": "The four types of mail merge main documents are ____",
+    "o": [
+      "Form letters, directories, catalogues and envelope",
+      "Form letters, envelops and mailing labels, directories and lists",
+      "Basic letters, envelops, labels and list",
+      "form letters, envelops, mailing labels and catalogue"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The processor which performs arithmetical and logical operations is called",
+    "o": [
+      "Control",
+      "ALU",
+      "Register",
+      "Cache memory"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which device is required to connect multiple computers on the same internet network?",
+    "o": [
+      "Modem",
+      "Hotspots",
+      "IAP",
+      "Router"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is not a term of MS-EXCEL?",
+    "o": [
+      "Cells",
+      "Rows",
+      "Columns",
+      "Document"
+    ],
+    "a": 3
+  },
+  {
+    "q": "After choosing a predefine template,_____ option has to be chosen to change a background color",
+    "o": [
+      "Design template",
+      "Color scheme",
+      "Animation scheme",
+      "Color effects"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which can be used for quick access to commonly used commands and tools?",
+    "o": [
+      "Status bar",
+      "Tool bar",
+      "Menu bar",
+      "Title bar"
+    ],
+    "a": 1
+  },
+  {
+    "q": "How do you wrap the text in a cell?",
+    "o": [
+      "Format, cells, font",
+      "Format, cells, protection",
+      "Format, cells, number",
+      "Format, cells, alignment"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The spelling dialog box can be involved by choosing spelling from _____menu",
+    "o": [
+      "Insert",
+      "File",
+      "Tools",
+      "View"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following system is produced by IBM?",
+    "o": [
+      "OS-2",
+      "Windows",
+      "DOS",
+      "UNIX"
+    ],
+    "a": 0
+  },
+  {
+    "q": "You can use the drag and drop method to",
+    "o": [
+      "Copy cell contents",
+      "Move cell contents",
+      "Add cell contents",
+      "A and b"
+    ],
+    "a": 3
+  },
+  {
+    "q": "When all the numbers between 0 and 100 in a range should be displayed in Red Color, apply",
+    "o": [
+      "Use =if() function to format the required numbers red",
+      "Apply Conditional Formatting command on Format menu.",
+      "Select the cells that contain number between 0 and 100 then click Red color on Text Color tool.",
+      "All of above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "To what temporary area can u store text and other data, and later paste them to another location",
+    "o": [
+      "The clipboard",
+      "ROM",
+      "CD-ROM",
+      "The hard disk"
+    ],
+    "a": 0
+  },
+  {
+    "q": "When you insert an excel file into a word document. The data are",
+    "o": [
+      "Hyperlinked placed in a word table",
+      "Linked",
+      "Embedded",
+      "Use the word menu bar and toolbars."
+    ],
+    "a": 2
+  },
+  {
+    "q": "When you delete a file, where it resides?",
+    "o": [
+      "Briefcase",
+      "Recycle bin",
+      "CD",
+      "Desktop"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Ctrl + Home is used to",
+    "o": [
+      "Moves the cursor to the beginning of the document",
+      "Moves the cursor to the beginning of line",
+      "Moves the cursor to the beginning of paragraph",
+      "All of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Operating system",
+    "o": [
+      "Links a program with the subroutines it references",
+      "Provides a layered, user-friendly interface",
+      "Enables the programmer to draw a flowchart"
+    ],
+    "a": 1
+  },
+  {
+    "q": "A worksheet can have a maximum of .... Number of rows",
+    "o": [
+      "256",
+      "1024",
+      "32000",
+      "65535"
+    ],
+    "a": 3
+  },
+  {
+    "q": "PowerPoint presentations are widely used as",
+    "o": [
+      "note outlines for teachers",
+      "project presentations by students",
+      "communication of planning",
+      "All of above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "All worksheet formula",
+    "o": [
+      "Manipulate values",
+      "Manipulate labels",
+      "Return a formula result",
+      "Use the addition operator"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which of the following is used to connect the internet with a computer?",
+    "o": [
+      "Router",
+      "Modem",
+      "Network Switch",
+      "Server"
+    ],
+    "a": 1
+  },
+  {
+    "q": "To insert new slide in the current Presentation, we can choose",
+    "o": [
+      "Ctrl+M",
+      "Ctrl+N",
+      "Ctrl+O",
+      "Ctrl+F"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Backdoors are also known as ______",
+    "o": [
+      "Malware-doors",
+      "Trojan-backups",
+      "Front-doors",
+      "Trapdoors"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What lets you to create new presentation by selecting ready-made font color and graphics effects?",
+    "o": [
+      "Presentation Template",
+      "Master Slide",
+      "Design Template",
+      "Animation Scheme"
+    ],
+    "a": 2
+  },
+  {
+    "q": "For real time operating systems, interrupt latency should be ____.",
+    "o": [
+      "Zero",
+      "Minimum",
+      "Maximum",
+      "Dependent on the scheduling"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The ______can cost you money, by sending text messages from your mobile phone numbers.",
+    "o": [
+      "IM-Trojans",
+      "Backdoor Trojans",
+      "SMS Trojans",
+      "Ransom Trojan"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following is an example of connectivity?",
+    "o": [
+      "Internet",
+      "Floppy disk",
+      "Power cord",
+      "Data"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which file starts MS Word?",
+    "o": [
+      "Winword.exe",
+      "Word.exe",
+      "Msword.exe",
+      "Word2003.exe"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Long text can be broken down into many lines within a cell. You can do this through",
+    "o": [
+      "Wrap Text in Format >> Cells",
+      "Justify in Edit >> Cells",
+      "Text Wraping in Format >> Cells, Layout tab",
+      "All of above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "……. Transforms one interface into another interface",
+    "o": [
+      "Program",
+      "Software",
+      "Data",
+      "None"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following provides a means of printing out features notes with a miniature slide on a printed page?",
+    "o": [
+      "Slides with animation",
+      "Outline view",
+      "Notes page",
+      "Audience handout"
+    ],
+    "a": 2
+  },
+  {
+    "q": "If you want to convert a symbol or several lines of text into an Autocorrect entry, you should:",
+    "o": [
+      "Insert the symbol or type the text in a word document first, then select the text or symbol and go to the autocorrect dialog box.",
+      "Click the tools menu and choose autocorrect options. Then, click the insert menu and choose symbol (or click the format menu and choose paragraph) to add the symbol or paragraph to autocorrect",
+      "Autocorrect can only accommodate one line of text. It is not possible to convert a symbol or multiple lines of text into an autocorrect entry.",
+      "Insert the symbol or type the text in a word document first. Then select the text or symbol and click the edit menu followed by paste special. Select new autocorrect entry then click OK."
+    ],
+    "a": 0
+  },
+  {
+    "q": "What is the default font used in MS Word document?",
+    "o": [
+      "Times new roman",
+      "Arial",
+      "Algerian",
+      "None of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Tree structure displays the",
+    "o": [
+      "File only",
+      "Directory only",
+      "File and directory name",
+      "None of the above"
+    ],
+    "a": 2
+  },
+  {
+    "q": "'www' stands for",
+    "o": [
+      "World Word Web",
+      "World Wide Web",
+      "World Work Web",
+      "None of these"
+    ],
+    "a": 1
+  },
+  {
+    "q": "A character is that is raised and smaller above the baseline is known as",
+    "o": [
+      "Raised",
+      "Outlined",
+      "Capscript",
+      "Superscript"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which enables us to sent the same letter to different persons?",
+    "o": [
+      "Macros",
+      "Template",
+      "Mail merge",
+      "None"
+    ],
+    "a": 2
+  },
+  {
+    "q": "To save a workbook, you:",
+    "o": [
+      "Click the save button on the standard toolbar from the menu",
+      "Press Ctrl+F5",
+      "Click Save on the Windows Start button",
+      "Select Edit>Save"
+    ],
+    "a": 0
+  },
+  {
+    "q": "The virus hides itself from getting detected by______ different ways.",
+    "o": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which components appear in the initial windows start up display?",
+    "o": [
+      "Dialog box",
+      "Task bar",
+      "Start menu",
+      "All of the above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Where is the headquarters of INTEL located?",
+    "o": [
+      "Redmond, Washington",
+      "Tucson, Arizona",
+      "Santa Clara, California",
+      "Richmond, Virginia"
+    ],
+    "a": 2
+  },
+  {
+    "q": "The operating system is responsible for?",
+    "o": [
+      "Bad-block recovery",
+      "Booting from disk",
+      "Disk initialization",
+      "All the above mentioned"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Short cut ctrl+ F used to",
+    "o": [
+      "Open find and replace dialog box with activating find tab",
+      "Open page setup dialog box with activating layout tab",
+      "Open font dialog box with activating font tab",
+      "Open file Save as dialog box"
+    ],
+    "a": 0
+  },
+  {
+    "q": "The component of windows that lets you transfer contents from one document to another",
+    "o": [
+      "Briefcase",
+      "Clipboard",
+      "Document",
+      "Boot"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following is the most popular web server on the web?",
+    "o": [
+      "Apache",
+      "Network Hub",
+      "Web server",
+      "FTP"
+    ],
+    "a": 0
+  },
+  {
+    "q": "What is the full form of MIME?",
+    "o": [
+      "Multipurpose Internet Mail Extensions",
+      "Multipurpose Intra Mail Extensions",
+      "Multiple Internet Mail Extensions",
+      "Multiple purpose Internet Mail Email"
+    ],
+    "a": 0
+  },
+  {
+    "q": "____gets installed & stays hidden in your computer’s memory. It stays involved to the specific types of files which it infects",
+    "o": [
+      "Boot sector virus",
+      "Direct action virus",
+      "Polymorphic virus",
+      "Multipartite virus"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following best describes serifs?",
+    "o": [
+      "Serifs on characters help to differentiate between similar looking letters",
+      "Serifs fonts are best for viewing test at a distance",
+      "Serifs are fine cross strokes that appear at the bottom and top of a letter",
+      "Serif font are very simple in appearance"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which key should be pressed to start a new paragraph in MS-Word?",
+    "o": [
+      "Down cursor key",
+      "Enter key",
+      "Shift + Enter",
+      "Ctrl + Enter"
+    ],
+    "a": 1
+  },
+  {
+    "q": "A _____may be a hidden part of a program, a separate infected program a Trojan in disguise of an executable or code in the firmware of any system’s hardware.",
+    "o": [
+      "crypter",
+      "virus",
+      "backdoor",
+      "key-logger"
+    ],
+    "a": 2
+  },
+  {
+    "q": "How do you create speaker note pages that show the slides, related notes, and your company logo on each page?",
+    "o": [
+      "Edit the notes master and add your company logo",
+      "Edit the slide master and insert your company logo and notes pane",
+      "Edit the handout master to include your company logo and one slide per page with additional note space",
+      "All of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "A protocol in the URL \"https://www.scientecheasy.com\" is",
+    "o": [
+      "www",
+      "HTTPS",
+      ".com",
+      "All of the above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following can you format using buttons on the formatting toolbar?",
+    "o": [
+      "Your hard drive",
+      "Format painting",
+      "Font color",
+      "Underlining"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which mods leads minimal set of drivers when starting windows?",
+    "o": [
+      "Safe mode",
+      "Normal mode",
+      "VGA mode",
+      "Network support mode"
+    ],
+    "a": 0
+  },
+  {
+    "q": "How can you stop a slide show?",
+    "o": [
+      "Press the right arrow",
+      "Press Escape",
+      "Press the left arrow",
+      "Press the down arrow"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The ____, or typeface, defines the appearance and shape of letters, numbers, and special characters.",
+    "o": [
+      "Font",
+      "Font size",
+      "Point",
+      "Paragraph formatting"
+    ],
+    "a": 0
+  },
+  {
+    "q": "To select one hyperlink after another during a slide presentation, what do you press?",
+    "o": [
+      "Tab",
+      "Ctrl + K",
+      "Ctrl + h",
+      "All of above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "What is to be use to add text in Slide?",
+    "o": [
+      "Text box",
+      "Note Box",
+      "Text Layer",
+      "Comment Box"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Transformation of input into output is performed by?",
+    "o": [
+      "Peripherals",
+      "Memory",
+      "Storage",
+      "The CPU"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What are the two types of monitors?",
+    "o": [
+      "CRT and DVD",
+      "CRT and LCD",
+      "DVD and VCD",
+      "LCD and DVD"
+    ],
+    "a": 1
+  },
+  {
+    "q": "How do you display current date only in MS Excel?",
+    "o": [
+      "date ()",
+      "Today ()",
+      "now ()",
+      "time ()"
+    ],
+    "a": 1
+  },
+  {
+    "q": "To select a block of text, click at the beginning of the selection, scroll to the end of the selection, position the mouse pointer at the end of the selection, hold down the _____key, and then click (or drag through the text)",
+    "o": [
+      "Ctrl",
+      "Alt",
+      "Shift",
+      "Tab"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which file format can be added to a PowerPoint show?",
+    "o": [
+      ".jpg",
+      ".gif",
+      ".wav",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "A ______provides malicious users remote control over the targeted computer.",
+    "o": [
+      "DDoS-Trojan",
+      "Backdoor Trojan",
+      "Trojan-banker",
+      "Trojan-downloader"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following protocol is used to connect to Usenet server and transfer News group articles between systems over the internet?",
+    "o": [
+      "FTP",
+      "NTTP",
+      "TCP",
+      "TCP/IP"
+    ],
+    "a": 1
+  },
+  {
+    "q": "If you will be displaying or printing your document on another computer, you’ll want to make sure and select the _____option under the ‘save’ Tab.",
+    "o": [
+      "Embed fonts",
+      "Embed true type fonts",
+      "Save true type fonts",
+      "Save fonts"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Supercomputers are mainly used for",
+    "o": [
+      "Mathematical intensive scientific  application",
+      "Data-retrieval operations",
+      "Input-output intensive processing",
+      "All of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Background colour or effects applied on a document is not visible in",
+    "o": [
+      "Web layout view",
+      "Print layout view",
+      "Reading view",
+      "Print preview"
+    ],
+    "a": 3
+  },
+  {
+    "q": "_______Controls the way in which the computer system functions and provides a means by which users can interact with the computer",
+    "o": [
+      "The platform",
+      "The operating system",
+      "Application software",
+      "The motherboard"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which is the layer of a computer system between the hardware and the user program",
+    "o": [
+      "Operating environment",
+      "Operating system",
+      "System environment",
+      "None"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following statements is FALSE concerning file?",
+    "o": [
+      "Files may share the same name or the same extension but not both",
+      "Every file in the same folder must have a unique name",
+      "File extension is another name for file type",
+      "The file extension comes before dot (.) followed by the file name"
+    ],
+    "a": 3
+  },
+  {
+    "q": "To adjust the width of table columns, you",
+    "o": [
+      "Click table menu. Column width, then make adjustments",
+      "Drag the vertical gridline between two columns",
+      "Drag the column markers on the table ruler bar",
+      "B and C"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What is the meaning of ”hibernate” in windows XP/ Windows 7?",
+    "o": [
+      "Restart the computer in safe mode",
+      "Restart the computer in hibernate mode",
+      "Shutdown the computer terminating all the running applications",
+      "Shutdown the computer without closing the running applications"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of them is not a proper way of getting into a system?",
+    "o": [
+      "IM",
+      "Attachments",
+      "Official product sites",
+      "Un-trusted sites, freeware and pirated software"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Windows can run",
+    "o": [
+      "One application only",
+      "Two applications only",
+      "Four applications only",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Inventor of www (World Wide Web) is ......",
+    "o": [
+      "Bill Gates",
+      "Lee. N. Feyong",
+      "Tim Berners Lee",
+      "Tom Berners Lee"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following port is not used by Trojans?",
+    "o": [
+      "UDP",
+      "TCP",
+      "SMTP",
+      "MP"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following formulas will excel not be able to calculate?",
+    "o": [
+      "SUM(Sales) – A3",
+      "SUM(A1:A5)*.5",
+      "SUM(A1:A5)/(10-10)",
+      "SUM(A1:A5)-10"
+    ],
+    "a": 2
+  },
+  {
+    "q": "USB stands for",
+    "o": [
+      "Universal serial bus",
+      "Universal  sequential bus",
+      "Unique serial bus",
+      "Unique sequential bus"
+    ],
+    "a": 0
+  },
+  {
+    "q": "A computer_____ is a malicious code which self-replicates by copying itself to other programs.",
+    "o": [
+      "Program",
+      "Virus",
+      "Application",
+      "Worm"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following statement is true",
+    "o": [
+      "You can insert text boxes from drawing toolbar in PowerPoint",
+      "You cannot insert text boxes from drawing toolbar in PowerPoint",
+      "Text boxes are providing when you choose a layout and can’t be inserted afterwards",
+      "None of above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Two basic types of operating systems are:",
+    "o": [
+      "Sequential and direct",
+      "Batch and timesharing",
+      "Sequential and real-time",
+      "Batch and interactive"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What is the term used when you press and hold the left mouse key and more the mouse around the slide?",
+    "o": [
+      "Highlighting",
+      "Dragging",
+      "Selecting",
+      "Moving"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Where can u change the vertical alignment?",
+    "o": [
+      "Formatting toolbar",
+      "Paragraph dialog box",
+      "Page setup dialog box",
+      "Standard toolbar"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Start / restart the computer is called",
+    "o": [
+      "Exit",
+      "Run",
+      "Option",
+      "Boot"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Page up key",
+    "o": [
+      "Moves the cursor one line up",
+      "Moves the cursor one screen up",
+      "Moves the cursor one page up",
+      "Moves the cursor one paragraph up"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following is not a worksheet design criterion?",
+    "o": [
+      "Efficiency",
+      "Aditibility",
+      "Description",
+      "Clarity"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which feature helps you to insert the contents of the clipboard as a text without any formatting",
+    "o": [
+      "Paste special",
+      "Format painter",
+      "Page setup",
+      "Styles"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which of the following is not a type of virus?",
+    "o": [
+      "Boot sector",
+      "Polymorphic",
+      "Multipartite",
+      "Trojans"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Documentation should include",
+    "o": [
+      "Destination and users of the output data",
+      "Source of input data",
+      "Information on the purpose of the workbook",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following are word processing software?",
+    "o": [
+      "WordPerfect",
+      "WordPad",
+      "MS Word",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is not essential component to perform a mail merge operation?",
+    "o": [
+      "Main document",
+      "Data source",
+      "Merge fields",
+      "Word fields"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The basic input output system(BIOS) resides in",
+    "o": [
+      "RAM",
+      "ROM",
+      "The CPU",
+      "Memory cache"
+    ],
+    "a": 1
+  },
+  {
+    "q": "What are the characteristics of host-based IDS?",
+    "o": [
+      "Logs are analysed to detect tails od intrusion",
+      "The host operating system logs in the audit information",
+      "Logs includes login, file opens, and program executions",
+      "All of the mentioned"
+    ],
+    "a": 3
+  },
+  {
+    "q": "In a computer, .com, .edu, .gov, and .net are the examples of",
+    "o": [
+      "Tag",
+      "Protocol",
+      "top level domain extension",
+      "IP address"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Trojan cannot  _____.",
+    "o": [
+      "Steal data",
+      "Self-replicate",
+      "Steal financial information",
+      "Steal login credential"
+    ],
+    "a": 1
+  },
+  {
+    "q": "In MS-Word, for what does ruler help?",
+    "o": [
+      "To set tabs",
+      "To set indents",
+      "To change page margins",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "A set of rules followed by each computer present on a network is called",
+    "o": [
+      "Web",
+      "HTTP",
+      "Domain",
+      "Protocol"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is the largest manufacturer of HARD DISK Drives?",
+    "o": [
+      "IBM",
+      "Seagate",
+      "Microsoft",
+      "None of these"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following plays an important role in developing common protocols for the evolution of www?",
+    "o": [
+      "Internet",
+      "WWW Consortium",
+      "Internet Architecture Board",
+      "None of these"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following statement about directories is false?",
+    "o": [
+      "Directories can exist inside directories",
+      "The root directory is always at the highest level",
+      "Directories cannot be renamed",
+      "Directories can be deleted"
+    ],
+    "a": 2
+  },
+  {
+    "q": "What is the smallest width of a column?",
+    "o": [
+      "0”",
+      "0.5”",
+      "1”",
+      "1.5”"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following is not the part of standard office suite?",
+    "o": [
+      "Database",
+      "File manager",
+      "Image editor",
+      "Word processor"
+    ],
+    "a": 1
+  },
+  {
+    "q": "______ system is build directly on the hardware",
+    "o": [
+      "Environment",
+      "System",
+      "Operating",
+      "None"
+    ],
+    "a": 2
+  },
+  {
+    "q": "What's the best way to design the layout for your slides?",
+    "o": [
+      "Create layouts for slides, handouts and notes using the Master Layout dialog box in slide master view",
+      "For each new slide, select a layout from the Slide Layout task pane",
+      "Apply templates from the Slide Design task pane",
+      "None of above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "If you select Insert >> Picture >> From File",
+    "o": [
+      "You can insert pictures and clipArts",
+      "You can insert clipArts only",
+      "You can insert pictures only",
+      "None of above"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Memories which can be read only are called____",
+    "o": [
+      "RAM",
+      "ROM",
+      "DRAM",
+      "Virtual memory"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Portrait and landscape are",
+    "o": [
+      "Page orientation",
+      "Paper size",
+      "Page layout",
+      "All of above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Swapping ____ be done when a process has pending I/O, or has to execute I/O operations only into operating system buffers.",
+    "o": [
+      "Must never",
+      "Maybe",
+      "Can",
+      "Must"
+    ],
+    "a": 2
+  },
+  {
+    "q": "A …….is a named location on a disk where files are stored.",
+    "o": [
+      "Folder",
+      "Pod",
+      "Version",
+      "None of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "A_____ is a grid with labeled columns and rows",
+    "o": [
+      "Dialog box",
+      "Worksheet",
+      "Clipboard",
+      "Toolbar"
+    ],
+    "a": 1
+  },
+  {
+    "q": "A computer port is used to?",
+    "o": [
+      "Communicate with hard disks",
+      "Download files",
+      "Communicate with other computer peripherals",
+      "None of the above"
+    ],
+    "a": 2
+  },
+  {
+    "q": "If you need a change the typeface of a document, which menu will you choose",
+    "o": [
+      "Edit",
+      "View",
+      "Format",
+      "tools"
+    ],
+    "a": 2
+  },
+  {
+    "q": "You cannot link excel worksheet data to a word document",
+    "o": [
+      "With the right drag method",
+      "With a hyperlink",
+      "With the copy and paste special commands",
+      "With the copy and paste buttons on the standard"
+    ],
+    "a": 3
+  },
+  {
+    "q": "_______is the science that attempts to produce machines that display the same type of intelligence that human do",
+    "o": [
+      "Nano science",
+      "Nanotechnology",
+      "Simulation",
+      "Artificial intelligence"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is not a valid version of MS office?",
+    "o": [
+      "Office XP",
+      "Office Vista",
+      "Office 2007",
+      "None of the above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which is not executable file?",
+    "o": [
+      ".com",
+      ".exe",
+      ".bat",
+      ".txt"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Transient operating system code is a code that_____.",
+    "o": [
+      "Stays in the memory always",
+      "Never enters the memory space",
+      "Comes and goes as needed",
+      "Is not easily accessible"
+    ],
+    "a": 2
+  },
+  {
+    "q": "What is the full form of ISDN?",
+    "o": [
+      "Internet Service Digital Network",
+      "Integrated Service Digital Network",
+      "Intranet Service Digital Network",
+      "International Service Digital Network"
+    ],
+    "a": 1
+  },
+  {
+    "q": "An essential difference between the operating system that runs a typical desktop computer and the operating system that runs a typical PDA is that _______",
+    "o": [
+      "The desktop OS has a graphical user’s interface whereas the PDA OS doesn’t.",
+      "The desktop OS can run several programs simultaneously whereas the PDA OS can’t.",
+      "The desktop OS manages hardware resources whereas the PDA OS does not",
+      "The desktop computer has an OS whereas a PDA does not."
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which is built directly on the hardware?",
+    "o": [
+      "Computer environment",
+      "Application software",
+      "Operating system",
+      "Database system"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following syntax is correct regarding to SUM function in Excel",
+    "o": [
+      "=SUM (A1, B1)",
+      "=SUM (A1:B9)",
+      "=SUM (Al:A9, B1:B9)",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "______perform automated DoS (Denial of service) attacks on the targeted web address.",
+    "o": [
+      "DDoS-Trojan",
+      "Backdoor Trojan",
+      "Trojan-banker",
+      "Trojan-downloader"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which of the following is not a part of Slide Design?",
+    "o": [
+      "Design Template",
+      "Color Scheme",
+      "Animation Scheme",
+      "Slide Layout"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is the fastest?",
+    "o": [
+      "CPU",
+      "Magnetic tapes and disks",
+      "Video terminal",
+      "Sensors, mechanical controller"
+    ],
+    "a": 0
+  },
+  {
+    "q": "The internet, sometimes called simply \"Net\" is",
+    "o": [
+      "A huge network of networks that joins computers from all across the world.",
+      "An internal communication system",
+      "a communication system for the government.",
+      "All of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "To install the new font in window XP",
+    "o": [
+      "Start -> settings -> control panel -> font",
+      "Start -> settings -> control panel -> font -> install new font",
+      "Start -> control panel -> font -> install new font",
+      "Start -> setting -> font"
+    ],
+    "a": 1
+  },
+  {
+    "q": "A computer that is used to store data or information for users on the internet is called",
+    "o": [
+      "Web server",
+      "web client",
+      "web database",
+      "web application"
+    ],
+    "a": 0
+  },
+  {
+    "q": "With which view can you see how text and graphics will appear on the printed page?",
+    "o": [
+      "Normal",
+      "Print layout",
+      "Outline",
+      "Web layout"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which PowerPoint view works best for adding slide transitions ?",
+    "o": [
+      "Slide view",
+      "Slide show view",
+      "Notes view",
+      "Slide sorter view"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The view that displays the slides of a presentation as miniature representations of the slides is called",
+    "o": [
+      "Slide show",
+      "Slide sorter view",
+      "Notes page view",
+      "Outline view"
+    ],
+    "a": 1
+  },
+  {
+    "q": "RAM chips",
+    "o": [
+      "Allows the computer to store data electronically",
+      "Store data indefinitely unless you delete it",
+      "Are secondary memory",
+      "All of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "The operating system keeps a small table containing information about all open files called______",
+    "o": [
+      "File table",
+      "Directory table",
+      "Open-file table",
+      "System table"
+    ],
+    "a": 2
+  },
+  {
+    "q": "To insert a hyperlink in a slide",
+    "o": [
+      "Choose Insert >> Hyperlink",
+      "Press Ctrl + K",
+      "Hyperlinks can't be inserted in slides",
+      "both a & b"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What is the default number of lines to drop for drop cap?",
+    "o": [
+      "3",
+      "10",
+      "15",
+      "20"
+    ],
+    "a": 0
+  },
+  {
+    "q": "In the context of animations, what is a trigger?",
+    "o": [
+      "An action button that advances to the next slide",
+      "An item on the slide that performs an action when clicked.",
+      "The name of a motion path.",
+      "All of above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following memory is volatile?",
+    "o": [
+      "RAM",
+      "ROM",
+      "EPROM",
+      "PROM"
+    ],
+    "a": 0
+  },
+  {
+    "q": "An organization has a president, vice president, managers and supervisors. On what level of an organization chart are the vice presidents",
+    "o": [
+      "Fourth level",
+      "Third level",
+      "Second level",
+      "First level"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which type of fonts are best suite for titles and headlines ?",
+    "o": [
+      "Serif Fonts",
+      "Text Fonts",
+      "Picture Fonts",
+      "Sans Serif Fonts"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Portable program means?",
+    "o": [
+      "Independent from its authors",
+      "Independent of platform",
+      "Program with wheels",
+      "None of the above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The ………provides information about hardware installation, configuration and hardware status",
+    "o": [
+      "Device manager",
+      "Control panel",
+      "Add new hardware",
+      "Program manager"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Each excel file is called a workbook because",
+    "o": [
+      "It can contain text and data",
+      "It can be modified",
+      "it can contain many sheets including worksheets and chart sheets",
+      "You have to work hard to create it"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Ctrl + N is used to",
+    "o": [
+      "Save documents",
+      "Open documents",
+      "New documents",
+      "Close documents"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Arithmetic logic unit\nI. Performs arithmetic operations\nII. Store data\nIII. Perform comparison\nIV. Communicate with the input devices\nFrom above the correct one is",
+    "o": [
+      "I only",
+      "II only",
+      "I and II only",
+      "I and III only"
+    ],
+    "a": 3
+  },
+  {
+    "q": "For windows 10, Microsoft released ______in place of MS paint.",
+    "o": [
+      "Paint 10",
+      "New MS paint",
+      "Paint 3D",
+      "Universal point"
+    ],
+    "a": 2
+  },
+  {
+    "q": "The most frequently used instructions of a computer program are likely to be fetched from",
+    "o": [
+      "The hard disk",
+      "Cache memory",
+      "RAM",
+      "Registers"
+    ],
+    "a": 1
+  },
+  {
+    "q": "By pressing F12, which of following will happen?",
+    "o": [
+      "Close dialog box will open",
+      "Open dialog box will open",
+      "Save dialog box will open",
+      "Save as dialog box will open"
+    ],
+    "a": 3
+  },
+  {
+    "q": "______ works in background & keeps on downloading other malicious programs when the system is online.",
+    "o": [
+      "DDoS-Trojan",
+      "Backdoor Trojan",
+      "Trojan-banker",
+      "Trojan-downloader"
+    ],
+    "a": 3
+  },
+  {
+    "q": "For an effective operating system, when to check for deadlock?",
+    "o": [
+      "Every time a resource request is made at fixed time intervals",
+      "At fixed time intervals",
+      "Every time a resource request is made",
+      "None of the mentioned"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the below-mentioned reasons do not satisfy the reason why people create a computer virus?",
+    "o": [
+      "Research purpose",
+      "Pranks",
+      "Identity theft",
+      "Protection"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which computer memory is used for storing programs and data currently being processed by the CPU?",
+    "o": [
+      "Mass memory",
+      "Internal memory",
+      "Non-volatile memory",
+      "PROM"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following protocols is used in internet technology?",
+    "o": [
+      "HTTPS",
+      "DHCP",
+      "DNS",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is true?",
+    "o": [
+      "Byte is a single digit in a binary number",
+      "Bit represents a grouping of digital numbers",
+      "Eight-digit binary number is called a byte",
+      "Eight-digit binary number is called a bit"
+    ],
+    "a": 2
+  },
+  {
+    "q": "To update a formula in a table, press the",
+    "o": [
+      "F9 keys",
+      "ALT+F9 keys",
+      "SHIFT+F9 keys",
+      "F8 keys"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Memory",
+    "o": [
+      "Is a device that performs a sequence of operations specified by instructions in the memory.",
+      "Is a device where information is stored",
+      "Is a sequence of instructions",
+      "is typically characterized by interactive processing and time-slicing of the CPU."
+    ],
+    "a": 1
+  },
+  {
+    "q": "A Microsoft windows is a(n)",
+    "o": [
+      "Operating system",
+      "Graphic program",
+      "Word processing",
+      "Database program"
+    ],
+    "a": 0
+  },
+  {
+    "q": "The selected design template can be applied",
+    "o": [
+      "To current slide only",
+      "To all the slides",
+      "To all the new presentation you create",
+      "All of above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which standard network protocol is used to communicate between web browser and web server?",
+    "o": [
+      "NTTP",
+      "FTP",
+      "HTTP",
+      "IP"
+    ],
+    "a": 2
+  },
+  {
+    "q": "What is cache RAM",
+    "o": [
+      "Extra memory used for overflow from your hard disk",
+      "A place to store secret information like passwords",
+      "It’s the same as your hard disk drive",
+      "Fast memory used for data that is accessed often"
+    ],
+    "a": 3
+  },
+  {
+    "q": "To delete a file without allowing it to store in recycle bin",
+    "o": [
+      "Press delete key",
+      "Press shift + delete key",
+      "Press Ctrl + delete key",
+      "Press Alt + delete key"
+    ],
+    "a": 1
+  },
+  {
+    "q": "CPU scheduling is the basis of ____.",
+    "o": [
+      "Multiprogramming operating systems",
+      "Larger memory sized systems",
+      "Multiprocessor systems",
+      "None of the mentioned"
+    ],
+    "a": 0
+  },
+  {
+    "q": "When you rename a file five times then the number of file in the disk is",
+    "o": [
+      "1",
+      "2",
+      "3",
+      "5"
+    ],
+    "a": 0
+  },
+  {
+    "q": "In Normal view, this tab displays the content of each slide.",
+    "o": [
+      "Slides",
+      "View",
+      "Sort",
+      "Outline"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which key combination will move the insertion point to the bottom of your document?",
+    "o": [
+      "END",
+      "PAGE DOWN",
+      "CTRL + PAGE DOWN",
+      "None of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following options is not available in insert>>>picture?",
+    "o": [
+      "Chart",
+      "Graph",
+      "Clip art",
+      "Word art"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Microprocessor was introduced in which generation of computer?",
+    "o": [
+      "Second generation",
+      "Fourth generation",
+      "Both (A) and (B)",
+      "Third generation"
+    ],
+    "a": 1
+  },
+  {
+    "q": "How many different positions can you set for drop cap?",
+    "o": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Getting data from a cell located in a different sheet is called ......",
+    "o": [
+      "Accessing",
+      "Referencing",
+      "Updating",
+      "Functioning"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Who invented the supercomputers",
+    "o": [
+      "Charles Babbage",
+      "JH Van Tassell",
+      "Charles Ginsberg",
+      "Seymour Cray"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is the most popular activity on the internet?",
+    "o": [
+      "Shopping",
+      "Entertainment",
+      "Searching",
+      "Video calling"
+    ],
+    "a": 2
+  },
+  {
+    "q": "You can use the formula palette to",
+    "o": [
+      "Format cells containing numbers",
+      "Create and edit formula containing functions",
+      "Enter assumptions data",
+      "Copy a range of cells"
+    ],
+    "a": 1
+  },
+  {
+    "q": "A real time operating system is most likely to be used for which of the following task?",
+    "o": [
+      "Controlling access to a shared printer in a network",
+      "Ensuring that system clock works correctly on the server",
+      "Managing the access to system files in a laptop computer",
+      "Controlling the fuel injection system of an automobile engines"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Supervisor slate is",
+    "o": [
+      "Never used",
+      "Entered by programs when they enter the processor",
+      "Required to perform any I/O",
+      "Only allowed to the operating system"
+    ],
+    "a": 3
+  },
+  {
+    "q": "To create a formula, you can use:",
+    "o": [
+      "Values but not cell references",
+      "Cell references but not values",
+      "Values or cell references although not both at the same time",
+      "Value and cell references"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which standard internet protocol provides secure data transmission between web server and browser with the help of encryption?",
+    "o": [
+      "HTTP",
+      "HTTPS",
+      "TELNET",
+      "ARPANET"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Second generation of computers are made of",
+    "o": [
+      "Vacuum tubes",
+      "Transistors",
+      "LSI",
+      "VLSI"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which is not the function of \"Edit, Clear\" command?",
+    "o": [
+      "Delete contents",
+      "Delete notes",
+      "Delete cells",
+      "Delete formats"
+    ],
+    "a": 2
+  },
+  {
+    "q": "What does a system bus do?",
+    "o": [
+      "Allows the users to communicate with the computer",
+      "Carries out instructions",
+      "Connects the various components within the computer",
+      "Stores data and instructions"
+    ],
+    "a": 2
+  },
+  {
+    "q": "_____ is the high-speed memory used in computer.",
+    "o": [
+      "RAM",
+      "Hard disk",
+      "Cache",
+      "BIOS"
+    ],
+    "a": 2
+  },
+  {
+    "q": "What does the NOW () function return",
+    "o": [
+      "It returns the serial number of the current date and time",
+      "it returns the serial number of the current date",
+      "It returns the serial number of the current time",
+      "None of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Tab scroll buttons are place on Excel screen",
+    "o": [
+      "towards the bottom right corner",
+      "towards the bottom left corner",
+      "towards the top right corner",
+      "towards the top left corner"
+    ],
+    "a": 1
+  },
+  {
+    "q": "What does OS X has?",
+    "o": [
+      "Monolithic kernel with modules",
+      "Microkernel",
+      "Monolithic kernel",
+      "Hybrid kernel"
+    ],
+    "a": 3
+  },
+  {
+    "q": "A utility that can be used to minimize the number of fragmented files and enhance the speed",
+    "o": [
+      "Disk space",
+      "Defrag",
+      "Scandisk",
+      "Double space"
+    ],
+    "a": 1
+  },
+  {
+    "q": "You can activate a cell by",
+    "o": [
+      "Pressing the Tab key",
+      "Clicking the cell",
+      "Pressing the arrow key",
+      "All of the above."
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which command will you use in PowerPoint if you need to change the color of different objects without changing content?",
+    "o": [
+      "Design Template",
+      "Color Scheme",
+      "Font Color",
+      "Object Color"
+    ],
+    "a": 1
+  },
+  {
+    "q": "CPU stands for",
+    "o": [
+      "Central performance unit",
+      "Control processing unit",
+      "Common processing unit",
+      "Central processing unit"
+    ],
+    "a": 3
+  },
+  {
+    "q": "______infects the master boot record and it is a challenging and complex task to remove the virus.",
+    "o": [
+      "Boot sector virus",
+      "Polymorphic virus",
+      "Multipartite",
+      "Trojans"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which of the following resources must be protected by the operating system?",
+    "o": [
+      "I/O",
+      "Memory",
+      "CPU",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "what does EXT indicator on status bar of MS Word indicate?",
+    "o": [
+      "It indicates whether the external text is pasted on document or not",
+      "In indicates whether extended add-ons are installed on MS Word or not",
+      "It indicated whether extended selected mode is turned on or off",
+      "None of these"
+    ],
+    "a": 2
+  },
+  {
+    "q": "The feature of Word that automatically adjusts the amount of space between certain combination of characters so that an entire word looks more evenly spaced. What is that feature called?",
+    "o": [
+      "Spacing",
+      "Kerning",
+      "Positioning",
+      "Scaling"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Where can you set the shading color for a range of cells in Excel?",
+    "o": [
+      "Choose required color form Patterns tab of Format Cells dialog box",
+      "Choose required color on Fill Color tool in Formatting toolbar",
+      "Choose required color on Fill Color tool in Drawing toolbar",
+      "All of above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The following are all computing devices, except______.",
+    "o": [
+      "Notebook computers",
+      "Cellular telephones",
+      "Digital scanners",
+      "Personal digital assistants(PDA)"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Insert date, format page number, and insert autotext are buttons on the ______toolbar.",
+    "o": [
+      "Formatting",
+      "Header and footer",
+      "Standard",
+      "Edit"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The 0 and 1 in the binary numbering system are called binary digit or",
+    "o": [
+      "Bytes",
+      "Kilobytes",
+      "Decimal bytes",
+      "Bits"
+    ],
+    "a": 3
+  },
+  {
+    "q": "How to select one hyperlink after another during a slide presentation?",
+    "o": [
+      "Ctrl + K",
+      "Ctrl + H",
+      "Tab",
+      "Ctrl + D"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Disk label can be up to ……. Characters",
+    "o": [
+      "8",
+      "9",
+      "11",
+      "255"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the key is used to close the active window?",
+    "o": [
+      "Ctrl + F4",
+      "Alt +F4",
+      "Alt +F6",
+      "Ctrl +F5"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Press the ____ button to have the windows fill the entire screen",
+    "o": [
+      "Close",
+      "Maximise",
+      "Minimize",
+      "None of the above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following should e used when you want to add a slide to an existing presentation?",
+    "o": [
+      "File, add a new slide",
+      "Insert, new slide",
+      "File, open",
+      "File, new"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Another term for main memory is",
+    "o": [
+      "Hard disk",
+      "ROM",
+      "Floppy disk",
+      "RAM"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following can you use to add times to the slides in a presentation ?",
+    "o": [
+      "Slice Show menu",
+      "Rehearse timing button",
+      "Slide transition button",
+      "All of above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "A small part of taskbar that has icon of background running application is",
+    "o": [
+      "Start button",
+      "Quick launch",
+      "Task bar",
+      "System tray"
+    ],
+    "a": 3
+  },
+  {
+    "q": "In real time operating system______",
+    "o": [
+      "Process scheduling can be done only once",
+      "All processes have the same priority",
+      "All process has not the same priority",
+      "A task must be serviced by its deadline period."
+    ],
+    "a": 3
+  },
+  {
+    "q": "How can you update the values of formula cells if Auto Calculate mode of Excel is disabled?",
+    "o": [
+      "F8",
+      "F9",
+      "F10",
+      "F11"
+    ],
+    "a": 1
+  },
+  {
+    "q": "To import text from a word document that uses headings into a PowerPoint presentation:",
+    "o": [
+      "This cannot be done in PowerPoint",
+      "Click Insert, Slides from Outline",
+      "Click Import, Word Document Headings",
+      "Click File, New, Presentation from Word Headings"
+    ],
+    "a": 1
+  },
+  {
+    "q": "You want to set such that when you type Baishakh and drag the fill handle, Excel should produce Jestha, Aashadh and so on. What will you set to effect that?",
+    "o": [
+      "Custom List",
+      "Auto Fill Options",
+      "Fill Across Worksheet",
+      "Fill Series"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Ctrl +S",
+    "o": [
+      "Save document with different name",
+      "Save document with same name",
+      "Save document and close word application",
+      "Save document and print whole pages"
+    ],
+    "a": 1
+  },
+  {
+    "q": "In which year apple II virus came into existence?",
+    "o": [
+      "1979",
+      "1980",
+      "1981",
+      "1982"
+    ],
+    "a": 2
+  },
+  {
+    "q": "How do you delete a column?",
+    "o": [
+      "Select the column heading you want to delete and the select the delete row button on the standard toolbar",
+      "Select the column heading you want to delete and select insert delete from the menu",
+      "Select the column heading you want to delete and select edit>delete from the menu",
+      "Right click the column heading you want to delete and select delete from the shortcut menu"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Press ____key while booting to display advanced boot menu",
+    "o": [
+      "F5",
+      "F6",
+      "F8",
+      "Del"
+    ],
+    "a": 2
+  },
+  {
+    "q": "How are data organized in a spreadsheet?",
+    "o": [
+      "Lines and spaces",
+      "Layers and planes",
+      "Height and width",
+      "Rows and columns"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is used to display the content of a certain drive or folder?",
+    "o": [
+      "Click the drive or folder while holding down the Alt key",
+      "Triple click the drive or folder",
+      "Right click the drive or folder",
+      "Double click the drive or folder"
+    ],
+    "a": 3
+  },
+  {
+    "q": "To return the remainder after a number is divided by a divisor in EXCEL we use the function?",
+    "o": [
+      "ROUND ()",
+      "FACT ()",
+      "MOD ()",
+      "DIV ()"
+    ],
+    "a": 2
+  },
+  {
+    "q": "The transmission of a file from one computer system to another computer or to a server so that others can see or retrieve it is called",
+    "o": [
+      "Downloading",
+      "Sharing",
+      "Uploading",
+      "sending file"
+    ],
+    "a": 2
+  },
+  {
+    "q": "In which menu can you find features like Slide Design, Slide Layout etc .?",
+    "o": [
+      "Insert Menu",
+      "Format Menu",
+      "Tools Menu",
+      "Slide Show Menu"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Running multiple programs at the same time is called",
+    "o": [
+      "Multitasking",
+      "Foreground tasking",
+      "Single tasking",
+      "Symmetric"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Underlined character on the menu or dialog box known as",
+    "o": [
+      "Hot spot",
+      "Hot key",
+      "Pane",
+      "Underline word"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which windows features can be accessed from the start menu?",
+    "o": [
+      "Help",
+      "Windows explorer",
+      "Microsoft network",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following techniques cannot be used for the security of data or information?",
+    "o": [
+      "Authentication",
+      "Authorization",
+      "Encryption",
+      "Decryption"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Bringing a page into memory only when it is needed, this mechanism is called",
+    "o": [
+      "Deadlock",
+      "Page fruit",
+      "Dormant paging",
+      "Demand paging"
+    ],
+    "a": 3
+  },
+  {
+    "q": "To display system boot menu which of the following key you must press?",
+    "o": [
+      "F4",
+      "F7",
+      "F8",
+      "F5"
+    ],
+    "a": 2
+  },
+  {
+    "q": "The windows feature is the ability of computer to automatically configure a new hardware component is that",
+    "o": [
+      "Auto detect",
+      "Plug and play",
+      "Add remove hardware",
+      "None of the above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Ctrl + right arrow is used to",
+    "o": [
+      "Move the cursor one word right",
+      "Moves the cursor end of the line",
+      "Moves the cursor end of the document",
+      "Moves the cursor one paragraph down"
+    ],
+    "a": 0
+  },
+  {
+    "q": "To copy formatting from one area in a worksheet and apply it to another area you would use",
+    "o": [
+      "The Edit > Copy Format and Edit>Paste Format commands form the menu",
+      "The Copy and Apply Formatting dialog box, located under the Format > Copy and Apply menu",
+      "There is no way to copy and apply formatting in Excel - You have to do it manually",
+      "The Format Painter button on the standard toolbar"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The _____of a system includes the programs or instructions",
+    "o": [
+      "Hardware",
+      "Icon",
+      "Information",
+      "Software"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The _____ operating system was initially created in the early 1970s at AT & T’s Bell Labs.",
+    "o": [
+      "Linux",
+      "DOS",
+      "Unix",
+      "GNU"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following features allows you to view slides in a slide show without manually advancing each slide?",
+    "o": [
+      "Adding build effects",
+      "Setting slide times",
+      "Adding transitions",
+      "All of these"
+    ],
+    "a": 1
+  },
+  {
+    "q": "During the boot process, the ____looks for the system file",
+    "o": [
+      "CD",
+      "BIOS",
+      "CPU",
+      "DVD"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The term memory applies to which one of the following",
+    "o": [
+      "Logic",
+      "Storage",
+      "Input devices",
+      "Output devices"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The memory sizes in the mainframe computers and advanced technology microcomputers are expressed as",
+    "o": [
+      "Bytes",
+      "Kilobytes",
+      "Bits",
+      "Megabytes"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The memory which is programmed at the time it is manufactured is",
+    "o": [
+      "RAM",
+      "ROM",
+      "PROM",
+      "EPROM"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following statement is not correct about the webpage?",
+    "o": [
+      "Webpage is a document that is displayed in the web browser on www.",
+      "Static webpage contains fixed information to visitors that are not frequently changed.",
+      "In a dynamic webpage, information frequently changes.",
+      "All of the above are correct."
+    ],
+    "a": 3
+  },
+  {
+    "q": "The active cell:",
+    "o": [
+      "is defined by a bold border around the cell",
+      "Receives the data the user enters",
+      "It is the formula bar",
+      "Only A and B"
+    ],
+    "a": 3
+  },
+  {
+    "q": "______is a method in which a computer security mechanism is bypassed untraceable for accessing the computer or its information.",
+    "o": [
+      "Front-door",
+      "Backdoor",
+      "Clickjacking",
+      "Key-logging"
+    ],
+    "a": 1
+  },
+  {
+    "q": "When integrating word and excel, word is usually is",
+    "o": [
+      "Server",
+      "Destination",
+      "Client",
+      "Both b and c"
+    ],
+    "a": 3
+  },
+  {
+    "q": "An operating system version designated for use of a media center PC is Microsoft windows XP",
+    "o": [
+      "Home edition",
+      "Media center edition",
+      "Tablet PC edition",
+      "None of the above."
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following pane is not available in Task Pane?",
+    "o": [
+      "Getting Started",
+      "Clip Art",
+      "Word Art",
+      "Search Results"
+    ],
+    "a": 2
+  },
+  {
+    "q": "The ‘IC’ chip used in computer is made of?",
+    "o": [
+      "Chromium",
+      "Iron oxide",
+      "Silica",
+      "Silicon"
+    ],
+    "a": 3
+  },
+  {
+    "q": "To start slide show of a presentation",
+    "o": [
+      "Hit F5 key",
+      "From Slide Show menu choose View Show option",
+      "From Slide Show menu choose Rehearse timing",
+      "Both A & B"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What is the extension of the font file?",
+    "o": [
+      ".ttf",
+      ".mdb",
+      ".fft",
+      ".txt"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Every computer machine host on the internet network has",
+    "o": [
+      "similar IP address",
+      "unique 15-digit number",
+      "unique IP address",
+      "the same IP address"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following command is used to switch between the window programs?",
+    "o": [
+      "Alt+Tab",
+      "Alt+f4",
+      "Ctrl+tab",
+      "None of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which one of the following is not a characteristic of a computer?",
+    "o": [
+      "Intelligence",
+      "Speed",
+      "Versatility",
+      "Automation"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which is the best view for getting your thoughts for a presentation out on the computer?",
+    "o": [
+      "Outline view",
+      "Notes page view",
+      "Slide sorter view",
+      "Slide view"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which of the following method can insert a new slide in current presentation?",
+    "o": [
+      "Right click on the Slide panel and choose New Slide",
+      "From Insert menu choose New Slide",
+      "Click on New Slide button on toolbar",
+      "All of above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The primary purpose of software is to turn data into-",
+    "o": [
+      "Web sites",
+      "Information",
+      "Programs",
+      "Objects"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following is not an advantage of magnetic disk storage?",
+    "o": [
+      "The access time of magnetic disk is much less than that of magnetic tape",
+      "Disk storage is less expensive than tape storage",
+      "Disk storage is longer lasting than magnetic tape",
+      "None of the above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "We can replace a font on all sides with another font using the option:",
+    "o": [
+      "Edit -> Fonts",
+      "Tools -> Fonts",
+      "Tools -> Replace fonts",
+      "Format -> Replace fonts"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is correct syntax in Excel",
+    "o": [
+      "=IF (Logical Test, True Result, False Result)",
+      "=IF(Logical Test, (True Result, False Result))",
+      "=IF(Logical Test, True Result) (Logical Test, False Result)",
+      "=IF(Logical Test, True Result), IF(Logical Test, False Result)"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which of the following is an example for automatic text formatting",
+    "o": [
+      "Underlining hyperlink",
+      "Adjusting extra space",
+      "Replacing two -'s with an em hyphens",
+      "All of above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the cell pointer indicates that you can fill series?",
+    "o": [
+      "Doctor's symbol (Big Plus)",
+      "small thin plus icon",
+      "Mouse Pointer with anchor at the tip",
+      "None of above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "To obtain better memory utilization, dynamic loading is used. With dynamic loading, a routine is not loaded until it is called. For implementing dynamic  loading____",
+    "o": [
+      "Special support from operating system is essential",
+      "Special support from the hardware is required",
+      "User programs can implement dynamic loading without any special support from hardware or operating system",
+      "Special support from both hardware and operating system is essential."
+    ],
+    "a": 2
+  },
+  {
+    "q": "What is placed to the left of horizontal scroll bar",
+    "o": [
+      "Tab stop buttons",
+      "View buttons",
+      "Split buttons",
+      "Indicators"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The portion of the process scheduler in an operating system that dispatches processes is concerned with _____",
+    "o": [
+      "Assigning ready processes to waiting queue",
+      "Assigning running processes to  blocked queue",
+      "Assigning ready processes to CPU",
+      "All of the mentioned"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Scandisk analyze and repair damage to which of the following?",
+    "o": [
+      "Physical clusters",
+      "F A T",
+      "Lost clusters",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following section does not exist in a slide layout",
+    "o": [
+      "Titles",
+      "Lists",
+      "Charts",
+      "Animations"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Any and every command can be found on the",
+    "o": [
+      "Drawing toolbar",
+      "Formatting toolbar",
+      "Standard toolbar",
+      "Menu bar"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is not an example of a value?",
+    "o": [
+      "350",
+      "May 10, 2001",
+      "0.57",
+      "Serial Number 50771"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The operating system manages",
+    "o": [
+      "Memory",
+      "Processor",
+      "Disks and I/O device",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Backdoors can be designed as ____.",
+    "o": [
+      "The hidden part of the program",
+      "As part of Trojans",
+      "Embedded code of the firmware",
+      "Embedded with anti -malware"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The ……... contains commands associated with my computer window",
+    "o": [
+      "Standard menu",
+      "Start menu",
+      "System menu",
+      "None of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which key or key combination will move the insertion point to the bottom of your document?",
+    "o": [
+      "END",
+      "PAGE DOWN",
+      "CTRL + PAGE DOWN",
+      "None of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "One way to make a PowerPoint slide display animations is to:",
+    "o": [
+      "Select the slide in normal view; and click format, animation",
+      "Click the PowerPoint window and move it around vigorously with the mouse for a manual animation effect",
+      "Select the slide in slide sorter view, right click and choose preset animations from the shortcut menu",
+      "PowerPoint does not have an animation feature"
+    ],
+    "a": 2
+  },
+  {
+    "q": "In operating system, each process has its own_______",
+    "o": [
+      "Open files",
+      "Pending alarms, signals, and signal handlers",
+      "Address space and global variables",
+      "All of the mentioned"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What is the term used for unsolicited e-mail?",
+    "o": [
+      "News group",
+      "Use net",
+      "Backbone",
+      "Spam"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Instructions and memory address are represented by",
+    "o": [
+      "Character code",
+      "Binary codes",
+      "Binary word",
+      "Parity bit"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Network operating system runs on_______?",
+    "o": [
+      "Every system in the network",
+      "Server",
+      "Both server and every server in the network",
+      "None of the mentioned"
+    ],
+    "a": 1
+  },
+  {
+    "q": "How can you optimize performance of your computer?",
+    "o": [
+      "Delete unused files",
+      "Defrag disk",
+      "Scan for virus",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Who is known as the father of Wikipedia?",
+    "o": [
+      "John Smith",
+      "Albert Brown",
+      "Jimmy Wells",
+      "Stephen Hawkins"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Virtual memory is",
+    "o": [
+      "Simple to implement",
+      "Used in all major commercial operating systems",
+      "Less efficient in utilization of memory",
+      "Useful when fast I/O devices are not available."
+    ],
+    "a": 1
+  },
+  {
+    "q": "Press the ____ button to have the window fill the entire screen",
+    "o": [
+      "Close",
+      "Maximize",
+      "Minimize",
+      "None of the above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "All of the following are task performed by the computer system except",
+    "o": [
+      "Managing hardware on the computer",
+      "Controlling the access that application program has to the CPU",
+      "Performing housekeeping task like file compression and disk defragmentation",
+      "Provides an interface for user to interact with computer,"
+    ],
+    "a": 2
+  },
+  {
+    "q": "A program in execution is called",
+    "o": [
+      "A paging",
+      "A process",
+      "A virtual memory",
+      "A demand page"
+    ],
+    "a": 1
+  },
+  {
+    "q": "You can use the format painter multiple times before you turn it off by",
+    "o": [
+      "You can use the format painter button only one time when you click it",
+      "Double clicking the format painter button",
+      "Pressing the Ctrl key and clicking the format painter button",
+      "Pressing the Alt key and clicking the format painter button"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following position is not available for fonts on MS Word?",
+    "o": [
+      "Normal",
+      "Raised",
+      "Lowered",
+      "Centered"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Booting means",
+    "o": [
+      "Restarting computer",
+      "Installing program",
+      "Removing errors",
+      "Switch off"
+    ],
+    "a": 0
+  },
+  {
+    "q": "B7:B9 indicates:",
+    "o": [
+      "Cells B7 and cell B9 only",
+      "Cells B7 through B9",
+      "Cell B8 only",
+      "None of the above"
+    ],
+    "a": 1
+  },
+  {
+    "q": "To start Microsoft PowerPoint application",
+    "o": [
+      "Click on Start >> Programs >> All Programs >> Microsoft PowerPoint",
+      "Hit Ctrl + R then type ppoint.exe and Enter",
+      "Click Start >> Run then type PowerPoint then press Enter",
+      "All of above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The term “operating system” means",
+    "o": [
+      "A set of programs which controls computer working",
+      "The way a computer operator works",
+      "Conversion of high-level language into machine code",
+      "None of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "What are the types of distributed operating systems?",
+    "o": [
+      "Zone based operating system",
+      "Level based operating system",
+      "Network operating system",
+      "All of the mentioned"
+    ],
+    "a": 2
+  },
+  {
+    "q": "To select an entire column in MS-EXCEL, press?",
+    "o": [
+      "CTRL + C",
+      "CTRL + Arrow key",
+      "CTRL + S",
+      "None of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The first dial-up connection was made in 1965 by",
+    "o": [
+      "Lawrence G. Roberts",
+      "Robert Hook",
+      "Bill Gates",
+      "None of these"
+    ],
+    "a": 0
+  },
+  {
+    "q": "The FCFS algorithm is particularly troublesome for _______",
+    "o": [
+      "Operating systems",
+      "Multiprocessor systems",
+      "Time sharing systems",
+      "Multiprogramming systems"
+    ],
+    "a": 2
+  },
+  {
+    "q": "From where you can access save command?",
+    "o": [
+      "Home tab",
+      "Insert tab",
+      "Review tab",
+      "None of above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "To hold row and column titles in place so that they do not scroll when you scroll a worksheet click the",
+    "o": [
+      "Unfreeze panes command on the window menu",
+      "Freeze panes command on the window menu",
+      "Hold titles command on the edit menu",
+      "Split command on the window menu"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Basic building blocks for a digital circuit is ______",
+    "o": [
+      "CMOS",
+      "Logic gates",
+      "BIOS",
+      "DMOS"
+    ],
+    "a": 1
+  },
+  {
+    "q": "How can you show or hide the gridlines in Excel Worksheet?",
+    "o": [
+      "Go to Tools >> Options >> View tab and mark or remove the check box named Gridline",
+      "Click Gridline tool on Forms toolbar",
+      "Both of above",
+      "None of above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "What is the shortcut key to hide entire column",
+    "o": [
+      "CTRL + -",
+      "CTRL + 0",
+      "CTRL + H",
+      "CTRL + C"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Data can be arranged in a worksheet in a easy to understand manner using",
+    "o": [
+      "auto formatting",
+      "applying styles",
+      "changing fonts",
+      "all of above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What is the minimum scale percentage available in scale drop down box?",
+    "o": [
+      "500",
+      "200",
+      "100",
+      "90"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is true about primary storage?",
+    "o": [
+      "It is a part of the CPU",
+      "It allows very fast access to the data",
+      "It is relatively more expensive",
+      "All the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "You can set Page Border in Excel from",
+    "o": [
+      "From Border tab in Format Cells dialog box",
+      "From Border tool in Formatting toolbar",
+      "From Line Style tool in Drawing toolbar",
+      "You can’t set page border in Excel."
+    ],
+    "a": 3
+  },
+  {
+    "q": "A/an _______is a program that steals your logins & passwords for instant messaging applications.",
+    "o": [
+      "IM-Trojans",
+      "Backdoor Trojans",
+      "Trojan-downloader",
+      "Ransom Trojan"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Press ___ to create a line break, which advances the insertion point to the beginning of the next physical line – ignoring any paragraph formatting instructions",
+    "o": [
+      "Shift+ enter",
+      "Ctrl+ enter",
+      "Shift + tab",
+      "Ctrl + tab"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which of the following is used to create newspaper style columns?",
+    "o": [
+      "Format columns",
+      "Table insert table",
+      "Format tabs",
+      "Insert text box"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Which of the following is not true?",
+    "o": [
+      "Kernel remains in the memory during the entire computer session",
+      "Kernel is made of various modules which can not be loaded in running the operating system",
+      "Kernel is the first part of the operating system to load into the memory during booting",
+      "Kernel is the program that constitutes the central core of the operating system"
+    ],
+    "a": 1
+  },
+  {
+    "q": "What does COUNTA () function do?",
+    "o": [
+      "Count cells having alphabets",
+      "Count empty cells",
+      "Counts cells having numbers",
+      "Counts non-empty cells"
+    ],
+    "a": 3
+  },
+  {
+    "q": "When a row of data is to be converted into columns",
+    "o": [
+      "Copy the cells in row, select the same number of cells in row and paste",
+      "Copy the cells in column then choose Edit >> Paste Special, then click Transpose and OK",
+      "Copy the cells then go to Format >> Cells then on Alignment tab click Transpose check box and click OK",
+      "Select the cells then place the cell pointer on new cell and choose Edit >> Paste Special, mark Transpose check box and click OK"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Press animation effects allows you to",
+    "o": [
+      "Add clip art images to your slides",
+      "Create a custom transition to the next slide",
+      "Show bullet items as they are discussed",
+      "None of above"
+    ],
+    "a": 2
+  },
+  {
+    "q": "What is the correct way to refer the cell A10 on sheet3 from sheet1?",
+    "o": [
+      "Sheet3!A10",
+      "Sheet1!A10",
+      "Sheet3.A10",
+      "A10"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Once activated ____can enable _____to spy on the victim, steal their sensitive information & gain backdoor access of the system",
+    "o": [
+      "Virus, cyber-criminals",
+      "Malware, penetration tester",
+      "Trojans, cyber-criminals",
+      "Virus, penetration testers"
+    ],
+    "a": 2
+  },
+  {
+    "q": "_____are specially designed computer chips that reside inside other devices, such as your car or electric thermostat",
+    "o": [
+      "Server",
+      "Embedded computer",
+      "Robotic computer",
+      "Mainframes"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which tab is not available on left panel when you open a presentation?",
+    "o": [
+      "Outline",
+      "Slides",
+      "Notes",
+      "All of above are available"
+    ],
+    "a": 2
+  },
+  {
+    "q": "What is the major use of internet?",
+    "o": [
+      "Sharing data and information",
+      "Browsing webpages",
+      "Sending and receiving emails",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "_____can modify data on your system-so that your system doesn’t run correctly or you can no longer access specific data, or it may even ask for random in order to give your access.",
+    "o": [
+      "IM-Trojans",
+      "Backdoor Trojans",
+      "Trojan-downloader",
+      "Ransom Trojan"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The Chart wizard term data categories refers to;",
+    "o": [
+      "A chart plot area",
+      "A horizontal axis",
+      "The organization of individual values with a chart's data series",
+      "The data range that supply chart data"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which operation you will perform if you need to move a block a text?",
+    "o": [
+      "Copy and paste",
+      "Cut and paste",
+      "Paste and delete",
+      "Paste and cut"
+    ],
+    "a": 1
+  },
+  {
+    "q": "If you have a PowerPoint show you created and want to send using email to another teacher you can add the show to your email message as a (an)",
+    "o": [
+      "Inclusion",
+      "Attachment",
+      "Reply",
+      "Forward"
+    ],
+    "a": 1
+  },
+  {
+    "q": "When word flags a possible spelling or grammar error, it also changes the mark on the spelling and grammar status icon to a ____.",
+    "o": [
+      "Green X",
+      "Green check mark",
+      "Red X",
+      "Red check mark"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which of the following is a block device",
+    "o": [
+      "Mouse",
+      "Printer",
+      "Terminals",
+      "Disk"
+    ],
+    "a": 3
+  },
+  {
+    "q": "______is most often done after fixing a problem, adding a new program or making configuration change",
+    "o": [
+      "Shut down",
+      "Restart",
+      "Sleep",
+      "Hibernate"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Files created with Lotus 1-2-3 have an extension",
+    "o": [
+      "DOC",
+      "XLS",
+      "123",
+      "WK1"
+    ],
+    "a": 3
+  },
+  {
+    "q": "_______deletes all the files that it infects.",
+    "o": [
+      "Non-resident virus",
+      "Overwrite virus",
+      "Polymorphic virus",
+      "Multipartite virus"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The …… is a temporary storage area in memory where you can attach text or graphics information",
+    "o": [
+      "Clipboard",
+      "Copyboard",
+      "Both A and B",
+      "None of the above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "In how many generations a computer can be classified?",
+    "o": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "a": 2
+  },
+  {
+    "q": "ctrl + V is used to",
+    "o": [
+      "paste texts in the beginning of document",
+      "paste images in the beginning of document",
+      "paste tables at the middle of document",
+      "none of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is not a real time operating system?",
+    "o": [
+      "RTlinux",
+      "Palm OS",
+      "QNX",
+      "VxWorks"
+    ],
+    "a": 1
+  },
+  {
+    "q": "ROM is needed for storing an initial program called______?",
+    "o": [
+      "Computer startup loader",
+      "OS version",
+      "Kernel",
+      "Bootstrap loader"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The primary job of the operating system of a computer is to",
+    "o": [
+      "Command resources",
+      "Manage resources",
+      "Provide utilities",
+      "Be user friendly"
+    ],
+    "a": 1
+  },
+  {
+    "q": "What happens when dollar signs ($) are entered in a cell address? (e$B$2:$B$10)",
+    "o": [
+      "An absolute cell address is created",
+      "Cell address will change when it is copied to another cell",
+      "The sheet tab is changed",
+      "The status bar does not display the cell address"
+    ],
+    "a": 0
+  },
+  {
+    "q": "A software program that is used to view web pages is called",
+    "o": [
+      "Site",
+      "Host",
+      "Link",
+      "Browser"
+    ],
+    "a": 3
+  },
+  {
+    "q": "To create a formula, you first:",
+    "o": [
+      "Select the cell you want to place the formula into",
+      "Type the equals sign (=) to tell Excel that you're about to enter a formula",
+      "Enter the formula using any input values and the appropriate mathematical operators that make up your formula",
+      "Choose the new command from the file menu"
+    ],
+    "a": 1
+  },
+  {
+    "q": "What is the function of folder?",
+    "o": [
+      "Save file",
+      "Delete file",
+      "Move file",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which of the following is not available on the ruler of MS Word screen?",
+    "o": [
+      "Left indent",
+      "Right indent",
+      "Tab stop box",
+      "Center indent"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The _____ program initializes all aspects of the system, from CPU\nregisters to device controllers and the contents of main memory and then starts the operating system.",
+    "o": [
+      "Bootstrap",
+      "Main",
+      "Bootloader",
+      "Rom"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Where is computer’s BIOS stored?",
+    "o": [
+      "DRAM",
+      "Flash",
+      "SRAM",
+      "EEPROM"
+    ],
+    "a": 3
+  },
+  {
+    "q": "To preview a motion path effect using the custom animation task pane, you should",
+    "o": [
+      "click the play button",
+      "click the show effect button",
+      "double click the motion path",
+      "all of above"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Ctrl +G is used to",
+    "o": [
+      "Open paragraph dialog box activating goto tab",
+      "Open page setup dialog box activating Goto Tab",
+      "Open find and replacement dialog box with activating Goto box",
+      "Open Goto dialog box"
+    ],
+    "a": 2
+  },
+  {
+    "q": "A computer system, device, or program that is responsible for accepting HTTP requests from clients, serving back HTTP responses along with data to clients is called",
+    "o": [
+      "Web",
+      "Network Hub",
+      "Web server",
+      "FTP"
+    ],
+    "a": 2
+  },
+  {
+    "q": "In Microsoft windows, the graphical pattern on the desktop used as background for windows is",
+    "o": [
+      "Icons",
+      "Wall paper",
+      "Picture",
+      "Background"
+    ],
+    "a": 1
+  },
+  {
+    "q": "A ___ is a small malicious program that runs hidden in our infected system.",
+    "o": [
+      "Virus",
+      "Trojan",
+      "Shareware",
+      "Adware"
+    ],
+    "a": 1
+  },
+  {
+    "q": "To redo the last work, press _____",
+    "o": [
+      "Ctrl+ U",
+      "Ctrl+ Y",
+      "Ctrl+ Z",
+      "Ctrl+ W"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Status indicators are located on the",
+    "o": [
+      "Vertical scroll bar",
+      "Horizontal scroll bar",
+      "Formula bar",
+      "Standard toolbar"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Which is not concerned with control panel?",
+    "o": [
+      "Printer",
+      "Run application",
+      "Font",
+      "Keyboard"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Animation schemes can be applied to ____________ in the presentation",
+    "o": [
+      "All slides",
+      "Select slides",
+      "Current slide",
+      "All of the above"
+    ],
+    "a": 3
+  },
+  {
+    "q": "short cut Ctrl + P used to",
+    "o": [
+      "open paragraph dialog box",
+      "open page format dialog box",
+      "open save dialog box",
+      "open print dialog box"
+    ],
+    "a": 3
+  },
+  {
+    "q": "What is the responsibility of the logical unit in the CPU of a computer",
+    "o": [
+      "To produce result",
+      "To compare numbers",
+      "To control the flow of information",
+      "To do math’s work"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following refers to the memory in your computer?",
+    "o": [
+      "RAM",
+      "DSL",
+      "USB",
+      "LAN"
+    ],
+    "a": 0
+  },
+  {
+    "q": "When we double click on my computer",
+    "o": [
+      "Show the content of your save files",
+      "Show list of your computer drive",
+      "List of deleted files and folders",
+      "All of the above."
+    ],
+    "a": 1
+  },
+  {
+    "q": "To insert slide numbers",
+    "o": [
+      "Insert a text box and select Insert >> Page Number",
+      "Insert a textbox and select Insert >> Number >> PageNumber.",
+      "Choose Insert >> Slide Number",
+      "Insert a new text box and select Insert >> slide Number"
+    ],
+    "a": 2
+  },
+  {
+    "q": "How many options does a binary choice offer?",
+    "o": [
+      "None",
+      "One",
+      "Two",
+      "It depends on the amount of memory in the computer"
+    ],
+    "a": 2
+  },
+  {
+    "q": "To access the services of the operating system, the interface is provided by the ________",
+    "o": [
+      "Library",
+      "System calls",
+      "Assembly instructions",
+      "API"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which tool you will use to join some cells and place the content at the middle of joined cell?",
+    "o": [
+      "From Format Cells dialog box click on Merge Cells check box",
+      "From Format Cells dialog box select the Centered alignment",
+      "From Format Cells dialog box choose Merge and Center check box",
+      "Click on Merge and Center tool on formatting toolbar"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which operating system can you give smallest file name?",
+    "o": [
+      "Ps/2",
+      "DoS",
+      "Windows",
+      "Windows NT"
+    ],
+    "a": 1
+  },
+  {
+    "q": "What is gutter margin?",
+    "o": [
+      "Margin that is added to right margin when printing",
+      "Margin that is added to the binding side of page when printing",
+      "Margin that is added to the left margin when printing",
+      "Margin that is added to the outside of the page when printing"
+    ],
+    "a": 1
+  },
+  {
+    "q": "The term ‘memory’ applies to which of the following",
+    "o": [
+      "Logic",
+      "Storage",
+      "Input device",
+      "Output device"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following function will use to find the highest number in a series of number?",
+    "o": [
+      "MAX (BI:B3)",
+      "MAXIMUM (B1:B3)",
+      "HIGH (B1:B3)",
+      "HIGHEST(BI:B3)"
+    ],
+    "a": 0
+  },
+  {
+    "q": "HOME key",
+    "o": [
+      "Moves the cursor beginning of the document",
+      "Moves the cursor beginning of the paragraph",
+      "Moves the cursor beginning of the screen",
+      "Moves the cursor beginning of the line"
+    ],
+    "a": 3
+  },
+  {
+    "q": "The _____ presents a uniform device-access interface to the I/O subsystem, much as system calls provide a standard interface between the application and the operating system.",
+    "o": [
+      "Device drivers",
+      "I/O systems",
+      "Devices",
+      "Buses"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Computer use the _____ number of systems to store data and perform calculations.",
+    "o": [
+      "Decimal",
+      "Hexadecimal",
+      "Octal",
+      "Binary"
+    ],
+    "a": 3
+  },
+  {
+    "q": "How many columns can you insert in a word document in maximum?",
+    "o": [
+      "40",
+      "45",
+      "50",
+      "55"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Which of the following protocol assigns an IP address to the client computer connected to the internet?",
+    "o": [
+      "RPC",
+      "IP",
+      "RSVP",
+      "DHCP"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Which is the default file extension created by notepad?",
+    "o": [
+      ".doc",
+      ".html",
+      ".txt",
+      ".tif"
+    ],
+    "a": 2
+  },
+  {
+    "q": "When integrating word and excel, word is usually the",
+    "o": [
+      "Server",
+      "Destination",
+      "Client",
+      "Both b and c"
+    ],
+    "a": 3
+  }
+];
+let answered = {};
+let submitted = false;
+let timerSeconds = 60 * 60;
+let timerInterval = null;
+
+function escapeHtml(value) {
+  return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function textToHtml(value) { return escapeHtml(value).replace(/\n/g, '<br>'); }
+function label(i) { return LABELS[i] || String(i+1); }
+
+function renderQuestions() {
+  const wrap = document.getElementById('questions-wrap');
+  wrap.innerHTML = QUESTIONS.map((q, qi) => `
+    <div class="q-card" style="animation-delay:${Math.min(qi * 0.012, 0.7)}s">
+      <span class="q-num">Question ${String(qi + 1).padStart(2,'0')}</span>
+      <div class="q-text">${textToHtml(q.q)}</div>
+      <div class="options-grid">
+        ${q.o.map((opt, oi) => `
+          <button class="opt-btn" id="opt-${qi}-${oi}" onclick="choose(event, ${qi}, ${oi})">
+            <span class="fill-layer"></span>
+            <span class="opt-label">${label(oi)}</span>
+            <span class="opt-text">${textToHtml(opt)}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function choose(event, qi, oi) {
+  if (submitted) return;
+  const clicked = document.getElementById(`opt-${qi}-${oi}`);
+  const already = answered[qi] === oi;
+
+  QUESTIONS[qi].o.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qi}-${i}`);
+    btn.classList.remove('selected', 'draining');
+  });
+
+  createRipple(event, clicked);
+
+  if (already) {
+    delete answered[qi];
+    clicked.classList.add('draining');
+    setTimeout(() => clicked.classList.remove('draining'), 650);
+  } else {
+    answered[qi] = oi;
+    clicked.classList.add('selected');
+    clicked.animate([
+      { transform:'scale(1)' },
+      { transform:'scale(1.025) translateY(-2px)' },
+      { transform:'scale(1)' }
+    ], { duration:360, easing:'cubic-bezier(.16,1,.3,1)' });
+  }
+  updateProgress();
+}
+
+function createRipple(event, el) {
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const rip = document.createElement('span');
+  rip.className = 'ripple';
+  rip.style.width = rip.style.height = size + 'px';
+  rip.style.left = (event.clientX - rect.left - size / 2) + 'px';
+  rip.style.top = (event.clientY - rect.top - size / 2) + 'px';
+  el.appendChild(rip);
+  setTimeout(() => rip.remove(), 900);
+}
+
+function updateProgress() {
+  const done = Object.keys(answered).length;
+  document.getElementById('progress-bar').style.width = ((done / QUESTIONS.length) * 100) + '%';
+  document.getElementById('progress-label').textContent = `${done} / ${QUESTIONS.length}`;
+}
+
+function submitTest() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+
+  QUESTIONS.forEach((q, qi) => {
+    q.o.forEach((_, i) => {
+      const b = document.getElementById(`opt-${qi}-${i}`);
+      b.disabled = true;
+      b.classList.remove('selected', 'draining');
+    });
+  });
+
+  QUESTIONS.forEach((q, qi) => {
+    setTimeout(() => {
+      const chosen = answered[qi];
+      if (chosen === undefined) {
+        document.getElementById(`opt-${qi}-${q.a}`).classList.add('skipped-correct');
+      } else if (chosen === q.a) {
+        document.getElementById(`opt-${qi}-${chosen}`).classList.add('correct');
+      } else {
+        document.getElementById(`opt-${qi}-${chosen}`).classList.add('wrong');
+        document.getElementById(`opt-${qi}-${q.a}`).classList.add('correct');
+      }
+    }, qi * 25);
+  });
+
+  let correct = 0, wrong = 0, skip = 0;
+  QUESTIONS.forEach((q, qi) => {
+    if (answered[qi] === undefined) skip++;
+    else if (answered[qi] === q.a) correct++;
+    else wrong++;
+  });
+
+  setTimeout(() => showResult(correct, wrong, skip), QUESTIONS.length * 25 + 500);
+}
+
+function showResult(correct, wrong, skip) {
+  document.getElementById('test-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+
+  document.getElementById('score-num').textContent = correct;
+  document.getElementById('r-correct').textContent = correct;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-skip').textContent = skip;
+
+  const pct = correct / QUESTIONS.length;
+  let msg = '';
+  if (pct === 1) msg = 'Perfect score. The answer gods have signed your paper.';
+  else if (pct >= .8) msg = 'Excellent work. A few tiny gremlins left to defeat.';
+  else if (pct >= .6) msg = 'Good attempt. Review the tricky ones and try again.';
+  else if (pct >= .4) msg = 'Fair attempt. Your revision engine needs more fuel.';
+  else msg = 'Keep practising. Every retry sharpens the blade.';
+  document.getElementById('score-msg').textContent = msg;
+
+  document.getElementById('btn-review').style.display = (wrong + skip) === 0 ? 'none' : 'inline-block';
+  if (pct === 1) launchConfetti();
+}
+
+function renderReview() {
+  const list = document.getElementById('review-list');
+  list.innerHTML = QUESTIONS.map((q, qi) => {
+    const chosen = answered[qi];
+    const isCorrect = chosen === q.a;
+    const skipped = chosen === undefined;
+    return `
+      <div class="review-card">
+        <span class="q-num">Question ${String(qi + 1).padStart(2,'0')}</span>
+        <div class="review-q-text">${textToHtml(q.q)}</div>
+        <div class="review-opts">
+          ${q.o.map((opt, oi) => {
+            const cls = oi === q.a ? 'right' : (oi === chosen && !isCorrect ? 'yours' : '');
+            return `<div class="review-opt ${cls}">
+              <span class="review-opt-label">${label(oi)}</span>
+              <span>${textToHtml(opt)}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="review-tags">
+          ${isCorrect ? '<span class="tag correct">Correct</span>' : skipped ? '<span class="tag skip">Skipped</span>' : '<span class="tag wrong">Wrong</span>'}
+          <span class="tag">Answer: ${label(q.a)}</span>
+          ${skipped ? '' : `<span class="tag">You: ${label(chosen)}</span>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function startWithTimer() {
+  const v = Math.max(0, Number(document.getElementById('timer-input').value || 0));
+  timerSeconds = Math.round(v * 60);
+  document.getElementById('timer-modal').style.display = 'none';
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('test-screen').style.display = 'block';
+  renderQuestions();
+  updateProgress();
+  window.scrollTo(0, 0);
+  if (timerSeconds > 0) startTimer(); else document.getElementById('timer-pill').textContent = 'No timer';
+}
+
+function startTimer() {
+  const pill = document.getElementById('timer-pill');
+  const tick = () => {
+    const min = Math.floor(timerSeconds / 60);
+    const sec = timerSeconds % 60;
+    pill.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    pill.classList.toggle('low', timerSeconds <= 60);
+    if (timerSeconds <= 0) {
+      pill.textContent = 'Time up';
+      pill.classList.add('done');
+      clearInterval(timerInterval);
+      submitTest();
+      return;
+    }
+    timerSeconds--;
+  };
+  tick();
+  timerInterval = setInterval(tick, 1000);
+}
+
+function retry() {
+  answered = {};
+  submitted = false;
+  clearInterval(timerInterval);
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('timer-modal').style.display = 'block';
+}
+
+function goChapter() { location.href = '../computer-class/'; }
+
+function launchConfetti() {
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  for (let i = 0; i < 100; i++) {
+    const p = document.createElement('span');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.setProperty('--duration', (2.6 + Math.random() * 1.8) + 's');
+    p.style.setProperty('--delay', (Math.random() * .5) + 's');
+    p.style.setProperty('--drift', ((Math.random() - .5) * 240) + 'px');
+    p.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+    layer.appendChild(p);
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 5200);
+}
+
+document.getElementById('open-timer').addEventListener('click', () => {
+  document.getElementById('timer-modal').style.display = 'block';
+});
+document.getElementById('timer-cancel').addEventListener('click', () => {
+  document.getElementById('timer-modal').style.display = 'none';
+});
+document.getElementById('timer-start').addEventListener('click', startWithTimer);
+document.querySelectorAll('.timer-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.timer-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    document.getElementById('timer-input').value = chip.dataset.min;
+  });
+});
+document.getElementById('submit-btn').addEventListener('click', submitTest);
+document.getElementById('btn-retry').addEventListener('click', retry);
+document.getElementById('btn-review').addEventListener('click', () => {
+  renderReview();
+  document.getElementById('review-modal').style.display = 'block';
+});
+document.getElementById('review-close').addEventListener('click', () => {
+  document.getElementById('review-modal').style.display = 'none';
+});
+
+const cursor = document.getElementById('cursor');
+if (cursor) {
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .q-card, .opt-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+}
+</script>
+</body>
+</html>
