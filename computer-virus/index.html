@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Computer Virus — Mock Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root {
+    --cream:#F5F0E8;
+    --ink:#1A1714;
+    --accent:#C84B2F;
+    --gold:#D4A847;
+    --muted:#7A7068;
+    --card-bg:#FDFAF5;
+    --correct:#3f9b5f;
+    --wrong:#c84b2f;
+    --skip:#d4a847;
+    --line:rgba(26,23,20,0.10);
+  }
+  html { scroll-behavior:smooth; }
+  body {
+    min-height:100vh;
+    font-family:'DM Sans', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow-x:hidden;
+    cursor:none;
+  }
+  body::before {
+    content:'';
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  }
+  .cursor {
+    position:fixed; width:10px; height:10px; background:var(--accent); border-radius:50%;
+    pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
+    transition:width .3s,height .3s,opacity .3s; mix-blend-mode:multiply;
+  }
+  .cursor.big { width:38px; height:38px; opacity:.25; }
+
+  #home, #test-screen, #result-screen, #review-modal, #timer-modal { position:relative; z-index:1; }
+  .page { max-width:1080px; margin:0 auto; padding:0 40px 80px; }
+  nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:32px 0 0;
+  }
+  .logo, .back-link { text-decoration:none; color:var(--ink); }
+  .logo {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:18px;
+    letter-spacing:-.5px; display:flex; align-items:center; gap:8px;
+  }
+  .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .back-link, .top-btn {
+    display:flex; align-items:center; gap:8px; font-size:12px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--muted); transition:color .2s;
+  }
+  .back-link:hover { color:var(--accent); }
+  .back-arrow {
+    width:26px; height:26px; border:1px solid currentColor; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:13px;
+  }
+  .hero {
+    padding:70px 0 42px; animation:fadeUp .8s ease both;
+  }
+  .eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .eyebrow-line { width:36px; height:1px; background:var(--accent); }
+  .eyebrow-text { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); }
+  .hero h1 {
+    font-family:'Syne', sans-serif; font-size:clamp(42px,7vw,78px);
+    line-height:.95; letter-spacing:-2.8px; margin-bottom:18px;
+  }
+  .hero h1 span { color:var(--accent); font-style:italic; }
+  .hero p { color:var(--muted); max-width:560px; line-height:1.7; font-weight:300; }
+  .start-panel {
+    margin-top:22px; background:var(--card-bg); border:1px solid var(--line);
+    border-radius:4px; padding:28px; display:grid; grid-template-columns:1fr auto;
+    align-items:center; gap:24px; box-shadow:0 24px 60px rgba(26,23,20,.08);
+  }
+  .start-kicker { color:var(--accent); letter-spacing:2px; text-transform:uppercase; font-size:11px; }
+  .start-panel h2 { font-family:'Syne',sans-serif; font-size:28px; margin:8px 0; }
+  .start-panel p { color:var(--muted); line-height:1.55; font-weight:300; }
+  .primary-btn, .secondary-btn, .submit-btn, .review-close, .timer-chip, .timer-start-btn, .timer-cancel-btn {
+    border:1px solid rgba(26,23,20,.12); border-radius:999px; background:var(--card-bg);
+    color:var(--ink); padding:12px 20px; cursor:pointer; font-weight:700;
+    font-family:'DM Sans',sans-serif; transition:transform .25s, background .25s, color .25s, box-shadow .25s;
+  }
+  .primary-btn, .submit-btn, .timer-start-btn {
+    background:var(--ink); color:var(--cream); border-color:var(--ink);
+  }
+  .primary-btn:hover, .submit-btn:hover, .timer-start-btn:hover, .secondary-btn:hover, .review-close:hover, .timer-chip:hover, .timer-cancel-btn:hover {
+    transform:translateY(-2px); box-shadow:0 16px 34px rgba(26,23,20,.12);
+  }
+
+  #test-screen { display:none; min-height:100vh; padding-bottom:90px; }
+  .test-header {
+    position:sticky; top:12px; z-index:100; width:min(1180px,calc(100% - 32px));
+    margin:12px auto 0; padding:12px 16px; border-radius:4px;
+    display:flex; justify-content:space-between; align-items:center; gap:14px;
+    background:rgba(253,250,245,.92); border:1px solid rgba(26,23,20,.10);
+    box-shadow:0 16px 42px rgba(26,23,20,.10); backdrop-filter:blur(18px);
+  }
+  .header-left, .progress-wrap { display:flex; align-items:center; gap:12px; min-width:0; }
+  .test-title-bar {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:15px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .progress-wrap { flex:1; justify-content:flex-end; }
+  .progress-bar-outer {
+    width:180px; height:7px; border-radius:999px; overflow:hidden;
+    background:rgba(26,23,20,.10);
+  }
+  .progress-bar-inner {
+    width:0%; height:100%; background:linear-gradient(90deg,var(--accent),var(--gold));
+    transition:width .35s cubic-bezier(.16,1,.3,1);
+  }
+  .progress-label, .timer-pill {
+    color:var(--muted); font-size:12px; white-space:nowrap; font-weight:700;
+  }
+  .timer-pill.low { color:var(--wrong); animation:pulse 1s infinite; }
+  .timer-pill.done { color:var(--wrong); }
+
+  .questions-wrap {
+    max-width:1180px; margin:0 auto; padding:38px 32px 90px;
+    display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px;
+  }
+  .q-card {
+    position:relative; overflow:hidden; background:var(--card-bg); border:1px solid var(--line);
+    border-radius:4px; padding:26px; box-shadow:0 18px 45px rgba(26,23,20,.07);
+    opacity:0; transform:translateY(18px); animation:cardIn .42s ease forwards;
+  }
+  .q-card::after {
+    content:''; position:absolute; left:0; top:0; width:3px; height:0; background:var(--accent);
+    transition:height .35s cubic-bezier(.16,1,.3,1);
+  }
+  .q-card:hover::after { height:100%; }
+  .q-num {
+    display:block; color:var(--accent); font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    font-weight:800; margin-bottom:10px;
+  }
+  .q-text { font-weight:700; line-height:1.6; margin-bottom:18px; letter-spacing:-.1px; }
+  .options-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .opt-btn, .review-opt {
+    position:relative; overflow:hidden; min-height:58px; display:flex; align-items:flex-start; gap:10px;
+    padding:13px 14px; border-radius:4px; border:1px solid rgba(26,23,20,.10);
+    color:var(--ink); background:#fffaf2; text-align:left; font-family:'DM Sans',sans-serif;
+    line-height:1.42; cursor:pointer; transition:transform .32s cubic-bezier(.16,1,.3,1), box-shadow .32s, border-color .32s, background .32s;
+  }
+  .opt-btn:hover:not(:disabled) { transform:translateY(-2px); border-color:rgba(200,75,47,.22); box-shadow:0 13px 28px rgba(26,23,20,.09); }
+  .opt-label, .review-opt-label {
+    position:relative; z-index:2; flex-shrink:0; min-width:24px; height:24px;
+    border-radius:50%; display:grid; place-items:center; color:var(--accent);
+    font-size:11px; font-weight:800; border:1px solid rgba(200,75,47,.22); background:#fff;
+  }
+  .opt-text { position:relative; z-index:2; overflow-wrap:anywhere; }
+  .fill-layer {
+    position:absolute; inset:0; z-index:1; pointer-events:none; background:rgba(200,75,47,.12);
+    clip-path:inset(0 100% 0 0); transition:none;
+  }
+  .opt-btn.selected .fill-layer { animation:sweepIn .72s linear forwards; }
+  .opt-btn.draining .fill-layer { animation:sweepOut .62s linear forwards; }
+  .opt-btn.selected { border-color:rgba(200,75,47,.34); background:#fff6ec; }
+  .opt-btn.selected .opt-label { background:var(--accent); color:white; }
+  .opt-btn.correct { border-color:rgba(63,155,95,.55); background:rgba(63,155,95,.10); animation:pop .45s; }
+  .opt-btn.correct .opt-label, .review-opt.right .review-opt-label { background:var(--correct); color:white; border-color:var(--correct); }
+  .opt-btn.wrong { border-color:rgba(200,75,47,.65); background:rgba(200,75,47,.10); animation:shake .38s; }
+  .opt-btn.wrong .opt-label, .review-opt.yours .review-opt-label { background:var(--wrong); color:white; border-color:var(--wrong); }
+  .opt-btn.skipped-correct { border-color:rgba(212,168,71,.65); background:rgba(212,168,71,.14); animation:pop .45s; }
+  .opt-btn.skipped-correct .opt-label { background:var(--skip); color:var(--ink); border-color:var(--skip); }
+  .opt-btn:disabled { cursor:default; }
+  .ripple {
+    position:absolute; z-index:3; pointer-events:none; border-radius:50%; background:rgba(200,75,47,.18);
+    transform:scale(0); opacity:1; animation:ripple .85s linear forwards;
+  }
+
+  #result-screen { display:none; min-height:100vh; padding:70px 24px; }
+  .result-inner {
+    max-width:760px; margin:0 auto; text-align:center; background:var(--card-bg); border:1px solid var(--line);
+    border-radius:4px; padding:36px 28px; box-shadow:0 24px 60px rgba(26,23,20,.10);
+  }
+  .result-badge { color:var(--accent); font-size:11px; letter-spacing:3px; text-transform:uppercase; font-weight:800; }
+  .result-title { font-family:'Syne',sans-serif; font-size:clamp(32px,5vw,52px); letter-spacing:-1.5px; margin:10px 0; }
+  .score-big { font-family:'Syne',sans-serif; font-size:72px; font-weight:800; color:var(--accent); margin:24px 0 6px; }
+  .score-msg { color:var(--muted); margin-bottom:26px; }
+  .stats-row { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-bottom:30px; }
+  .stat-pill { min-width:120px; padding:16px 22px; background:#fffaf2; border:1px solid var(--line); border-radius:4px; }
+  .stat-pill .val { display:block; font-family:'Syne'; font-size:28px; font-weight:800; }
+  .stat-pill .lbl { display:block; color:var(--muted); font-size:11px; letter-spacing:1px; text-transform:uppercase; }
+  .correct-val { color:var(--correct); } .wrong-val { color:var(--wrong); } .skip-val { color:var(--skip); }
+  .result-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; }
+
+  #review-modal, #timer-modal {
+    display:none; position:fixed; inset:0; z-index:250; overflow:auto; padding:38px 20px 80px;
+    background:rgba(245,240,232,.92); backdrop-filter:blur(12px);
+  }
+  .review-inner { max-width:980px; margin:0 auto; }
+  .review-header {
+    position:sticky; top:12px; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:16px;
+    background:rgba(253,250,245,.94); border:1px solid var(--line); border-radius:4px; padding:14px 16px;
+    box-shadow:0 16px 42px rgba(26,23,20,.08); backdrop-filter:blur(18px); margin-bottom:22px;
+  }
+  .review-title { font-family:'Syne'; font-size:22px; font-weight:800; }
+  .review-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+  .review-card {
+    background:var(--card-bg); border:1px solid var(--line); border-radius:4px; padding:22px; box-shadow:0 16px 42px rgba(26,23,20,.07);
+  }
+  .review-q-text { font-weight:700; line-height:1.55; margin-bottom:14px; }
+  .review-opts { display:grid; gap:8px; }
+  .review-opt { cursor:default; min-height:auto; background:#fffaf2; color:var(--muted); }
+  .review-opt.right, .review-opt.yours { color:var(--ink); }
+  .review-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .tag { font-size:10px; letter-spacing:1px; text-transform:uppercase; border:1px solid var(--line); padding:5px 9px; border-radius:999px; color:var(--muted); }
+  .tag.correct { color:var(--correct); border-color:rgba(63,155,95,.35); }
+  .tag.wrong { color:var(--wrong); border-color:rgba(200,75,47,.35); }
+  .tag.skip { color:var(--skip); border-color:rgba(212,168,71,.45); }
+
+  .timer-box {
+    max-width:520px; margin:70px auto 0; background:var(--card-bg); border:1px solid var(--line); border-radius:4px;
+    padding:30px; box-shadow:0 26px 70px rgba(26,23,20,.16); animation:timerPop .35s cubic-bezier(.16,1,.3,1) both;
+  }
+  .timer-kicker { color:var(--accent); letter-spacing:3px; text-transform:uppercase; font-size:11px; font-weight:800; }
+  .timer-title { font-family:'Syne'; font-size:34px; letter-spacing:-1px; margin:8px 0; }
+  .timer-sub { color:var(--muted); line-height:1.6; margin-bottom:18px; }
+  .timer-presets { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .timer-chip.selected { background:var(--accent); color:white; border-color:var(--accent); }
+  .timer-custom-row { display:grid; grid-template-columns:1fr 120px; gap:10px; align-items:center; margin-bottom:18px; color:var(--muted); }
+  .timer-input {
+    width:100%; border:1px solid var(--line); background:#fffaf2; border-radius:4px; padding:12px; font:inherit; color:var(--ink);
+  }
+  .timer-actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+  .confetti-layer { position:fixed; inset:0; z-index:500; pointer-events:none; overflow:hidden; }
+  .confetti-piece {
+    position:absolute; top:-20px; width:8px; height:14px; background:var(--accent);
+    animation:fall var(--duration) var(--delay) cubic-bezier(.15,.78,.25,1) forwards;
+    transform:rotate(var(--rot));
+  }
+  .confetti-piece:nth-child(3n) { background:var(--gold); border-radius:50%; }
+  .confetti-piece:nth-child(4n) { background:var(--ink); }
+
+  @keyframes cardIn { to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+  @keyframes pop { 50% { transform:scale(1.018); } }
+  @keyframes shake { 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
+  @keyframes ripple { 0%{transform:scale(0);opacity:0} 10%{opacity:.9} 100%{transform:scale(6);opacity:0} }
+  @keyframes sweepIn {
+    0%{clip-path:inset(0 100% 0 0)} 18%{clip-path:inset(0 67% 0 0)} 36%{clip-path:inset(0 38% 0 0)}
+    55%{clip-path:inset(0 16% 0 0)} 75%{clip-path:inset(0 4% 0 0)} 100%{clip-path:inset(0 0 0 0)}
+  }
+  @keyframes sweepOut {
+    0%{clip-path:inset(0 0 0 0)} 22%{clip-path:inset(0 0 0 26%)} 48%{clip-path:inset(0 0 0 56%)}
+    76%{clip-path:inset(0 0 0 88%)} 100%{clip-path:inset(0 0 0 100%)}
+  }
+  @keyframes timerPop { from{opacity:0;transform:translateY(18px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} }
+  @keyframes fall {
+    0% { transform:translate3d(0,-30px,0) rotate(var(--rot)); opacity:0; }
+    10% { opacity:1; }
+    100% { transform:translate3d(var(--drift),110vh,0) rotate(calc(var(--rot) + 720deg)); opacity:0; }
+  }
+
+  @media (max-width:840px) {
+    .test-header { align-items:stretch; flex-direction:column; border-radius:4px; }
+    .header-left { justify-content:space-between; }
+    .progress-wrap, .submit-btn { width:100%; }
+    .progress-bar-outer { flex:1; width:auto; }
+    .questions-wrap, .review-list { grid-template-columns:1fr; }
+    .start-panel { grid-template-columns:1fr; }
+  }
+  @media (max-width:560px) {
+    body { cursor:auto; }
+    .cursor { display:none; }
+    .page { padding:0 20px 60px; }
+    .questions-wrap { padding:24px 14px 80px; }
+    .options-grid { grid-template-columns:1fr; }
+    .q-card { padding:20px; }
+    nav { gap:16px; align-items:flex-start; }
+    .timer-custom-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+
+<section id="home">
+  <div class="page">
+    <nav>
+      <a class="back-link" href="../computer-class/"><span class="back-arrow">←</span><span>Computer Class</span></a>
+      <a class="logo" href="../"><span class="logo-dot"></span>Zakir Lab</a>
+    </nav>
+    <div class="hero">
+      <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Ch 02 Mock Test</span></div>
+      <h1>Computer Virus<br><span>Practice</span></h1>
+      <p>Viruses, Trojans, backdoors, malware types, infection methods, and security basics.</p>
+      <div class="start-panel">
+        <div>
+          <div class="start-kicker">31 questions</div>
+          <h2>Ready to start?</h2>
+          <p>Select your timer, answer the questions, submit, and review every wrong or skipped answer.</p>
+        </div>
+        <button class="primary-btn" id="open-timer">Start Test →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="test-screen">
+  <div class="test-header">
+    <div class="header-left">
+      <button class="secondary-btn" onclick="goChapter()">← Class</button>
+      <div class="test-title-bar">Computer Virus</div>
+    </div>
+    <div class="progress-wrap">
+      <span class="timer-pill" id="timer-pill">No timer</span>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar"></div></div>
+      <span class="progress-label" id="progress-label">0 / 31</span>
+      <button class="submit-btn" id="submit-btn">Submit</button>
+    </div>
+  </div>
+  <div class="questions-wrap" id="questions-wrap"></div>
+</section>
+
+<section id="result-screen">
+  <div class="result-inner">
+    <div class="result-badge">Result</div>
+    <h2 class="result-title" id="result-title">Your Score</h2>
+    <div class="score-big"><span id="score-num">0</span><span style="font-size:32px;color:var(--muted)">/31</span></div>
+    <p class="score-msg" id="score-msg"></p>
+    <div class="stats-row">
+      <div class="stat-pill"><span class="val correct-val" id="r-correct">0</span><span class="lbl">Correct</span></div>
+      <div class="stat-pill"><span class="val wrong-val" id="r-wrong">0</span><span class="lbl">Wrong</span></div>
+      <div class="stat-pill"><span class="val skip-val" id="r-skip">0</span><span class="lbl">Skipped</span></div>
+    </div>
+    <div class="result-actions">
+      <button class="secondary-btn" onclick="goChapter()">← Class</button>
+      <button class="secondary-btn" id="btn-review">Review Answers</button>
+      <button class="primary-btn" id="btn-retry">Retry Test</button>
+    </div>
+  </div>
+</section>
+
+<div id="review-modal">
+  <div class="review-inner">
+    <div class="review-header">
+      <div>
+        <div class="review-title">Review Answers</div>
+        <div style="color:var(--muted);font-size:12px">Correct answers and your selected answers are marked.</div>
+      </div>
+      <button class="review-close" id="review-close">Close</button>
+    </div>
+    <div class="review-list" id="review-list"></div>
+  </div>
+</div>
+
+<div id="timer-modal">
+  <div class="timer-box">
+    <div class="timer-kicker">Timer Setup</div>
+    <div class="timer-title">Choose time</div>
+    <p class="timer-sub">Pick a preset or set your own time. You can also start without a timer.</p>
+    <div class="timer-presets">
+      <button class="timer-chip selected" data-min="15">15 min</button>
+      <button class="timer-chip" data-min="30">30 min</button>
+      <button class="timer-chip" data-min="60">60 min</button>
+      <button class="timer-chip" data-min="0">No timer</button>
+    </div>
+    <div class="timer-custom-row">
+      <label for="timer-input">Custom minutes</label>
+      <input class="timer-input" id="timer-input" type="number" min="0" max="300" value="15"/>
+    </div>
+    <div class="timer-actions">
+      <button class="timer-cancel-btn" id="timer-cancel">Cancel</button>
+      <button class="timer-start-btn" id="timer-start">Start Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LABELS = ['A','B','C','D','E','F'];
+const QUESTIONS = [
+  {
+    "q": "_______Infects the executables as well as the boot sectors",
+    "o": [
+      "Non-resident virus",
+      "Boot sector virus",
+      "Polymorphic virus",
+      "Multipartite virus"
+    ],
+    "a": 3,
+    "source": "Computer Virus",
+    "sourceNo": 1
+  },
+  {
+    "q": "____gets installed & stays hidden in your computer’s memory. It stays involved to the specific types of files which it infects",
+    "o": [
+      "Boot sector virus",
+      "Direct action virus",
+      "Polymorphic virus",
+      "Multipartite virus"
+    ],
+    "a": 2,
+    "source": "Computer Virus",
+    "sourceNo": 2
+  },
+  {
+    "q": "Backdoors can be designed as ____.",
+    "o": [
+      "The hidden part of the program",
+      "As part of Trojans",
+      "Embedded code of the firmware",
+      "Embedded with anti -malware"
+    ],
+    "a": 1,
+    "source": "Computer Virus",
+    "sourceNo": 3
+  },
+  {
+    "q": "The threat of backdoors started when _____&_____ OSs became widely accepted",
+    "o": [
+      "Single-user, windows",
+      "Multiuser, networked",
+      "Single-user, UNIX",
+      "Multiuser, UNIX"
+    ],
+    "a": 1,
+    "source": "Computer Virus",
+    "sourceNo": 4
+  },
+  {
+    "q": "A _____may be a hidden part of a program, a separate infected program a Trojan in disguise of an executable or code in the firmware of any system’s hardware.",
+    "o": [
+      "crypter",
+      "virus",
+      "backdoor",
+      "key-logger"
+    ],
+    "a": 2,
+    "source": "Computer Virus",
+    "sourceNo": 5
+  },
+  {
+    "q": "A ___ is a small malicious program that runs hidden in our infected system.",
+    "o": [
+      "Virus",
+      "Trojan",
+      "Shareware",
+      "Adware"
+    ],
+    "a": 1,
+    "source": "Computer Virus",
+    "sourceNo": 6
+  },
+  {
+    "q": "In mid-1981, the 1st virus for apple computers with the name _____came into existence.",
+    "o": [
+      "Apple I",
+      "Apple II",
+      "Apple III",
+      "Apple virus"
+    ],
+    "a": 1,
+    "source": "Computer Virus",
+    "sourceNo": 7
+  },
+  {
+    "q": "Trojan cannot  _____.",
+    "o": [
+      "Steal data",
+      "Self-replicate",
+      "Steal financial information",
+      "Steal login credential"
+    ],
+    "a": 1,
+    "source": "Computer Virus",
+    "sourceNo": 8
+  },
+  {
+    "q": "Which of the following port is not used by Trojans?",
+    "o": [
+      "UDP",
+      "TCP",
+      "SMTP",
+      "MP"
+    ],
+    "a": 3,
+    "source": "Computer Virus",
+    "sourceNo": 9
+  },
+  {
+    "q": "Which of them is not a proper way of getting into a system?",
+    "o": [
+      "IM",
+      "Attachments",
+      "Official product sites",
+      "Un-trusted sites, freeware and pirated software"
+    ],
+    "a": 2,
+    "source": "Computer Virus",
+    "sourceNo": 10
+  },
+  {
+    "q": "The ______can cost you money, by sending text messages from your mobile phone numbers.",
+    "o": [
+      "IM-Trojans",
+      "Backdoor Trojans",
+      "SMS Trojans",
+      "Ransom Trojan"
+    ],
+    "a": 2,
+    "source": "Computer Virus",
+    "sourceNo": 11
+  },
+  {
+    "q": "Which of the following is not a type of virus?",
+    "o": [
+      "Boot sector",
+      "Polymorphic",
+      "Multipartite",
+      "Trojans"
+    ],
+    "a": 3,
+    "source": "Computer Virus",
+    "sourceNo": 12
+  },
+  {
+    "q": "_____can modify data on your system-so that your system doesn’t run correctly or you can no longer access specific data, or it may even ask for random in order to give your access.",
+    "o": [
+      "IM-Trojans",
+      "Backdoor Trojans",
+      "Trojan-downloader",
+      "Ransom Trojan"
+    ],
+    "a": 3,
+    "source": "Computer Virus",
+    "sourceNo": 13
+  },
+  {
+    "q": "Which of the below-mentioned reasons do not satisfy the reason why people create a computer virus?",
+    "o": [
+      "Research purpose",
+      "Pranks",
+      "Identity theft",
+      "Protection"
+    ],
+    "a": 3,
+    "source": "Computer Virus",
+    "sourceNo": 14
+  },
+  {
+    "q": "_____works in the background and steals sensitive data.",
+    "o": [
+      "Virus",
+      "Shareware",
+      "Trojan",
+      "Adware"
+    ],
+    "a": 2,
+    "source": "Computer Virus",
+    "sourceNo": 15
+  },
+  {
+    "q": "By gaining access to the Trojaned system that attacker can stage different types of attack using that____ program running in the background.",
+    "o": [
+      "Trojan",
+      "Virus",
+      "Antivirus",
+      "Anti-malware"
+    ],
+    "a": 0,
+    "source": "Computer Virus",
+    "sourceNo": 16
+  },
+  {
+    "q": "A computer_____ is a malicious code which self-replicates by copying itself to other programs.",
+    "o": [
+      "Program",
+      "Virus",
+      "Application",
+      "Worm"
+    ],
+    "a": 1,
+    "source": "Computer Virus",
+    "sourceNo": 17
+  },
+  {
+    "q": "______ works in background & keeps on downloading other malicious programs when the system is online.",
+    "o": [
+      "DDoS-Trojan",
+      "Backdoor Trojan",
+      "Trojan-banker",
+      "Trojan-downloader"
+    ],
+    "a": 3,
+    "source": "Computer Virus",
+    "sourceNo": 18
+  },
+  {
+    "q": "______infects the master boot record and it is a challenging and complex task to remove the virus.",
+    "o": [
+      "Boot sector virus",
+      "Polymorphic virus",
+      "Multipartite",
+      "Trojans"
+    ],
+    "a": 0,
+    "source": "Computer Virus",
+    "sourceNo": 19
+  },
+  {
+    "q": "Once activated ____can enable _____to spy on the victim, steal their sensitive information & gain backdoor access of the system",
+    "o": [
+      "Virus, cyber-criminals",
+      "Malware, penetration tester",
+      "Trojans, cyber-criminals",
+      "Virus, penetration testers"
+    ],
+    "a": 2,
+    "source": "Computer Virus",
+    "sourceNo": 20
+  },
+  {
+    "q": "______is a method in which a computer security mechanism is bypassed untraceable for accessing the computer or its information.",
+    "o": [
+      "Front-door",
+      "Backdoor",
+      "Clickjacking",
+      "Key-logging"
+    ],
+    "a": 1,
+    "source": "Computer Virus",
+    "sourceNo": 21
+  },
+  {
+    "q": "______is also known as cavity virus.",
+    "o": [
+      "Non-resident virus",
+      "Overwrite virus",
+      "Polymorphic virus",
+      "Space-filler virus"
+    ],
+    "a": 3,
+    "source": "Computer Virus",
+    "sourceNo": 22
+  },
+  {
+    "q": "A/an _______is a program that steals your logins & passwords for instant messaging applications.",
+    "o": [
+      "IM-Trojans",
+      "Backdoor Trojans",
+      "Trojan-downloader",
+      "Ransom Trojan"
+    ],
+    "a": 0,
+    "source": "Computer Virus",
+    "sourceNo": 23
+  },
+  {
+    "q": "_______are difficult to identify as they keep on changing their type and signature.",
+    "o": [
+      "Non-resident virus",
+      "Boot-sector virus",
+      "Polymorphic virus",
+      "Multipartite virus"
+    ],
+    "a": 2,
+    "source": "Computer Virus",
+    "sourceNo": 24
+  },
+  {
+    "q": "______perform automated DoS (Denial of service) attacks on the targeted web address.",
+    "o": [
+      "DDoS-Trojan",
+      "Backdoor Trojan",
+      "Trojan-banker",
+      "Trojan-downloader"
+    ],
+    "a": 0,
+    "source": "Computer Virus",
+    "sourceNo": 25
+  },
+  {
+    "q": "Backdoors are also known as ______",
+    "o": [
+      "Malware-doors",
+      "Trojan-backups",
+      "Front-doors",
+      "Trapdoors"
+    ],
+    "a": 3,
+    "source": "Computer Virus",
+    "sourceNo": 26
+  },
+  {
+    "q": "_______deletes all the files that it infects.",
+    "o": [
+      "Non-resident virus",
+      "Overwrite virus",
+      "Polymorphic virus",
+      "Multipartite virus"
+    ],
+    "a": 1,
+    "source": "Computer Virus",
+    "sourceNo": 27
+  },
+  {
+    "q": "Which of the following is a remote Trojan?",
+    "o": [
+      "Troya",
+      "DaCryptic",
+      "BankerA",
+      "Game-Troj"
+    ],
+    "a": 0,
+    "source": "Computer Virus",
+    "sourceNo": 28
+  },
+  {
+    "q": "The virus hides itself from getting detected by______ different ways.",
+    "o": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "a": 2,
+    "source": "Computer Virus",
+    "sourceNo": 29
+  },
+  {
+    "q": "In which year apple II virus came into existence?",
+    "o": [
+      "1979",
+      "1980",
+      "1981",
+      "1982"
+    ],
+    "a": 2,
+    "source": "Computer Virus",
+    "sourceNo": 30
+  },
+  {
+    "q": "A ______provides malicious users remote control over the targeted computer.",
+    "o": [
+      "DDoS-Trojan",
+      "Backdoor Trojan",
+      "Trojan-banker",
+      "Trojan-downloader"
+    ],
+    "a": 1,
+    "source": "Computer Virus",
+    "sourceNo": 31
+  }
+];
+let answered = {};
+let submitted = false;
+let timerSeconds = 15 * 60;
+let timerInterval = null;
+
+function escapeHtml(value) {
+  return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function textToHtml(value) { return escapeHtml(value).replace(/\n/g, '<br>'); }
+function label(i) { return LABELS[i] || String(i+1); }
+
+function renderQuestions() {
+  const wrap = document.getElementById('questions-wrap');
+  wrap.innerHTML = QUESTIONS.map((q, qi) => `
+    <div class="q-card" style="animation-delay:${Math.min(qi * 0.018, 0.6)}s">
+      <span class="q-num">Question ${String(qi + 1).padStart(2,'0')}</span>
+      <div class="q-text">${textToHtml(q.q)}</div>
+      <div class="options-grid">
+        ${q.o.map((opt, oi) => `
+          <button class="opt-btn" id="opt-${qi}-${oi}" onclick="choose(event, ${qi}, ${oi})">
+            <span class="fill-layer"></span>
+            <span class="opt-label">${label(oi)}</span>
+            <span class="opt-text">${textToHtml(opt)}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function choose(event, qi, oi) {
+  if (submitted) return;
+  const clicked = document.getElementById(`opt-${qi}-${oi}`);
+  const already = answered[qi] === oi;
+
+  QUESTIONS[qi].o.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qi}-${i}`);
+    btn.classList.remove('selected', 'draining');
+  });
+
+  createRipple(event, clicked);
+
+  if (already) {
+    delete answered[qi];
+    clicked.classList.add('draining');
+    setTimeout(() => clicked.classList.remove('draining'), 650);
+  } else {
+    answered[qi] = oi;
+    clicked.classList.add('selected');
+    clicked.animate([
+      { transform:'scale(1)' },
+      { transform:'scale(1.025) translateY(-2px)' },
+      { transform:'scale(1)' }
+    ], { duration:360, easing:'cubic-bezier(.16,1,.3,1)' });
+  }
+  updateProgress();
+}
+
+function createRipple(event, el) {
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const rip = document.createElement('span');
+  rip.className = 'ripple';
+  rip.style.width = rip.style.height = size + 'px';
+  rip.style.left = (event.clientX - rect.left - size / 2) + 'px';
+  rip.style.top = (event.clientY - rect.top - size / 2) + 'px';
+  el.appendChild(rip);
+  setTimeout(() => rip.remove(), 900);
+}
+
+function updateProgress() {
+  const done = Object.keys(answered).length;
+  document.getElementById('progress-bar').style.width = ((done / QUESTIONS.length) * 100) + '%';
+  document.getElementById('progress-label').textContent = `${done} / ${QUESTIONS.length}`;
+}
+
+function submitTest() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+
+  QUESTIONS.forEach((q, qi) => {
+    q.o.forEach((_, i) => {
+      const b = document.getElementById(`opt-${qi}-${i}`);
+      b.disabled = true;
+      b.classList.remove('selected', 'draining');
+    });
+  });
+
+  QUESTIONS.forEach((q, qi) => {
+    setTimeout(() => {
+      const chosen = answered[qi];
+      if (chosen === undefined) {
+        document.getElementById(`opt-${qi}-${q.a}`).classList.add('skipped-correct');
+      } else if (chosen === q.a) {
+        document.getElementById(`opt-${qi}-${chosen}`).classList.add('correct');
+      } else {
+        document.getElementById(`opt-${qi}-${chosen}`).classList.add('wrong');
+        document.getElementById(`opt-${qi}-${q.a}`).classList.add('correct');
+      }
+    }, qi * 35);
+  });
+
+  let correct = 0, wrong = 0, skip = 0;
+  QUESTIONS.forEach((q, qi) => {
+    if (answered[qi] === undefined) skip++;
+    else if (answered[qi] === q.a) correct++;
+    else wrong++;
+  });
+
+  setTimeout(() => showResult(correct, wrong, skip), QUESTIONS.length * 35 + 500);
+}
+
+function showResult(correct, wrong, skip) {
+  document.getElementById('test-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+
+  document.getElementById('score-num').textContent = correct;
+  document.getElementById('r-correct').textContent = correct;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-skip').textContent = skip;
+
+  const pct = correct / QUESTIONS.length;
+  let msg = '';
+  if (pct === 1) msg = 'Perfect score. The answer gods have signed your paper.';
+  else if (pct >= .8) msg = 'Excellent work. A few tiny gremlins left to defeat.';
+  else if (pct >= .6) msg = 'Good attempt. Review the tricky ones and try again.';
+  else if (pct >= .4) msg = 'Fair attempt. Your revision engine needs more fuel.';
+  else msg = 'Keep practising. Every retry sharpens the blade.';
+  document.getElementById('score-msg').textContent = msg;
+
+  document.getElementById('btn-review').style.display = (wrong + skip) === 0 ? 'none' : 'inline-block';
+  if (pct === 1) launchConfetti();
+}
+
+function renderReview() {
+  const list = document.getElementById('review-list');
+  list.innerHTML = QUESTIONS.map((q, qi) => {
+    const chosen = answered[qi];
+    const isCorrect = chosen === q.a;
+    const skipped = chosen === undefined;
+    return `
+      <div class="review-card">
+        <span class="q-num">Question ${String(qi + 1).padStart(2,'0')}</span>
+        <div class="review-q-text">${textToHtml(q.q)}</div>
+        <div class="review-opts">
+          ${q.o.map((opt, oi) => {
+            const cls = oi === q.a ? 'right' : (oi === chosen && !isCorrect ? 'yours' : '');
+            return `<div class="review-opt ${cls}">
+              <span class="review-opt-label">${label(oi)}</span>
+              <span>${textToHtml(opt)}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="review-tags">
+          ${isCorrect ? '<span class="tag correct">Correct</span>' : skipped ? '<span class="tag skip">Skipped</span>' : '<span class="tag wrong">Wrong</span>'}
+          <span class="tag">Answer: ${label(q.a)}</span>
+          ${skipped ? '' : `<span class="tag">You: ${label(chosen)}</span>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function startWithTimer() {
+  const v = Math.max(0, Number(document.getElementById('timer-input').value || 0));
+  timerSeconds = Math.round(v * 60);
+  document.getElementById('timer-modal').style.display = 'none';
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('test-screen').style.display = 'block';
+  renderQuestions();
+  updateProgress();
+  window.scrollTo(0, 0);
+  if (timerSeconds > 0) startTimer(); else document.getElementById('timer-pill').textContent = 'No timer';
+}
+
+function startTimer() {
+  const pill = document.getElementById('timer-pill');
+  const tick = () => {
+    const min = Math.floor(timerSeconds / 60);
+    const sec = timerSeconds % 60;
+    pill.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    pill.classList.toggle('low', timerSeconds <= 60);
+    if (timerSeconds <= 0) {
+      pill.textContent = 'Time up';
+      pill.classList.add('done');
+      clearInterval(timerInterval);
+      submitTest();
+      return;
+    }
+    timerSeconds--;
+  };
+  tick();
+  timerInterval = setInterval(tick, 1000);
+}
+
+function retry() {
+  answered = {};
+  submitted = false;
+  clearInterval(timerInterval);
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('timer-modal').style.display = 'block';
+}
+
+function goChapter() { location.href = '../computer-class/'; }
+
+function launchConfetti() {
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement('span');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.setProperty('--duration', (2.6 + Math.random() * 1.8) + 's');
+    p.style.setProperty('--delay', (Math.random() * .5) + 's');
+    p.style.setProperty('--drift', ((Math.random() - .5) * 240) + 'px');
+    p.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+    layer.appendChild(p);
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 5200);
+}
+
+document.getElementById('open-timer').addEventListener('click', () => {
+  document.getElementById('timer-modal').style.display = 'block';
+});
+document.getElementById('timer-cancel').addEventListener('click', () => {
+  document.getElementById('timer-modal').style.display = 'none';
+});
+document.getElementById('timer-start').addEventListener('click', startWithTimer);
+document.querySelectorAll('.timer-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.timer-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    document.getElementById('timer-input').value = chip.dataset.min;
+  });
+});
+document.getElementById('submit-btn').addEventListener('click', submitTest);
+document.getElementById('btn-retry').addEventListener('click', retry);
+document.getElementById('btn-review').addEventListener('click', () => {
+  renderReview();
+  document.getElementById('review-modal').style.display = 'block';
+});
+document.getElementById('review-close').addEventListener('click', () => {
+  document.getElementById('review-modal').style.display = 'none';
+});
+
+const cursor = document.getElementById('cursor');
+if (cursor) {
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .q-card, .opt-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+}
+</script>
+</body>
+</html>

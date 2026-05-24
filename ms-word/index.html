@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MS Word — Mock Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root {
+    --cream:#F5F0E8;
+    --ink:#1A1714;
+    --accent:#C84B2F;
+    --gold:#D4A847;
+    --muted:#7A7068;
+    --card-bg:#FDFAF5;
+    --correct:#3f9b5f;
+    --wrong:#c84b2f;
+    --skip:#d4a847;
+    --line:rgba(26,23,20,0.10);
+  }
+  html { scroll-behavior:smooth; }
+  body {
+    min-height:100vh;
+    font-family:'DM Sans', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow-x:hidden;
+    cursor:none;
+  }
+  body::before {
+    content:'';
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  }
+  .cursor {
+    position:fixed; width:10px; height:10px; background:var(--accent); border-radius:50%;
+    pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
+    transition:width .3s,height .3s,opacity .3s; mix-blend-mode:multiply;
+  }
+  .cursor.big { width:38px; height:38px; opacity:.25; }
+
+  #home, #test-screen, #result-screen, #review-modal, #timer-modal { position:relative; z-index:1; }
+  .page { max-width:1080px; margin:0 auto; padding:0 40px 80px; }
+  nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:32px 0 0;
+  }
+  .logo, .back-link { text-decoration:none; color:var(--ink); }
+  .logo {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:18px;
+    letter-spacing:-.5px; display:flex; align-items:center; gap:8px;
+  }
+  .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .back-link, .top-btn {
+    display:flex; align-items:center; gap:8px; font-size:12px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--muted); transition:color .2s;
+  }
+  .back-link:hover { color:var(--accent); }
+  .back-arrow {
+    width:26px; height:26px; border:1px solid currentColor; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:13px;
+  }
+  .hero {
+    padding:70px 0 42px; animation:fadeUp .8s ease both;
+  }
+  .eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .eyebrow-line { width:36px; height:1px; background:var(--accent); }
+  .eyebrow-text { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); }
+  .hero h1 {
+    font-family:'Syne', sans-serif; font-size:clamp(42px,7vw,78px);
+    line-height:.95; letter-spacing:-2.8px; margin-bottom:18px;
+  }
+  .hero h1 span { color:var(--accent); font-style:italic; }
+  .hero p { color:var(--muted); max-width:560px; line-height:1.7; font-weight:300; }
+  .start-panel {
+    margin-top:22px; background:var(--card-bg); border:1px solid var(--line);
+    border-radius:4px; padding:28px; display:grid; grid-template-columns:1fr auto;
+    align-items:center; gap:24px; box-shadow:0 24px 60px rgba(26,23,20,.08);
+  }
+  .start-kicker { color:var(--accent); letter-spacing:2px; text-transform:uppercase; font-size:11px; }
+  .start-panel h2 { font-family:'Syne',sans-serif; font-size:28px; margin:8px 0; }
+  .start-panel p { color:var(--muted); line-height:1.55; font-weight:300; }
+  .primary-btn, .secondary-btn, .submit-btn, .review-close, .timer-chip, .timer-start-btn, .timer-cancel-btn {
+    border:1px solid rgba(26,23,20,.12); border-radius:999px; background:var(--card-bg);
+    color:var(--ink); padding:12px 20px; cursor:pointer; font-weight:700;
+    font-family:'DM Sans',sans-serif; transition:transform .25s, background .25s, color .25s, box-shadow .25s;
+  }
+  .primary-btn, .submit-btn, .timer-start-btn {
+    background:var(--ink); color:var(--cream); border-color:var(--ink);
+  }
+  .primary-btn:hover, .submit-btn:hover, .timer-start-btn:hover, .secondary-btn:hover, .review-close:hover, .timer-chip:hover, .timer-cancel-btn:hover {
+    transform:translateY(-2px); box-shadow:0 16px 34px rgba(26,23,20,.12);
+  }
+
+  #test-screen { display:none; min-height:100vh; padding-bottom:90px; }
+  .test-header {
+    position:sticky; top:12px; z-index:100; width:min(1180px,calc(100% - 32px));
+    margin:12px auto 0; padding:12px 16px; border-radius:4px;
+    display:flex; justify-content:space-between; align-items:center; gap:14px;
+    background:rgba(253,250,245,.92); border:1px solid rgba(26,23,20,.10);
+    box-shadow:0 16px 42px rgba(26,23,20,.10); backdrop-filter:blur(18px);
+  }
+  .header-left, .progress-wrap { display:flex; align-items:center; gap:12px; min-width:0; }
+  .test-title-bar {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:15px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .progress-wrap { flex:1; justify-content:flex-end; }
+  .progress-bar-outer {
+    width:180px; height:7px; border-radius:999px; overflow:hidden;
+    background:rgba(26,23,20,.10);
+  }
+  .progress-bar-inner {
+    width:0%; height:100%; background:linear-gradient(90deg,var(--accent),var(--gold));
+    transition:width .35s cubic-bezier(.16,1,.3,1);
+  }
+  .progress-label, .timer-pill {
+    color:var(--muted); font-size:12px; white-space:nowrap; font-weight:700;
+  }
+  .timer-pill.low { color:var(--wrong); animation:pulse 1s infinite; }
+  .timer-pill.done { color:var(--wrong); }
+
+  .questions-wrap {
+    max-width:1180px; margin:0 auto; padding:38px 32px 90px;
+    display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px;
+  }
+  .q-card {
+    position:relative; overflow:hidden; background:var(--card-bg); border:1px solid var(--line);
+    border-radius:4px; padding:26px; box-shadow:0 18px 45px rgba(26,23,20,.07);
+    opacity:0; transform:translateY(18px); animation:cardIn .42s ease forwards;
+  }
+  .q-card::after {
+    content:''; position:absolute; left:0; top:0; width:3px; height:0; background:var(--accent);
+    transition:height .35s cubic-bezier(.16,1,.3,1);
+  }
+  .q-card:hover::after { height:100%; }
+  .q-num {
+    display:block; color:var(--accent); font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    font-weight:800; margin-bottom:10px;
+  }
+  .q-text { font-weight:700; line-height:1.6; margin-bottom:18px; letter-spacing:-.1px; }
+  .options-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .opt-btn, .review-opt {
+    position:relative; overflow:hidden; min-height:58px; display:flex; align-items:flex-start; gap:10px;
+    padding:13px 14px; border-radius:4px; border:1px solid rgba(26,23,20,.10);
+    color:var(--ink); background:#fffaf2; text-align:left; font-family:'DM Sans',sans-serif;
+    line-height:1.42; cursor:pointer; transition:transform .32s cubic-bezier(.16,1,.3,1), box-shadow .32s, border-color .32s, background .32s;
+  }
+  .opt-btn:hover:not(:disabled) { transform:translateY(-2px); border-color:rgba(200,75,47,.22); box-shadow:0 13px 28px rgba(26,23,20,.09); }
+  .opt-label, .review-opt-label {
+    position:relative; z-index:2; flex-shrink:0; min-width:24px; height:24px;
+    border-radius:50%; display:grid; place-items:center; color:var(--accent);
+    font-size:11px; font-weight:800; border:1px solid rgba(200,75,47,.22); background:#fff;
+  }
+  .opt-text { position:relative; z-index:2; overflow-wrap:anywhere; }
+  .fill-layer {
+    position:absolute; inset:0; z-index:1; pointer-events:none; background:rgba(200,75,47,.12);
+    clip-path:inset(0 100% 0 0); transition:none;
+  }
+  .opt-btn.selected .fill-layer { animation:sweepIn .72s linear forwards; }
+  .opt-btn.draining .fill-layer { animation:sweepOut .62s linear forwards; }
+  .opt-btn.selected { border-color:rgba(200,75,47,.34); background:#fff6ec; }
+  .opt-btn.selected .opt-label { background:var(--accent); color:white; }
+  .opt-btn.correct { border-color:rgba(63,155,95,.55); background:rgba(63,155,95,.10); animation:pop .45s; }
+  .opt-btn.correct .opt-label, .review-opt.right .review-opt-label { background:var(--correct); color:white; border-color:var(--correct); }
+  .opt-btn.wrong { border-color:rgba(200,75,47,.65); background:rgba(200,75,47,.10); animation:shake .38s; }
+  .opt-btn.wrong .opt-label, .review-opt.yours .review-opt-label { background:var(--wrong); color:white; border-color:var(--wrong); }
+  .opt-btn.skipped-correct { border-color:rgba(212,168,71,.65); background:rgba(212,168,71,.14); animation:pop .45s; }
+  .opt-btn.skipped-correct .opt-label { background:var(--skip); color:var(--ink); border-color:var(--skip); }
+  .opt-btn:disabled { cursor:default; }
+  .ripple {
+    position:absolute; z-index:3; pointer-events:none; border-radius:50%; background:rgba(200,75,47,.18);
+    transform:scale(0); opacity:1; animation:ripple .85s linear forwards;
+  }
+
+  #result-screen { display:none; min-height:100vh; padding:70px 24px; }
+  .result-inner {
+    max-width:760px; margin:0 auto; text-align:center; background:var(--card-bg); border:1px solid var(--line);
+    border-radius:4px; padding:36px 28px; box-shadow:0 24px 60px rgba(26,23,20,.10);
+  }
+  .result-badge { color:var(--accent); font-size:11px; letter-spacing:3px; text-transform:uppercase; font-weight:800; }
+  .result-title { font-family:'Syne',sans-serif; font-size:clamp(32px,5vw,52px); letter-spacing:-1.5px; margin:10px 0; }
+  .score-big { font-family:'Syne',sans-serif; font-size:72px; font-weight:800; color:var(--accent); margin:24px 0 6px; }
+  .score-msg { color:var(--muted); margin-bottom:26px; }
+  .stats-row { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-bottom:30px; }
+  .stat-pill { min-width:120px; padding:16px 22px; background:#fffaf2; border:1px solid var(--line); border-radius:4px; }
+  .stat-pill .val { display:block; font-family:'Syne'; font-size:28px; font-weight:800; }
+  .stat-pill .lbl { display:block; color:var(--muted); font-size:11px; letter-spacing:1px; text-transform:uppercase; }
+  .correct-val { color:var(--correct); } .wrong-val { color:var(--wrong); } .skip-val { color:var(--skip); }
+  .result-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; }
+
+  #review-modal, #timer-modal {
+    display:none; position:fixed; inset:0; z-index:250; overflow:auto; padding:38px 20px 80px;
+    background:rgba(245,240,232,.92); backdrop-filter:blur(12px);
+  }
+  .review-inner { max-width:980px; margin:0 auto; }
+  .review-header {
+    position:sticky; top:12px; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:16px;
+    background:rgba(253,250,245,.94); border:1px solid var(--line); border-radius:4px; padding:14px 16px;
+    box-shadow:0 16px 42px rgba(26,23,20,.08); backdrop-filter:blur(18px); margin-bottom:22px;
+  }
+  .review-title { font-family:'Syne'; font-size:22px; font-weight:800; }
+  .review-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+  .review-card {
+    background:var(--card-bg); border:1px solid var(--line); border-radius:4px; padding:22px; box-shadow:0 16px 42px rgba(26,23,20,.07);
+  }
+  .review-q-text { font-weight:700; line-height:1.55; margin-bottom:14px; }
+  .review-opts { display:grid; gap:8px; }
+  .review-opt { cursor:default; min-height:auto; background:#fffaf2; color:var(--muted); }
+  .review-opt.right, .review-opt.yours { color:var(--ink); }
+  .review-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .tag { font-size:10px; letter-spacing:1px; text-transform:uppercase; border:1px solid var(--line); padding:5px 9px; border-radius:999px; color:var(--muted); }
+  .tag.correct { color:var(--correct); border-color:rgba(63,155,95,.35); }
+  .tag.wrong { color:var(--wrong); border-color:rgba(200,75,47,.35); }
+  .tag.skip { color:var(--skip); border-color:rgba(212,168,71,.45); }
+
+  .timer-box {
+    max-width:520px; margin:70px auto 0; background:var(--card-bg); border:1px solid var(--line); border-radius:4px;
+    padding:30px; box-shadow:0 26px 70px rgba(26,23,20,.16); animation:timerPop .35s cubic-bezier(.16,1,.3,1) both;
+  }
+  .timer-kicker { color:var(--accent); letter-spacing:3px; text-transform:uppercase; font-size:11px; font-weight:800; }
+  .timer-title { font-family:'Syne'; font-size:34px; letter-spacing:-1px; margin:8px 0; }
+  .timer-sub { color:var(--muted); line-height:1.6; margin-bottom:18px; }
+  .timer-presets { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .timer-chip.selected { background:var(--accent); color:white; border-color:var(--accent); }
+  .timer-custom-row { display:grid; grid-template-columns:1fr 120px; gap:10px; align-items:center; margin-bottom:18px; color:var(--muted); }
+  .timer-input {
+    width:100%; border:1px solid var(--line); background:#fffaf2; border-radius:4px; padding:12px; font:inherit; color:var(--ink);
+  }
+  .timer-actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+  .confetti-layer { position:fixed; inset:0; z-index:500; pointer-events:none; overflow:hidden; }
+  .confetti-piece {
+    position:absolute; top:-20px; width:8px; height:14px; background:var(--accent);
+    animation:fall var(--duration) var(--delay) cubic-bezier(.15,.78,.25,1) forwards;
+    transform:rotate(var(--rot));
+  }
+  .confetti-piece:nth-child(3n) { background:var(--gold); border-radius:50%; }
+  .confetti-piece:nth-child(4n) { background:var(--ink); }
+
+  @keyframes cardIn { to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+  @keyframes pop { 50% { transform:scale(1.018); } }
+  @keyframes shake { 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
+  @keyframes ripple { 0%{transform:scale(0);opacity:0} 10%{opacity:.9} 100%{transform:scale(6);opacity:0} }
+  @keyframes sweepIn {
+    0%{clip-path:inset(0 100% 0 0)} 18%{clip-path:inset(0 67% 0 0)} 36%{clip-path:inset(0 38% 0 0)}
+    55%{clip-path:inset(0 16% 0 0)} 75%{clip-path:inset(0 4% 0 0)} 100%{clip-path:inset(0 0 0 0)}
+  }
+  @keyframes sweepOut {
+    0%{clip-path:inset(0 0 0 0)} 22%{clip-path:inset(0 0 0 26%)} 48%{clip-path:inset(0 0 0 56%)}
+    76%{clip-path:inset(0 0 0 88%)} 100%{clip-path:inset(0 0 0 100%)}
+  }
+  @keyframes timerPop { from{opacity:0;transform:translateY(18px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} }
+  @keyframes fall {
+    0% { transform:translate3d(0,-30px,0) rotate(var(--rot)); opacity:0; }
+    10% { opacity:1; }
+    100% { transform:translate3d(var(--drift),110vh,0) rotate(calc(var(--rot) + 720deg)); opacity:0; }
+  }
+
+  @media (max-width:840px) {
+    .test-header { align-items:stretch; flex-direction:column; border-radius:4px; }
+    .header-left { justify-content:space-between; }
+    .progress-wrap, .submit-btn { width:100%; }
+    .progress-bar-outer { flex:1; width:auto; }
+    .questions-wrap, .review-list { grid-template-columns:1fr; }
+    .start-panel { grid-template-columns:1fr; }
+  }
+  @media (max-width:560px) {
+    body { cursor:auto; }
+    .cursor { display:none; }
+    .page { padding:0 20px 60px; }
+    .questions-wrap { padding:24px 14px 80px; }
+    .options-grid { grid-template-columns:1fr; }
+    .q-card { padding:20px; }
+    nav { gap:16px; align-items:flex-start; }
+    .timer-custom-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+
+<section id="home">
+  <div class="page">
+    <nav>
+      <a class="back-link" href="../computer-class/"><span class="back-arrow">←</span><span>Computer Class</span></a>
+      <a class="logo" href="../"><span class="logo-dot"></span>Zakir Lab</a>
+    </nav>
+    <div class="hero">
+      <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Ch 05 Mock Test</span></div>
+      <h1>MS Word<br><span>Practice</span></h1>
+      <p>Shortcuts, formatting, mail merge, page setup, rulers, columns, and document tools.</p>
+      <div class="start-panel">
+        <div>
+          <div class="start-kicker">66 questions</div>
+          <h2>Ready to start?</h2>
+          <p>Select your timer, answer the questions, submit, and review every wrong or skipped answer.</p>
+        </div>
+        <button class="primary-btn" id="open-timer">Start Test →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="test-screen">
+  <div class="test-header">
+    <div class="header-left">
+      <button class="secondary-btn" onclick="goChapter()">← Class</button>
+      <div class="test-title-bar">MS Word</div>
+    </div>
+    <div class="progress-wrap">
+      <span class="timer-pill" id="timer-pill">No timer</span>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar"></div></div>
+      <span class="progress-label" id="progress-label">0 / 66</span>
+      <button class="submit-btn" id="submit-btn">Submit</button>
+    </div>
+  </div>
+  <div class="questions-wrap" id="questions-wrap"></div>
+</section>
+
+<section id="result-screen">
+  <div class="result-inner">
+    <div class="result-badge">Result</div>
+    <h2 class="result-title" id="result-title">Your Score</h2>
+    <div class="score-big"><span id="score-num">0</span><span style="font-size:32px;color:var(--muted)">/66</span></div>
+    <p class="score-msg" id="score-msg"></p>
+    <div class="stats-row">
+      <div class="stat-pill"><span class="val correct-val" id="r-correct">0</span><span class="lbl">Correct</span></div>
+      <div class="stat-pill"><span class="val wrong-val" id="r-wrong">0</span><span class="lbl">Wrong</span></div>
+      <div class="stat-pill"><span class="val skip-val" id="r-skip">0</span><span class="lbl">Skipped</span></div>
+    </div>
+    <div class="result-actions">
+      <button class="secondary-btn" onclick="goChapter()">← Class</button>
+      <button class="secondary-btn" id="btn-review">Review Answers</button>
+      <button class="primary-btn" id="btn-retry">Retry Test</button>
+    </div>
+  </div>
+</section>
+
+<div id="review-modal">
+  <div class="review-inner">
+    <div class="review-header">
+      <div>
+        <div class="review-title">Review Answers</div>
+        <div style="color:var(--muted);font-size:12px">Correct answers and your selected answers are marked.</div>
+      </div>
+      <button class="review-close" id="review-close">Close</button>
+    </div>
+    <div class="review-list" id="review-list"></div>
+  </div>
+</div>
+
+<div id="timer-modal">
+  <div class="timer-box">
+    <div class="timer-kicker">Timer Setup</div>
+    <div class="timer-title">Choose time</div>
+    <p class="timer-sub">Pick a preset or set your own time. You can also start without a timer.</p>
+    <div class="timer-presets">
+      <button class="timer-chip selected" data-min="15">15 min</button>
+      <button class="timer-chip" data-min="30">30 min</button>
+      <button class="timer-chip" data-min="60">60 min</button>
+      <button class="timer-chip" data-min="0">No timer</button>
+    </div>
+    <div class="timer-custom-row">
+      <label for="timer-input">Custom minutes</label>
+      <input class="timer-input" id="timer-input" type="number" min="0" max="300" value="15"/>
+    </div>
+    <div class="timer-actions">
+      <button class="timer-cancel-btn" id="timer-cancel">Cancel</button>
+      <button class="timer-start-btn" id="timer-start">Start Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LABELS = ['A','B','C','D','E','F'];
+const QUESTIONS = [
+  {
+    "q": "Press ___ to create a line break, which advances the insertion point to the beginning of the next physical line – ignoring any paragraph formatting instructions",
+    "o": [
+      "Shift+ enter",
+      "Ctrl+ enter",
+      "Shift + tab",
+      "Ctrl + tab"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 1
+  },
+  {
+    "q": "To redo the last work, press _____",
+    "o": [
+      "Ctrl+ U",
+      "Ctrl+ Y",
+      "Ctrl+ Z",
+      "Ctrl+ W"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 2
+  },
+  {
+    "q": "A character is that is raised and smaller above the baseline is known as",
+    "o": [
+      "Raised",
+      "Outlined",
+      "Capscript",
+      "Superscript"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 3
+  },
+  {
+    "q": "Which key or key combination will move the insertion point to the bottom of your document?",
+    "o": [
+      "END",
+      "PAGE DOWN",
+      "CTRL + PAGE DOWN",
+      "None of the above"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 4
+  },
+  {
+    "q": "Ctrl + Home is used to",
+    "o": [
+      "Moves the cursor to the beginning of the document",
+      "Moves the cursor to the beginning of line",
+      "Moves the cursor to the beginning of paragraph",
+      "All of the above"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 5
+  },
+  {
+    "q": "Selecting a text means, selecting?",
+    "o": [
+      "A word",
+      "An entire sentence",
+      "Whole document",
+      "Any of the above"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 6
+  },
+  {
+    "q": "Which of the following is not a valid version of MS office?",
+    "o": [
+      "Office XP",
+      "Office Vista",
+      "Office 2007",
+      "None of the above"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 7
+  },
+  {
+    "q": "How many columns can you insert in a word document in maximum?",
+    "o": [
+      "40",
+      "45",
+      "50",
+      "55"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 8
+  },
+  {
+    "q": "What do you mean by vertical separation between columns?",
+    "o": [
+      "Orientation",
+      "Gutter",
+      "Margin",
+      "Index"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 9
+  },
+  {
+    "q": "Which of the following are word processing software?",
+    "o": [
+      "WordPerfect",
+      "WordPad",
+      "MS Word",
+      "All of the above"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 10
+  },
+  {
+    "q": "If you want to convert a symbol or several lines of text into an Autocorrect entry, you should:",
+    "o": [
+      "Insert the symbol or type the text in a word document first, then select the text or symbol and go to the autocorrect dialog box.",
+      "Click the tools menu and choose autocorrect options. Then, click the insert menu and choose symbol (or click the format menu and choose paragraph) to add the symbol or paragraph to autocorrect",
+      "Autocorrect can only accommodate one line of text. It is not possible to convert a symbol or multiple lines of text into an autocorrect entry.",
+      "Insert the symbol or type the text in a word document first. Then select the text or symbol and click the edit menu followed by paste special. Select new autocorrect entry then click OK."
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 11
+  },
+  {
+    "q": "When word flags a possible spelling or grammar error, it also changes the mark on the spelling and grammar status icon to a ____.",
+    "o": [
+      "Green X",
+      "Green check mark",
+      "Red X",
+      "Red check mark"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 12
+  },
+  {
+    "q": "How many different positions can you set for drop cap?",
+    "o": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 13
+  },
+  {
+    "q": "To undo the last work, press ____",
+    "o": [
+      "Ctrl + U",
+      "Ctrl + Y",
+      "Ctrl + Z",
+      "Ctrl + W"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 14
+  },
+  {
+    "q": "Which is not a font style?",
+    "o": [
+      "Bold",
+      "Superscript",
+      "Italic",
+      "Regular"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 15
+  },
+  {
+    "q": "Short cut ctrl+ F used to",
+    "o": [
+      "Open find and replace dialog box with activating find tab",
+      "Open page setup dialog box with activating layout tab",
+      "Open font dialog box with activating font tab",
+      "Open file Save as dialog box"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 16
+  },
+  {
+    "q": "With which view can you see how text and graphics will appear on the printed page?",
+    "o": [
+      "Normal",
+      "Print layout",
+      "Outline",
+      "Web layout"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 17
+  },
+  {
+    "q": "In MS-Word, for what does ruler help?",
+    "o": [
+      "To set tabs",
+      "To set indents",
+      "To change page margins",
+      "All of the above"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 18
+  },
+  {
+    "q": "From where you can access save command?",
+    "o": [
+      "Home tab",
+      "Insert tab",
+      "Review tab",
+      "None of above"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 19
+  },
+  {
+    "q": "By pressing F12, which of following will happen?",
+    "o": [
+      "Close dialog box will open",
+      "Open dialog box will open",
+      "Save dialog box will open",
+      "Save as dialog box will open"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 20
+  },
+  {
+    "q": "Ctrl +G is used to",
+    "o": [
+      "Open paragraph dialog box activating goto tab",
+      "Open page setup dialog box activating Goto Tab",
+      "Open find and replacement dialog box with activating Goto box",
+      "Open Goto dialog box"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 21
+  },
+  {
+    "q": "What is the default number of lines to drop for drop cap?",
+    "o": [
+      "3",
+      "10",
+      "15",
+      "20"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 22
+  },
+  {
+    "q": "Which key combination will move the insertion point to the bottom of your document?",
+    "o": [
+      "END",
+      "PAGE DOWN",
+      "CTRL + PAGE DOWN",
+      "None of the above"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 23
+  },
+  {
+    "q": "Which of the following is not essential component to perform a mail merge operation?",
+    "o": [
+      "Main document",
+      "Data source",
+      "Merge fields",
+      "Word fields"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 24
+  },
+  {
+    "q": "Which of the following is used to create newspaper style columns?",
+    "o": [
+      "Format columns",
+      "Table insert table",
+      "Format tabs",
+      "Insert text box"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 25
+  },
+  {
+    "q": "Text boundary can be displayed or hidden from",
+    "o": [
+      "Customize from tools menu",
+      "auto text option from insert menu",
+      "options from tools menu",
+      "all of above"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 26
+  },
+  {
+    "q": "Ctrl + N is used to",
+    "o": [
+      "Save documents",
+      "Open documents",
+      "New documents",
+      "Close documents"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 27
+  },
+  {
+    "q": "Which feature helps you to insert the contents of the clipboard as a text without any formatting",
+    "o": [
+      "Paste special",
+      "Format painter",
+      "Page setup",
+      "Styles"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 28
+  },
+  {
+    "q": "Ctrl +S",
+    "o": [
+      "Save document with different name",
+      "Save document with same name",
+      "Save document and close word application",
+      "Save document and print whole pages"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 29
+  },
+  {
+    "q": "What is the default font used in MS Word document?",
+    "o": [
+      "Times new roman",
+      "Arial",
+      "Algerian",
+      "None of the above"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 30
+  },
+  {
+    "q": "Which can be used for quick access to commonly used commands and tools?",
+    "o": [
+      "Status bar",
+      "Tool bar",
+      "Menu bar",
+      "Title bar"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 31
+  },
+  {
+    "q": "HOME key",
+    "o": [
+      "Moves the cursor beginning of the document",
+      "Moves the cursor beginning of the paragraph",
+      "Moves the cursor beginning of the screen",
+      "Moves the cursor beginning of the line"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 32
+  },
+  {
+    "q": "Which enables us to sent the same letter to different persons?",
+    "o": [
+      "Macros",
+      "Template",
+      "Mail merge",
+      "None"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 33
+  },
+  {
+    "q": "If you will be displaying or printing your document on another computer, you’ll want to make sure and select the _____option under the ‘save’ Tab.",
+    "o": [
+      "Embed fonts",
+      "Embed true type fonts",
+      "Save true type fonts",
+      "Save fonts"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 34
+  },
+  {
+    "q": "Background colour or effects applied on a document is not visible in",
+    "o": [
+      "Web layout view",
+      "Print layout view",
+      "Reading view",
+      "Print preview"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 35
+  },
+  {
+    "q": "What is the extension of files created in Ms-word 97-2003",
+    "o": [
+      "Dot",
+      "Doc",
+      "Dom",
+      "Txt"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 36
+  },
+  {
+    "q": "Which of the following position is not available for fonts on MS Word?",
+    "o": [
+      "Normal",
+      "Raised",
+      "Lowered",
+      "Centered"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 37
+  },
+  {
+    "q": "Which file starts MS Word?",
+    "o": [
+      "Winword.exe",
+      "Word.exe",
+      "Msword.exe",
+      "Word2003.exe"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 38
+  },
+  {
+    "q": "What is the minimum scale percentage available in scale drop down box?",
+    "o": [
+      "500",
+      "200",
+      "100",
+      "90"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 39
+  },
+  {
+    "q": "Why drop caps are used in documents?",
+    "o": [
+      "To drop all the capital letters",
+      "To automatically begin each paragraph with capital letter",
+      "To begin a paragraph with a large dropped initial capital letter",
+      "None of these"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 40
+  },
+  {
+    "q": "What is the function of CTRL + R in MS-Word",
+    "o": [
+      "Open the print dialog box",
+      "Update the current web page",
+      "Close the current window",
+      "None of these"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 41
+  },
+  {
+    "q": "Ctrl + right arrow is used to",
+    "o": [
+      "Move the cursor one word right",
+      "Moves the cursor end of the line",
+      "Moves the cursor end of the document",
+      "Moves the cursor one paragraph down"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 42
+  },
+  {
+    "q": "To select a block of text, click at the beginning of the selection, scroll to the end of the selection, position the mouse pointer at the end of the selection, hold down the _____key, and then click (or drag through the text)",
+    "o": [
+      "Ctrl",
+      "Alt",
+      "Shift",
+      "Tab"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 43
+  },
+  {
+    "q": "The feature of Word that automatically adjusts the amount of space between certain combination of characters so that an entire word looks more evenly spaced. What is that feature called?",
+    "o": [
+      "Spacing",
+      "Kerning",
+      "Positioning",
+      "Scaling"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 44
+  },
+  {
+    "q": "If you need a change the typeface of a document, which menu will you choose",
+    "o": [
+      "Edit",
+      "View",
+      "Format",
+      "tools"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 45
+  },
+  {
+    "q": "what does EXT indicator on status bar of MS Word indicate?",
+    "o": [
+      "It indicates whether the external text is pasted on document or not",
+      "In indicates whether extended add-ons are installed on MS Word or not",
+      "It indicated whether extended selected mode is turned on or off",
+      "None of these"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 46
+  },
+  {
+    "q": "Which of the following options is not available in insert>>>picture?",
+    "o": [
+      "Chart",
+      "Graph",
+      "Clip art",
+      "Word art"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 47
+  },
+  {
+    "q": "Insert date, format page number, and insert autotext are buttons on the ______toolbar.",
+    "o": [
+      "Formatting",
+      "Header and footer",
+      "Standard",
+      "Edit"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 48
+  },
+  {
+    "q": "Page up key",
+    "o": [
+      "Moves the cursor one line up",
+      "Moves the cursor one screen up",
+      "Moves the cursor one page up",
+      "Moves the cursor one paragraph up"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 49
+  },
+  {
+    "q": "Portrait and landscape are",
+    "o": [
+      "Page orientation",
+      "Paper size",
+      "Page layout",
+      "All of above"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 50
+  },
+  {
+    "q": "The ____, or typeface, defines the appearance and shape of letters, numbers, and special characters.",
+    "o": [
+      "Font",
+      "Font size",
+      "Point",
+      "Paragraph formatting"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 51
+  },
+  {
+    "q": "What is gutter margin?",
+    "o": [
+      "Margin that is added to right margin when printing",
+      "Margin that is added to the binding side of page when printing",
+      "Margin that is added to the left margin when printing",
+      "Margin that is added to the outside of the page when printing"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 52
+  },
+  {
+    "q": "Which of the following is not available on the ruler of MS Word screen?",
+    "o": [
+      "Left indent",
+      "Right indent",
+      "Tab stop box",
+      "Center indent"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 53
+  },
+  {
+    "q": "What is the smallest width of a column?",
+    "o": [
+      "0”",
+      "0.5”",
+      "1”",
+      "1.5”"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 54
+  },
+  {
+    "q": "The four types of mail merge main documents are ____",
+    "o": [
+      "Form letters, directories, catalogues and envelope",
+      "Form letters, envelops and mailing labels, directories and lists",
+      "Basic letters, envelops, labels and list",
+      "form letters, envelops, mailing labels and catalogue"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 55
+  },
+  {
+    "q": "short cut Ctrl + P used to",
+    "o": [
+      "open paragraph dialog box",
+      "open page format dialog box",
+      "open save dialog box",
+      "open print dialog box"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 56
+  },
+  {
+    "q": "ctrl + V is used to",
+    "o": [
+      "paste texts in the beginning of document",
+      "paste images in the beginning of document",
+      "paste tables at the middle of document",
+      "none of the above"
+    ],
+    "a": 3,
+    "source": "MS Word",
+    "sourceNo": 57
+  },
+  {
+    "q": "where can you find the horizontal split bar on MS Word screen?",
+    "o": [
+      "On the left of horizontal scroll bar",
+      "On the right of Horizontal scroll bar",
+      "On the top of vertical scroll bar",
+      "On the bottom of vertical scroll bar"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 58
+  },
+  {
+    "q": "Which key should be pressed to start a new paragraph in MS-Word?",
+    "o": [
+      "Down cursor key",
+      "Enter key",
+      "Shift + Enter",
+      "Ctrl + Enter"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 59
+  },
+  {
+    "q": "Where can u change the vertical alignment?",
+    "o": [
+      "Formatting toolbar",
+      "Paragraph dialog box",
+      "Page setup dialog box",
+      "Standard toolbar"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 60
+  },
+  {
+    "q": "Gutter position can be set in following positions",
+    "o": [
+      "Left & right",
+      "Left only",
+      "Left & top",
+      "Left & bottom"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 61
+  },
+  {
+    "q": "Which operation you will perform if you need to move a block a text?",
+    "o": [
+      "Copy and paste",
+      "Cut and paste",
+      "Paste and delete",
+      "Paste and cut"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 62
+  },
+  {
+    "q": "To update a formula in a table, press the",
+    "o": [
+      "F9 keys",
+      "ALT+F9 keys",
+      "SHIFT+F9 keys",
+      "F8 keys"
+    ],
+    "a": 0,
+    "source": "MS Word",
+    "sourceNo": 63
+  },
+  {
+    "q": "What is placed to the left of horizontal scroll bar",
+    "o": [
+      "Tab stop buttons",
+      "View buttons",
+      "Split buttons",
+      "Indicators"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 64
+  },
+  {
+    "q": "Which of the following is not the part of standard office suite?",
+    "o": [
+      "Database",
+      "File manager",
+      "Image editor",
+      "Word processor"
+    ],
+    "a": 1,
+    "source": "MS Word",
+    "sourceNo": 65
+  },
+  {
+    "q": "When you want to view different parts of a document without moving the insertion point.",
+    "o": [
+      "Use the previous page or next page buttons",
+      "Use the keyboard",
+      "Use the vertical and horizontal scroll bar",
+      "Use the zoom button"
+    ],
+    "a": 2,
+    "source": "MS Word",
+    "sourceNo": 66
+  }
+];
+let answered = {};
+let submitted = false;
+let timerSeconds = 15 * 60;
+let timerInterval = null;
+
+function escapeHtml(value) {
+  return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function textToHtml(value) { return escapeHtml(value).replace(/\n/g, '<br>'); }
+function label(i) { return LABELS[i] || String(i+1); }
+
+function renderQuestions() {
+  const wrap = document.getElementById('questions-wrap');
+  wrap.innerHTML = QUESTIONS.map((q, qi) => `
+    <div class="q-card" style="animation-delay:${Math.min(qi * 0.018, 0.6)}s">
+      <span class="q-num">Question ${String(qi + 1).padStart(2,'0')}</span>
+      <div class="q-text">${textToHtml(q.q)}</div>
+      <div class="options-grid">
+        ${q.o.map((opt, oi) => `
+          <button class="opt-btn" id="opt-${qi}-${oi}" onclick="choose(event, ${qi}, ${oi})">
+            <span class="fill-layer"></span>
+            <span class="opt-label">${label(oi)}</span>
+            <span class="opt-text">${textToHtml(opt)}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function choose(event, qi, oi) {
+  if (submitted) return;
+  const clicked = document.getElementById(`opt-${qi}-${oi}`);
+  const already = answered[qi] === oi;
+
+  QUESTIONS[qi].o.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qi}-${i}`);
+    btn.classList.remove('selected', 'draining');
+  });
+
+  createRipple(event, clicked);
+
+  if (already) {
+    delete answered[qi];
+    clicked.classList.add('draining');
+    setTimeout(() => clicked.classList.remove('draining'), 650);
+  } else {
+    answered[qi] = oi;
+    clicked.classList.add('selected');
+    clicked.animate([
+      { transform:'scale(1)' },
+      { transform:'scale(1.025) translateY(-2px)' },
+      { transform:'scale(1)' }
+    ], { duration:360, easing:'cubic-bezier(.16,1,.3,1)' });
+  }
+  updateProgress();
+}
+
+function createRipple(event, el) {
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const rip = document.createElement('span');
+  rip.className = 'ripple';
+  rip.style.width = rip.style.height = size + 'px';
+  rip.style.left = (event.clientX - rect.left - size / 2) + 'px';
+  rip.style.top = (event.clientY - rect.top - size / 2) + 'px';
+  el.appendChild(rip);
+  setTimeout(() => rip.remove(), 900);
+}
+
+function updateProgress() {
+  const done = Object.keys(answered).length;
+  document.getElementById('progress-bar').style.width = ((done / QUESTIONS.length) * 100) + '%';
+  document.getElementById('progress-label').textContent = `${done} / ${QUESTIONS.length}`;
+}
+
+function submitTest() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+
+  QUESTIONS.forEach((q, qi) => {
+    q.o.forEach((_, i) => {
+      const b = document.getElementById(`opt-${qi}-${i}`);
+      b.disabled = true;
+      b.classList.remove('selected', 'draining');
+    });
+  });
+
+  QUESTIONS.forEach((q, qi) => {
+    setTimeout(() => {
+      const chosen = answered[qi];
+      if (chosen === undefined) {
+        document.getElementById(`opt-${qi}-${q.a}`).classList.add('skipped-correct');
+      } else if (chosen === q.a) {
+        document.getElementById(`opt-${qi}-${chosen}`).classList.add('correct');
+      } else {
+        document.getElementById(`opt-${qi}-${chosen}`).classList.add('wrong');
+        document.getElementById(`opt-${qi}-${q.a}`).classList.add('correct');
+      }
+    }, qi * 35);
+  });
+
+  let correct = 0, wrong = 0, skip = 0;
+  QUESTIONS.forEach((q, qi) => {
+    if (answered[qi] === undefined) skip++;
+    else if (answered[qi] === q.a) correct++;
+    else wrong++;
+  });
+
+  setTimeout(() => showResult(correct, wrong, skip), QUESTIONS.length * 35 + 500);
+}
+
+function showResult(correct, wrong, skip) {
+  document.getElementById('test-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+
+  document.getElementById('score-num').textContent = correct;
+  document.getElementById('r-correct').textContent = correct;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-skip').textContent = skip;
+
+  const pct = correct / QUESTIONS.length;
+  let msg = '';
+  if (pct === 1) msg = 'Perfect score. The answer gods have signed your paper.';
+  else if (pct >= .8) msg = 'Excellent work. A few tiny gremlins left to defeat.';
+  else if (pct >= .6) msg = 'Good attempt. Review the tricky ones and try again.';
+  else if (pct >= .4) msg = 'Fair attempt. Your revision engine needs more fuel.';
+  else msg = 'Keep practising. Every retry sharpens the blade.';
+  document.getElementById('score-msg').textContent = msg;
+
+  document.getElementById('btn-review').style.display = (wrong + skip) === 0 ? 'none' : 'inline-block';
+  if (pct === 1) launchConfetti();
+}
+
+function renderReview() {
+  const list = document.getElementById('review-list');
+  list.innerHTML = QUESTIONS.map((q, qi) => {
+    const chosen = answered[qi];
+    const isCorrect = chosen === q.a;
+    const skipped = chosen === undefined;
+    return `
+      <div class="review-card">
+        <span class="q-num">Question ${String(qi + 1).padStart(2,'0')}</span>
+        <div class="review-q-text">${textToHtml(q.q)}</div>
+        <div class="review-opts">
+          ${q.o.map((opt, oi) => {
+            const cls = oi === q.a ? 'right' : (oi === chosen && !isCorrect ? 'yours' : '');
+            return `<div class="review-opt ${cls}">
+              <span class="review-opt-label">${label(oi)}</span>
+              <span>${textToHtml(opt)}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="review-tags">
+          ${isCorrect ? '<span class="tag correct">Correct</span>' : skipped ? '<span class="tag skip">Skipped</span>' : '<span class="tag wrong">Wrong</span>'}
+          <span class="tag">Answer: ${label(q.a)}</span>
+          ${skipped ? '' : `<span class="tag">You: ${label(chosen)}</span>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function startWithTimer() {
+  const v = Math.max(0, Number(document.getElementById('timer-input').value || 0));
+  timerSeconds = Math.round(v * 60);
+  document.getElementById('timer-modal').style.display = 'none';
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('test-screen').style.display = 'block';
+  renderQuestions();
+  updateProgress();
+  window.scrollTo(0, 0);
+  if (timerSeconds > 0) startTimer(); else document.getElementById('timer-pill').textContent = 'No timer';
+}
+
+function startTimer() {
+  const pill = document.getElementById('timer-pill');
+  const tick = () => {
+    const min = Math.floor(timerSeconds / 60);
+    const sec = timerSeconds % 60;
+    pill.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    pill.classList.toggle('low', timerSeconds <= 60);
+    if (timerSeconds <= 0) {
+      pill.textContent = 'Time up';
+      pill.classList.add('done');
+      clearInterval(timerInterval);
+      submitTest();
+      return;
+    }
+    timerSeconds--;
+  };
+  tick();
+  timerInterval = setInterval(tick, 1000);
+}
+
+function retry() {
+  answered = {};
+  submitted = false;
+  clearInterval(timerInterval);
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('timer-modal').style.display = 'block';
+}
+
+function goChapter() { location.href = '../computer-class/'; }
+
+function launchConfetti() {
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement('span');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.setProperty('--duration', (2.6 + Math.random() * 1.8) + 's');
+    p.style.setProperty('--delay', (Math.random() * .5) + 's');
+    p.style.setProperty('--drift', ((Math.random() - .5) * 240) + 'px');
+    p.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+    layer.appendChild(p);
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 5200);
+}
+
+document.getElementById('open-timer').addEventListener('click', () => {
+  document.getElementById('timer-modal').style.display = 'block';
+});
+document.getElementById('timer-cancel').addEventListener('click', () => {
+  document.getElementById('timer-modal').style.display = 'none';
+});
+document.getElementById('timer-start').addEventListener('click', startWithTimer);
+document.querySelectorAll('.timer-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.timer-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    document.getElementById('timer-input').value = chip.dataset.min;
+  });
+});
+document.getElementById('submit-btn').addEventListener('click', submitTest);
+document.getElementById('btn-retry').addEventListener('click', retry);
+document.getElementById('btn-review').addEventListener('click', () => {
+  renderReview();
+  document.getElementById('review-modal').style.display = 'block';
+});
+document.getElementById('review-close').addEventListener('click', () => {
+  document.getElementById('review-modal').style.display = 'none';
+});
+
+const cursor = document.getElementById('cursor');
+if (cursor) {
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .q-card, .opt-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+}
+</script>
+</body>
+</html>
