@@ -2,7 +2,9 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zakir's Website</title>
+
   <style>
     body {
       margin: 0;
@@ -12,6 +14,7 @@
       display: grid;
       place-items: center;
       text-align: center;
+      padding: 20px;
     }
 
     .card {
@@ -19,36 +22,81 @@
       padding: 40px;
       border-radius: 24px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-      max-width: 500px;
+      max-width: 560px;
+      width: 100%;
     }
 
     h1 {
       font-size: 42px;
       margin-bottom: 10px;
+      color: #111827;
     }
 
     p {
       font-size: 18px;
       color: #444;
+      line-height: 1.5;
+    }
+
+    .buttons {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
     }
 
     a {
       display: inline-block;
-      margin-top: 20px;
-      padding: 12px 22px;
+      padding: 13px 24px;
       border-radius: 999px;
       background: #2563eb;
       color: white;
       text-decoration: none;
       font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    a:hover {
+      background: #1d4ed8;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(37,99,235,0.25);
+    }
+
+    .secondary {
+      background: #ec4899;
+    }
+
+    .secondary:hover {
+      background: #db2777;
+      box-shadow: 0 10px 20px rgba(236,72,153,0.25);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 32px;
+      }
+
+      .card {
+        padding: 28px 20px;
+      }
+
+      p {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="card">
     <h1>Welcome to My Website</h1>
     <p>I will keep my creations, mock tests, and projects here.</p>
-    <a href="#">Coming Soon</a>
+
+    <div class="buttons">
+      <a href="mock-test/">Open Mock Test</a>
+      <a class="secondary" href="#">More Coming Soon</a>
+    </div>
   </div>
 </body>
 </html>
