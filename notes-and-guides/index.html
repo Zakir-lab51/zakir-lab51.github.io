@@ -9,329 +9,134 @@
 <style>
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   :root {
-    --cream:#F5F0E8;
-    --ink:#1A1714;
-    --accent:#C84B2F;
-    --gold:#D4A847;
-    --muted:#7A7068;
-    --card-bg:#FDFAF5;
-    --line:rgba(26,23,20,0.10);
+    --cream:#F5F0E8; --ink:#1A1714; --accent:#C84B2F; --gold:#D4A847;
+    --muted:#7A7068; --card-bg:#FDFAF5; --line:rgba(26,23,20,0.10);
   }
   html, body { min-height:100%; }
   body {
-    min-height:100vh;
-    font-family:'Manrope', sans-serif;
-    background:var(--cream);
-    color:var(--ink);
-    overflow-x:hidden;
-    cursor:none;
+    min-height:100vh; font-family:'Manrope', sans-serif; background:var(--cream);
+    color:var(--ink); overflow-x:hidden; cursor:none;
   }
   body::before {
-    content:'';
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:0;
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
   }
   .cursor {
-    position:fixed;
-    width:10px;
-    height:10px;
-    background:var(--accent);
-    border-radius:50%;
-    pointer-events:none;
-    z-index:9999;
-    transform:translate(-50%,-50%);
-    transition:width .3s, height .3s, opacity .3s;
-    mix-blend-mode:multiply;
+    position:fixed; width:10px; height:10px; background:var(--accent); border-radius:50%;
+    pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
+    transition:width .3s, height .3s, opacity .3s; mix-blend-mode:multiply;
   }
   .cursor.big { width:38px; height:38px; opacity:.25; }
-  .page {
-    position:relative;
-    z-index:1;
-    max-width:1080px;
-    margin:0 auto;
-    padding:0 40px 80px;
-  }
-  nav {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:32px 0 0;
-  }
-  .logo, .back-link {
-    text-decoration:none;
-    color:var(--ink);
-  }
+  .page { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 40px 80px; }
+  nav { display:flex; align-items:center; justify-content:space-between; padding:32px 0 0; }
+  .logo, .back-link { text-decoration:none; color:var(--ink); }
   .logo {
-    font-family:'Outfit', sans-serif;
-    font-weight:800;
-    font-size:18px;
-    letter-spacing:-.5px;
-    display:flex;
-    align-items:center;
-    gap:8px;
+    font-family:'Outfit', sans-serif; font-weight:800; font-size:18px; letter-spacing:-.5px;
+    display:flex; align-items:center; gap:8px;
   }
-  .logo-dot {
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:var(--accent);
-  }
+  .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
   .back-link {
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:12px;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    color:var(--muted);
-    transition:color .2s;
+    display:flex; align-items:center; gap:8px; font-size:12px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--muted); transition:color .2s;
   }
   .back-link:hover { color:var(--accent); }
   .back-arrow {
-    width:26px;
-    height:26px;
-    border:1px solid currentColor;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:13px;
+    width:26px; height:26px; border:1px solid currentColor; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:13px;
   }
-  .hero {
-    padding:70px 0 42px;
-    animation:fadeUp .8s ease both;
-  }
-  .eyebrow {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:18px;
-  }
-  .eyebrow-line {
-    width:36px;
-    height:1px;
-    background:var(--accent);
-  }
+  .hero { padding:70px 0 42px; animation:fadeUp .8s ease both; }
+  .eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .eyebrow-line { width:36px; height:1px; background:var(--accent); }
   .eyebrow-text {
-    font-size:11px;
-    letter-spacing:3px;
-    text-transform:uppercase;
-    color:var(--accent);
-    font-weight:800;
+    font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); font-weight:800;
   }
   .hero h1 {
-    font-family:'Outfit', sans-serif;
-    font-size:clamp(42px,7vw,82px);
-    line-height:.94;
-    letter-spacing:-3px;
-    margin-bottom:18px;
+    font-family:'Outfit', sans-serif; font-size:clamp(42px,7vw,82px);
+    line-height:.94; letter-spacing:-3px; margin-bottom:18px;
   }
-  .hero h1 span {
-    color:var(--accent);
-    font-style:italic;
-  }
-  .hero p {
-    color:var(--muted);
-    max-width:560px;
-    line-height:1.7;
-    font-weight:300;
-  }
+  .hero h1 span { color:var(--accent); font-style:italic; }
+  .hero p { color:var(--muted); max-width:560px; line-height:1.7; font-weight:300; }
   .divider {
-    height:1px;
-    background:linear-gradient(90deg, var(--accent), transparent 60%);
-    margin:4px 0 34px;
-    opacity:.85;
+    height:1px; background:linear-gradient(90deg, var(--accent), transparent 60%);
+    margin:4px 0 34px; opacity:.85;
   }
   .section-row {
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    gap:16px;
-    margin-bottom:18px;
+    display:flex; justify-content:space-between; align-items:baseline; gap:16px; margin-bottom:18px;
   }
   .section-title {
-    font-family:'Outfit', sans-serif;
-    font-size:13px;
-    letter-spacing:3px;
-    text-transform:uppercase;
-    font-weight:800;
+    font-family:'Outfit', sans-serif; font-size:13px; letter-spacing:3px; text-transform:uppercase; font-weight:800;
   }
-  .section-count {
-    font-size:11px;
-    letter-spacing:1px;
-    color:var(--muted);
-    text-transform:uppercase;
-  }
+  .section-count { font-size:11px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; }
   .notes-grid {
-    display:grid;
-    grid-template-columns:repeat(4, minmax(0, 1fr));
-    gap:16px;
+    display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:16px;
     animation:fadeUp .9s ease both .18s;
   }
   .note-card {
-    position:relative;
-    min-height:245px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    text-decoration:none;
-    color:var(--ink);
+    position:relative; min-height:245px; display:flex; flex-direction:column; justify-content:space-between;
+    text-decoration:none; color:var(--ink);
     background:
       radial-gradient(circle at top right, rgba(212,168,71,0.18), transparent 34%),
       radial-gradient(circle at bottom left, rgba(200,75,47,0.12), transparent 36%),
       linear-gradient(180deg, #fffdf8 0%, #fdf7ef 100%);
-    border:1px solid rgba(26,23,20,.08);
-    border-radius:18px;
-    padding:24px;
-    overflow:hidden;
-    box-shadow:
-      0 16px 40px rgba(26,23,20,.07),
-      inset 0 1px 0 rgba(255,255,255,.85);
+    border:1px solid rgba(26,23,20,.08); border-radius:18px; padding:24px; overflow:hidden;
+    box-shadow:0 16px 40px rgba(26,23,20,.07), inset 0 1px 0 rgba(255,255,255,.85);
     transition:transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s ease, border-color .35s ease;
   }
   .note-card::after {
-    content:'';
-    position:absolute;
-    inset:0;
+    content:''; position:absolute; inset:0;
     background:linear-gradient(135deg, rgba(255,255,255,.34), transparent 42%, rgba(200,75,47,.04));
     pointer-events:none;
   }
   .note-card::before {
-    content:attr(data-num);
-    position:absolute;
-    right:12px;
-    bottom:-2px;
-    font-family:'Outfit', sans-serif;
-    font-size:92px;
-    font-weight:800;
-    line-height:1;
-    color:rgba(26,23,20,.045);
-    pointer-events:none;
-    letter-spacing:-4px;
+    content:attr(data-num); position:absolute; right:12px; bottom:-2px;
+    font-family:'Outfit', sans-serif; font-size:92px; font-weight:800; line-height:1;
+    color:rgba(26,23,20,.045); pointer-events:none; letter-spacing:-4px;
   }
   .note-card:hover {
-    transform:translateY(-8px) scale(1.01);
-    border-color:rgba(200,75,47,.18);
-    box-shadow:
-      0 24px 60px rgba(26,23,20,.12),
-      inset 0 1px 0 rgba(255,255,255,.95);
+    transform:translateY(-8px) scale(1.01); border-color:rgba(200,75,47,.18);
+    box-shadow:0 24px 60px rgba(26,23,20,.12), inset 0 1px 0 rgba(255,255,255,.95);
   }
   .note-top {
-    position:relative;
-    z-index:1;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:14px;
+    position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:14px;
   }
   .note-tag {
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    color:var(--accent);
-    font-size:10px;
-    letter-spacing:2.4px;
-    text-transform:uppercase;
-    font-weight:800;
+    display:inline-flex; align-items:center; gap:8px; color:var(--accent);
+    font-size:10px; letter-spacing:2.4px; text-transform:uppercase; font-weight:800;
   }
-  .note-tag::before {
-    content:'';
-    width:22px;
-    height:1px;
-    background:var(--accent);
-  }
+  .note-tag::before { content:''; width:22px; height:1px; background:var(--accent); }
   .note-mark {
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    background:rgba(255,255,255,.58);
-    border:1px solid rgba(26,23,20,.10);
-    color:var(--muted);
-    font-size:12px;
-    font-weight:800;
-    letter-spacing:-.5px;
+    width:42px; height:42px; border-radius:50%; display:grid; place-items:center;
+    background:rgba(255,255,255,.58); border:1px solid rgba(26,23,20,.10);
+    color:var(--muted); font-size:12px; font-weight:800; letter-spacing:-.5px;
   }
   .note-card h2 {
-    position:relative;
-    z-index:1;
-    font-family:'Outfit', sans-serif;
-    font-size:clamp(24px, 2.3vw, 31px);
-    font-weight:800;
-    letter-spacing:-1px;
-    line-height:.98;
+    position:relative; z-index:1; font-family:'Outfit', sans-serif;
+    font-size:clamp(24px, 2.3vw, 31px); font-weight:800; letter-spacing:-1px; line-height:.98;
     max-width:90%;
   }
   .note-footer {
-    position:relative;
-    z-index:1;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    color:var(--muted);
-    font-size:12px;
-    font-weight:800;
-    letter-spacing:1px;
-    text-transform:uppercase;
+    position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:12px;
+    color:var(--muted); font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase;
   }
   .note-arrow {
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    border:1px solid rgba(26,23,20,.14);
-    background:rgba(255,255,255,.62);
-    color:var(--ink);
-    font-size:19px;
+    width:40px; height:40px; border-radius:50%; display:grid; place-items:center;
+    border:1px solid rgba(26,23,20,.14); background:rgba(255,255,255,.62);
+    color:var(--ink); font-size:19px;
     transition:transform .35s ease, background .35s ease, color .35s ease, border-color .35s ease;
   }
   .note-card:hover .note-arrow {
-    background:var(--accent);
-    color:var(--cream);
-    border-color:var(--accent);
+    background:var(--accent); color:var(--cream); border-color:var(--accent);
     transform:translateX(4px) rotate(-45deg);
   }
   footer {
-    margin-top:50px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    color:var(--muted);
-    font-size:12px;
-    animation:fadeUp .9s ease both .28s;
+    margin-top:50px; display:flex; align-items:center; justify-content:space-between;
+    color:var(--muted); font-size:12px; animation:fadeUp .9s ease both .28s;
   }
-  .status {
-    display:flex;
-    align-items:center;
-    gap:6px;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    font-size:11px;
-  }
-  .dot {
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:#5CB85C;
-    animation:pulse 2s infinite;
-  }
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(28px); }
-    to { opacity:1; transform:translateY(0); }
-  }
-  @keyframes pulse {
-    0%,100% { opacity:1; }
-    50% { opacity:.35; }
-  }
-  @media (max-width:980px) {
-    .notes-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); }
-  }
+  .status { display:flex; align-items:center; gap:6px; letter-spacing:2px; text-transform:uppercase; font-size:11px; }
+  .dot { width:6px; height:6px; border-radius:50%; background:#5CB85C; animation:pulse 2s infinite; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.35; } }
+  @media (max-width:980px) { .notes-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
   @media (max-width:560px) {
     body { cursor:auto; }
     .cursor { display:none; }
@@ -385,7 +190,7 @@
           <span class="note-tag">Physiology</span>
           <span class="note-mark">DS</span>
         </div>
-        <h2>Digestive System</h2>
+        <h2>Digestive System Physiology</h2>
         <div class="note-footer">
           <span>Open PDF</span>
           <span class="note-arrow">→</span>
