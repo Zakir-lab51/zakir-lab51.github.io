@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Computer Class — Zakir Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --cream: #F5F0E8;
+    --ink: #1A1714;
+    --accent: #C84B2F;
+    --gold: #D4A847;
+    --muted: #7A7068;
+    --card-bg: #FDFAF5;
+  }
+  html, body { height: 100%; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width 0.3s, height 0.3s, opacity 0.3s;
+    mix-blend-mode: multiply;
+  }
+  .cursor.big { width: 36px; height: 36px; opacity: 0.25; }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1;
+  }
+  .page {
+    position: relative; z-index: 2;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 32px 0 0;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 18px;
+    letter-spacing: -0.5px; color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+    text-decoration: none;
+  }
+  .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .back-btn {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--accent); }
+  .back-arrow {
+    width: 26px; height: 26px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .back-btn:hover .back-arrow { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* HEADER */
+  .page-header {
+    padding: 52px 0 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.1s;
+  }
+  .eyebrow {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 18px;
+  }
+  .eyebrow-line { width:36px; height:1px; background:var(--accent); }
+  .eyebrow-text { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); }
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(38px, 6vw, 68px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 0.95;
+    margin-bottom: 16px;
+  }
+  .page-title span { color: var(--accent); font-style: italic; }
+  .page-subtitle {
+    font-size: 15px; color: var(--muted);
+    font-weight: 300; max-width: 460px;
+    line-height: 1.65;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent) 0%, transparent 55%);
+    margin: 44px 0 40px;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.4s;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex; align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .section-count {
+    font-size: 11px; letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  /* CHAPTERS GRID */
+  .chapters-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 52px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.3s;
+  }
+
+  .chapter-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(26,23,20,0.08);
+    border-radius: 4px;
+    padding: 26px 22px 22px;
+    text-decoration: none;
+    color: var(--ink);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1),
+                border-color 0.3s, box-shadow 0.4s;
+  }
+  .chapter-card::after {
+    content: '';
+    position: absolute; left:0; top:0;
+    width: 3px; height: 0%;
+    background: var(--accent);
+    transition: height 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .chapter-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(200,75,47,0.18);
+    box-shadow: 0 20px 50px rgba(26,23,20,0.09);
+  }
+  .chapter-card:hover::after { height: 100%; }
+
+  .ch-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; color: var(--accent);
+  }
+  .ch-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px; font-weight: 700;
+    letter-spacing: -0.3px; line-height: 1.2;
+  }
+  .ch-meta {
+    font-size: 12px; color: var(--muted);
+    font-weight: 300; margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(26,23,20,0.07);
+    display: flex; align-items: center;
+    justify-content: space-between;
+  }
+  .ch-arrow {
+    font-size: 13px; color: var(--muted);
+    transition: color 0.2s, transform 0.3s;
+  }
+  .chapter-card:hover .ch-arrow { color: var(--accent); transform: translateX(3px); }
+
+  /* MOCK TEST SECTION */
+  .mock-section {
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.5s;
+  }
+
+  .mock-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .mock-card {
+    border-radius: 4px;
+    padding: 30px 28px;
+    text-decoration: none;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 190px;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+  }
+  .mock-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 28px 65px rgba(26,23,20,0.22);
+  }
+  .mock-card.dark { background: var(--ink); }
+  .mock-card.red  { background: var(--accent); }
+
+  .mock-card::before {
+    content: attr(data-bg-text);
+    position: absolute;
+    right: -10px; bottom: -20px;
+    font-family: 'Syne', sans-serif;
+    font-size: 110px; font-weight: 800;
+    line-height: 1;
+    color: rgba(255,255,255,0.05);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .mock-tag {
+    font-size: 10px; letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+  }
+  .mock-card.red .mock-tag { color: rgba(255,255,255,0.7); }
+
+  .mock-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px; font-weight: 800;
+    letter-spacing: -0.5px; line-height: 1.1;
+  }
+
+  .mock-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+    line-height: 1.6;
+    flex: 1;
+  }
+  .mock-card.red .mock-desc { color: rgba(255,255,255,0.75); }
+
+  .mock-footer {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .mock-pills {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .pill {
+    font-size: 10px; letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+  }
+  .mock-card.red .pill { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.9); }
+
+  .mock-arrow {
+    width: 34px; height: 34px;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 50%;
+    display: flex; align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  }
+  .mock-card:hover .mock-arrow {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateX(3px) rotate(-45deg);
+  }
+
+  /* FOOTER */
+  footer {
+    margin-top: 56px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.8s;
+  }
+  .footer-text { font-size:12px; color:var(--muted); }
+  .status { display:flex; align-items:center; gap:6px; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+  .dot { width:6px; height:6px; border-radius:50%; background:#5CB85C; animation: pulse 2s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  @media (max-width: 700px) {
+    .page { padding: 0 20px 60px; }
+    .chapters-grid { grid-template-columns: 1fr 1fr; }
+    .mock-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .chapters-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<div class="page">
+  <nav>
+    <a class="logo" href="../">
+      <span class="logo-dot"></span>
+      Zakir Lab
+    </a>
+    <a class="back-btn" href="../">
+      <div class="back-arrow">←</div>
+      <span>Home</span>
+    </a>
+  </nav>
+
+  <div class="page-header">
+    <div class="eyebrow">
+      <span class="eyebrow-line"></span>
+      <span class="eyebrow-text">Computer Class</span>
+    </div>
+    <h1 class="page-title">Chapters &<br><span>Mock Tests</span></h1>
+    <p class="page-subtitle">Pick a chapter to practice, or jump straight into a full mock test.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CHAPTERS -->
+  <div class="section-header">
+    <span class="section-title">Chapters</span>
+    <span class="section-count">6 topics coming soon</span>
+  </div>
+
+  <div class="chapters-grid">
+
+    <a class="chapter-card" href="#">
+      <span class="ch-num">Ch 01</span>
+      <div class="ch-title">Introduction to Computers</div>
+      <div class="ch-meta">
+        <span>10 questions</span>
+        <span class="ch-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="chapter-card" href="#">
+      <span class="ch-num">Ch 02</span>
+      <div class="ch-title">Hardware & Software</div>
+      <div class="ch-meta">
+        <span>12 questions</span>
+        <span class="ch-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="chapter-card" href="#">
+      <span class="ch-num">Ch 03</span>
+      <div class="ch-title">Operating Systems</div>
+      <div class="ch-meta">
+        <span>14 questions</span>
+        <span class="ch-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="chapter-card" href="#">
+      <span class="ch-num">Ch 04</span>
+      <div class="ch-title">Microsoft Office</div>
+      <div class="ch-meta">
+        <span>16 questions</span>
+        <span class="ch-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="chapter-card" href="#">
+      <span class="ch-num">Ch 05</span>
+      <div class="ch-title">Internet & Networking</div>
+      <div class="ch-meta">
+        <span>12 questions</span>
+        <span class="ch-arrow">→</span>
+      </div>
+    </a>
+
+    <a class="chapter-card" href="#">
+      <span class="ch-num">Ch 06</span>
+      <div class="ch-title">Data & Cyber Security</div>
+      <div class="ch-meta">
+        <span>10 questions</span>
+        <span class="ch-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- MOCK TESTS -->
+  <div class="mock-section">
+    <div class="section-header">
+      <span class="section-title">Full Mock Tests</span>
+      <span class="section-count">1 available</span>
+    </div>
+
+    <div class="mock-grid">
+
+      <a class="mock-card dark" href="../mock-test/" data-bg-text="01">
+        <span class="mock-tag">Mock Test</span>
+        <div class="mock-title">Full Test<br>Series 01</div>
+        <p class="mock-desc">All chapters combined. 50 questions. Timed exam simulation with instant result.</p>
+        <div class="mock-footer">
+          <div class="mock-pills">
+            <span class="pill">50 Qs</span>
+            <span class="pill">60 min</span>
+            <span class="pill">All chapters</span>
+          </div>
+          <div class="mock-arrow">→</div>
+        </div>
+      </a>
+
+      <a class="mock-card red" href="../mock-test/" data-bg-text="02">
+        <span class="mock-tag">Mock Test</span>
+        <div class="mock-title">Full Test<br>Series 02</div>
+        <p class="mock-desc">New question set, same format. Track improvement from Series 01.</p>
+        <div class="mock-footer">
+          <div class="mock-pills">
+            <span class="pill">50 Qs</span>
+            <span class="pill">60 min</span>
+            <span class="pill">All chapters</span>
+          </div>
+          <div class="mock-arrow">→</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-text">© 2024 Zakir Lab</span>
+    <div class="status">
+      <span class="dot"></span>
+      <span>Active</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, .chapter-card, .mock-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+</script>
+</body>
+</html>
