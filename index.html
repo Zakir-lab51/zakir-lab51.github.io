@@ -226,9 +226,9 @@
     color: var(--ink);
     position: relative;
     overflow: hidden;
-    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1),
-                border-color 0.3s ease,
-                box-shadow 0.4s ease;
+    transition: transform 0.58s cubic-bezier(0.16,1,0.3,1),
+                border-color 0.38s ease,
+                box-shadow 0.58s ease;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -248,6 +248,10 @@
     border-color: rgba(200,75,47,0.2);
     box-shadow: 0 24px 60px rgba(26,23,20,0.1);
   }
+
+  .card:nth-child(1) { animation: cardIn 0.75s cubic-bezier(0.16,1,0.3,1) both 0.66s; }
+  .card:nth-child(2) { animation: cardIn 0.75s cubic-bezier(0.16,1,0.3,1) both 0.76s; }
+  .card:nth-child(3) { animation: cardIn 0.75s cubic-bezier(0.16,1,0.3,1) both 0.86s; }
 
   .card:hover::after { height: 100%; }
 
@@ -379,13 +383,21 @@
   }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    0% { opacity: 0; transform: translateY(34px) scale(0.985); }
+    65% { opacity: 1; transform: translateY(-2px) scale(1); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    0% { opacity: 0; }
+    70% { opacity: 0.88; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes cardIn {
+    0% { opacity: 0; transform: translateY(28px) scale(0.98); }
+    70% { opacity: 1; transform: translateY(-2px) scale(1.002); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   @media (max-width: 640px) {
@@ -408,7 +420,7 @@
       <span class="logo-dot"></span>
       Zakir Lab
     </div>
-    <span class="nav-tag">Est. 2024</span>
+    <span class="nav-tag">Est. 2026</span>
   </nav>
 
   <section class="hero">
@@ -425,7 +437,7 @@
 
     <div class="hero-row">
       <p class="hero-sub">
-        A curated space for mock tests, computer class materials, and everything I build along the way.
+        Everything I build along the way.
       </p>
       <div class="hero-counter">
         <div class="counter-num">02</div>
@@ -459,7 +471,6 @@
           <div class="cta-arrow">→</div>
         </div>
       </a>
-      </div>
 
       <a class="card wide" href="#">
         <div class="wide-content">
