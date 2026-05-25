@@ -1120,9 +1120,53 @@
       flex-direction: column;
     }
   }
+
+  /* Small custom color dot cursor */
+  body {
+    cursor: none;
+  }
+
+  .cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition:
+      width .26s ease,
+      height .26s ease,
+      opacity .26s ease,
+      background .35s ease,
+      box-shadow .35s ease;
+    mix-blend-mode: multiply;
+  }
+
+  .cursor.big {
+    width: 38px;
+    height: 38px;
+    opacity: .26;
+  }
+
+  html[data-theme="dark"] .cursor {
+    background: var(--gold);
+    mix-blend-mode: normal;
+    box-shadow: 0 0 18px rgba(221,179,90,.35);
+  }
+
+  html[data-theme="dark"] .cursor.big {
+    opacity: .22;
+    box-shadow: 0 0 34px rgba(221,179,90,.42);
+  }
+
 </style>
 </head>
 <body>
+<div class="cursor" id="cursor"></div>
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="brand">
@@ -1448,6 +1492,28 @@
       openSearch();
     }
   });
+
+  const customCursor = document.getElementById('cursor');
+  if (customCursor) {
+    document.addEventListener('mousemove', e => {
+      customCursor.style.left = e.clientX + 'px';
+      customCursor.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button, input, .feature-card, .stat-card, .side-link, .mini-link, .search-box').forEach(el => {
+      el.addEventListener('mouseenter', () => customCursor.classList.add('big'));
+      el.addEventListener('mouseleave', () => customCursor.classList.remove('big'));
+    });
+
+    document.addEventListener('mouseleave', () => {
+      customCursor.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', () => {
+      customCursor.style.opacity = '';
+    });
+  }
+
 </script>
 </body>
 </html>
