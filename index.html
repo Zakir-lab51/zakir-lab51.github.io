@@ -385,14 +385,325 @@
     .search-row { grid-template-columns:1fr; }
     footer { flex-direction:column; align-items:flex-start; gap:10px; }
   }
+
+  /* Left slide study tools panel */
+  .study-drawer {
+    position: fixed;
+    left: 18px;
+    top: 104px;
+    width: 286px;
+    max-height: calc(100vh - 132px);
+    z-index: 20;
+    background:
+      radial-gradient(circle at top left, rgba(212,168,71,.16), transparent 32%),
+      var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 24px 70px rgba(26,23,20,.12);
+    transform: translateX(0);
+    transition: transform .65s cubic-bezier(.16,1,.3,1),
+                opacity .45s ease,
+                box-shadow .45s ease;
+  }
+  html[data-theme="dark"] .study-drawer {
+    box-shadow: 0 24px 70px rgba(0,0,0,.38);
+  }
+  .study-drawer.retracted {
+    transform: translateX(calc(-100% - 18px));
+  }
+  .drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .drawer-title {
+    display: grid;
+    gap: 4px;
+  }
+  .drawer-title span {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .drawer-title strong {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    letter-spacing: -.4px;
+  }
+  .drawer-toggle {
+    border: 1px solid var(--line);
+    background: var(--cream);
+    color: var(--ink);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform .35s ease, background .35s ease, color .35s ease, border-color .35s ease;
+  }
+  .drawer-toggle:hover {
+    transform: rotate(-10deg) scale(1.04);
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .drawer-links {
+    display: grid;
+    gap: 9px;
+  }
+  .drawer-link {
+    position: relative;
+    display: grid;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 12px 13px;
+    overflow: hidden;
+    transition: transform .38s cubic-bezier(.16,1,.3,1), border-color .35s ease, background .35s ease;
+  }
+  .drawer-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 0%;
+    background: var(--accent);
+    transition: height .36s cubic-bezier(.16,1,.3,1);
+  }
+  .drawer-link:hover {
+    transform: translateX(4px);
+    border-color: rgba(200,75,47,.25);
+  }
+  .drawer-link:hover::after { height: 100%; }
+  .drawer-link strong {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    letter-spacing: -.35px;
+  }
+  .drawer-link span {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .drawer-tab {
+    position: fixed;
+    left: 18px;
+    top: 104px;
+    z-index: 19;
+    border: 1px solid var(--line);
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 999px;
+    padding: 11px 15px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    box-shadow: 0 18px 45px rgba(26,23,20,.16);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-8px);
+    transition: opacity .35s ease, transform .35s ease, background .35s ease;
+  }
+  .drawer-tab.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  .drawer-tab:hover { background: var(--accent); }
+
+  /* Top-right compact search */
+  .search-button {
+    border: 1px solid var(--line);
+    background: var(--card-bg);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 9px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform .35s ease, border-color .35s ease, background .35s ease, color .35s ease;
+  }
+  .search-button:hover {
+    transform: translateY(-2px);
+    border-color: rgba(200,75,47,.28);
+    background: var(--accent);
+    color: white;
+  }
+  .search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    place-items: start center;
+    padding: 96px 22px 22px;
+    background: rgba(26,23,20,.26);
+    backdrop-filter: blur(12px);
+  }
+  html[data-theme="dark"] .search-modal {
+    background: rgba(0,0,0,.46);
+  }
+  .search-modal.open {
+    display: grid;
+    animation: fadeIn .28s ease both;
+  }
+  .search-box {
+    width: min(760px, 100%);
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 28px 90px rgba(26,23,20,.22);
+    animation: searchDrop .45s cubic-bezier(.16,1,.3,1) both;
+  }
+  html[data-theme="dark"] .search-box {
+    box-shadow: 0 28px 90px rgba(0,0,0,.42);
+  }
+  .search-box-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .search-box-head strong {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    letter-spacing: -.5px;
+  }
+  .search-close {
+    border: 1px solid var(--line);
+    background: var(--cream);
+    color: var(--ink);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    transition: transform .35s ease, background .35s ease, color .35s ease;
+  }
+  .search-close:hover {
+    transform: rotate(90deg);
+    background: var(--accent);
+    color: white;
+  }
+  .modal-search-input {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--cream);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 15px 18px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+  }
+  .search-box .results {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 10px;
+    margin-top: 16px;
+  }
+  @keyframes searchDrop {
+    0% { opacity: 0; transform: translateY(-18px) scale(.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @media (max-width: 1340px) {
+    .study-drawer {
+      left: 12px;
+      width: 258px;
+      top: 92px;
+    }
+    .drawer-tab {
+      left: 12px;
+      top: 92px;
+    }
+  }
+  @media (max-width: 1120px) {
+    .study-drawer {
+      transform: translateX(calc(-100% - 18px));
+    }
+    .study-drawer:not(.retracted).mobile-open {
+      transform: translateX(0);
+    }
+    .drawer-tab {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+  }
+  @media (max-width: 640px) {
+    .study-drawer {
+      width: min(286px, calc(100vw - 38px));
+      left: 10px;
+      top: 82px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+    }
+    .drawer-tab {
+      left: 10px;
+      top: 82px;
+      padding: 10px 13px;
+    }
+    .search-box .results {
+      grid-template-columns: 1fr;
+    }
+  }
+
 </style>
 </head>
 <body>
 <div class="cursor" id="cursor"></div>
 <div class="page">
+  <aside class="study-drawer" id="study-drawer" aria-label="Study tools">
+    <div class="drawer-head">
+      <div class="drawer-title">
+        <span>Study Tools</span>
+        <strong>Quick Panel</strong>
+      </div>
+      <button class="drawer-toggle" onclick="toggleStudyDrawer()" aria-label="Retract study tools">‹</button>
+    </div>
+    <div class="drawer-links">
+      <a class="drawer-link" href="dashboard/"><strong>Dashboard</strong><span>Progress, streaks, scores</span></a>
+      <a class="drawer-link" href="flashcards/"><strong>Flashcards</strong><span>Quick active recall</span></a>
+      <a class="drawer-link" href="cheatsheets/"><strong>Cheatsheets</strong><span>Fast reference cards</span></a>
+      <a class="drawer-link" href="pyqs/"><strong>PYQs</strong><span>Solved practice questions</span></a>
+      <a class="drawer-link" href="leaderboard/"><strong>Leaderboard</strong><span>Saved quiz rankings</span></a>
+      <a class="drawer-link" href="dev-log/"><strong>Dev Log</strong><span>Building in public</span></a>
+      <a class="drawer-link" href="whats-new/"><strong>What's New</strong><span>Recent updates</span></a>
+      <a class="drawer-link" href="suggest/"><strong>Suggest</strong><span>Share ideas/resources</span></a>
+    </div>
+  </aside>
+  <button class="drawer-tab" id="drawer-tab" onclick="toggleStudyDrawer()">Study Tools</button>
+
+  <div class="search-modal" id="search-modal" role="dialog" aria-label="Site search">
+    <div class="search-box">
+      <div class="search-box-head">
+        <strong>Search Zakir Lab</strong>
+        <button class="search-close" onclick="closeSearch()" aria-label="Close search">×</button>
+      </div>
+      <input class="modal-search-input" id="site-search" type="search" placeholder="Search notes, mock tests, flashcards, cheatsheets, PYQs...">
+      <div class="results" id="search-results"></div>
+    </div>
+  </div>
+
   <nav>
     <div class="logo"><span class="logo-dot"></span>Zakir Lab</div>
     <div class="nav-right">
+      <button class="search-button" onclick="openSearch()">Search</button>
       <button class="theme-toggle" onclick="toggleTheme()"><span data-theme-label>Dark</span> Mode</button>
       <span class="nav-tag">Est. 2026</span>
     </div>
@@ -419,14 +730,6 @@
 
   <div class="divider"></div>
 
-  <div class="search-panel">
-    <div class="search-row">
-      <input class="search-input" id="site-search" type="search" placeholder="Search notes, mock tests, flashcards, cheatsheets, PYQs...">
-      <div class="pulse-pill" id="activity-pulse">Activity loading</div>
-    </div>
-    <div class="results" id="search-results"></div>
-  </div>
-
   <section class="cards-section">
     <p class="section-label">What's here</p>
     <div class="cards-grid">
@@ -452,63 +755,6 @@
           <div class="card-cta" style="margin-top:20px;"><span>View dashboard</span><div class="cta-arrow">→</div></div>
         </div>
         <div class="wide-ornament">↗</div>
-      </a>
-    </div>
-  </section>
-
-  <section class="tools-section">
-    <div class="section-head">
-      <span class="section-title">Study tools</span>
-      <span class="section-note">Built-in extras</span>
-    </div>
-    <div class="tools-grid">
-      <a class="card tool-card" href="flashcards/">
-        <span class="card-tag">Recall</span>
-        <h2 class="card-title">Flashcards</h2>
-        <p class="card-desc">Flip cards for quick revision of CS and exam terms.</p>
-        <div class="card-cta"><span>Study</span><div class="cta-arrow">→</div></div>
-      </a>
-      <a class="card tool-card" href="cheatsheets/">
-        <span class="card-tag">Quick Reference</span>
-        <h2 class="card-title">Cheatsheets</h2>
-        <p class="card-desc">Shortcuts, formulas, Office tools, and internet basics.</p>
-        <div class="card-cta"><span>Open</span><div class="cta-arrow">→</div></div>
-      </a>
-      <a class="card tool-card" href="pyqs/">
-        <span class="card-tag">Practice</span>
-        <h2 class="card-title">PYQs</h2>
-        <p class="card-desc">Previous-year style questions with simple explanations.</p>
-        <div class="card-cta"><span>Solve</span><div class="cta-arrow">→</div></div>
-      </a>
-      <a class="card tool-card" href="leaderboard/">
-        <span class="card-tag">Scores</span>
-        <h2 class="card-title">Leaderboard</h2>
-        <p class="card-desc">A local leaderboard powered by your saved quiz results.</p>
-        <div class="card-cta"><span>Rank</span><div class="cta-arrow">→</div></div>
-      </a>
-      <a class="card tool-card" href="dev-log/">
-        <span class="card-tag">Building in Public</span>
-        <h2 class="card-title">Dev Log</h2>
-        <p class="card-desc">Small posts about what is being built and improved.</p>
-        <div class="card-cta"><span>Read</span><div class="cta-arrow">→</div></div>
-      </a>
-      <a class="card tool-card" href="whats-new/">
-        <span class="card-tag">Changelog</span>
-        <h2 class="card-title">What's New</h2>
-        <p class="card-desc">Recent additions and upgrade notes in one clean place.</p>
-        <div class="card-cta"><span>Check</span><div class="cta-arrow">→</div></div>
-      </a>
-      <a class="card tool-card" href="suggest/">
-        <span class="card-tag">Community</span>
-        <h2 class="card-title">Suggest</h2>
-        <p class="card-desc">Suggest a question, topic, resource, or improvement.</p>
-        <div class="card-cta"><span>Send</span><div class="cta-arrow">→</div></div>
-      </a>
-      <a class="card tool-card" href="full-length-test/">
-        <span class="card-tag">Mock Exam</span>
-        <h2 class="card-title">Full Tests</h2>
-        <p class="card-desc">Four full-length 100-question computer application tests.</p>
-        <div class="card-cta"><span>Start</span><div class="cta-arrow">→</div></div>
       </a>
     </div>
   </section>
@@ -567,40 +813,65 @@
   ];
 
   const results = document.getElementById('search-results');
+  const searchInput = document.getElementById('site-search');
+  const searchModal = document.getElementById('search-modal');
+  const studyDrawer = document.getElementById('study-drawer');
+  const drawerTab = document.getElementById('drawer-tab');
+
   function renderResults(query='') {
     const q = query.trim().toLowerCase();
-    const matches = q ? SEARCH_INDEX.filter(item => (item.title + ' ' + item.type + ' ' + item.desc + ' ' + item.keys).toLowerCase().includes(q)) : SEARCH_INDEX.slice(0, 3);
-    results.innerHTML = matches.slice(0, 6).map(item => `
+    const matches = q ? SEARCH_INDEX.filter(item => (item.title + ' ' + item.type + ' ' + item.desc + ' ' + item.keys).toLowerCase().includes(q)) : SEARCH_INDEX.slice(0, 6);
+    results.innerHTML = matches.slice(0, 8).map(item => `
       <a class="result-item show" href="${item.url}">
         <strong>${item.title}</strong>
         <span>${item.type} · ${item.desc}</span>
       </a>
     `).join('');
   }
-  renderResults();
-  document.getElementById('site-search').addEventListener('input', e => renderResults(e.target.value));
 
-  function updateActivityPulse(){
-    const today = new Date().toISOString().slice(0,10);
-    const data = JSON.parse(localStorage.getItem('ZAKIR_VISITS') || '{}');
-    data[today] = (data[today] || 0) + 1;
-    const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - 6);
-    let weekly = 0;
-    Object.keys(data).forEach(day => {
-      if (new Date(day) >= cutoff) weekly += data[day];
-    });
-    localStorage.setItem('ZAKIR_VISITS', JSON.stringify(data));
-    document.getElementById('activity-pulse').textContent = weekly + ' local visits this week';
+  function openSearch() {
+    searchModal.classList.add('open');
+    renderResults(searchInput.value);
+    setTimeout(() => searchInput.focus(), 80);
   }
-  updateActivityPulse();
+
+  function closeSearch() {
+    searchModal.classList.remove('open');
+  }
+
+  searchInput.addEventListener('input', e => renderResults(e.target.value));
+  searchModal.addEventListener('click', e => {
+    if (e.target === searchModal) closeSearch();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeSearch();
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+
+  function applyDrawerState() {
+    const retracted = localStorage.getItem('ZAKIR_DRAWER_RETRACTED') === 'yes';
+    studyDrawer.classList.toggle('retracted', retracted);
+    studyDrawer.classList.toggle('mobile-open', !retracted);
+    drawerTab.classList.toggle('show', retracted);
+  }
+
+  function toggleStudyDrawer() {
+    const retracted = !studyDrawer.classList.contains('retracted');
+    localStorage.setItem('ZAKIR_DRAWER_RETRACTED', retracted ? 'yes' : 'no');
+    applyDrawerState();
+  }
+
+  applyDrawerState();
 
   const cursor = document.getElementById('cursor');
   document.addEventListener('mousemove', e => {
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
   });
-  document.querySelectorAll('a, button, .card, input').forEach(el => {
+  document.querySelectorAll('a, button, .card, input, .drawer-link, .search-box').forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('big'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
   });
