@@ -278,6 +278,28 @@
     nav { gap:16px; align-items:flex-start; }
     .timer-custom-row { grid-template-columns:1fr; }
   }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(18px);
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 999px;
+    padding: 12px 18px;
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease;
+    font-size: 13px;
+    box-shadow: 0 18px 45px rgba(26,23,20,.22);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
 </style>
 </head>
 <body>
@@ -335,6 +357,7 @@
     <div class="result-actions">
       <button class="secondary-btn" onclick="goChapter()">← Class</button>
       <button class="secondary-btn" id="btn-review">Review Answers</button>
+      <button class="secondary-btn" id="btn-share">Share Result</button>
       <button class="primary-btn" id="btn-retry">Retry Test</button>
     </div>
   </div>
@@ -375,6 +398,7 @@
   </div>
 </div>
 
+<div class="toast" id="share-toast">Score card copied</div>
 <script>
 const LABELS = ['A','B','C','D','E','F'];
 const QUESTIONS = [
@@ -1037,6 +1061,7 @@ function showResult(correct, wrong, skip) {
   else if (pct >= .4) msg = 'Fair attempt. Your revision engine needs more fuel.';
   else msg = 'Keep practising. Every retry sharpens the blade.';
   document.getElementById('score-msg').textContent = msg;
+  saveZakirScore(correct, wrong, skip);
 
   document.getElementById('btn-review').style.display = (wrong + skip) === 0 ? 'none' : 'inline-block';
   if (pct === 1) launchConfetti();
@@ -1144,7 +1169,74 @@ document.querySelectorAll('.timer-chip').forEach(chip => {
     document.getElementById('timer-input').value = chip.dataset.min;
   });
 });
+
+function getZakirQuizTitle() {
+  try {
+    if (typeof TESTS !== 'undefined' && typeof selectedTestIndex !== 'undefined' && TESTS[selectedTestIndex]) {
+      return TESTS[selectedTestIndex].title;
+    }
+  } catch(e) {}
+  const titleBar = document.querySelector('.test-title-bar');
+  if (titleBar) return titleBar.textContent.trim();
+  return document.title.replace('— Mock Test','').replace('— Zakir Lab','').trim();
+}
+
+function saveZakirScore(correct, wrong, skip) {
+  const total = QUESTIONS.length;
+  const title = getZakirQuizTitle();
+  const percent = Math.round((correct / total) * 100);
+  const entry = {
+    title,
+    correct,
+    wrong,
+    skip,
+    total,
+    percent,
+    date: new Date().toISOString()
+  };
+  const history = JSON.parse(localStorage.getItem('ZAKIR_SCORE_HISTORY') || '[]');
+  history.push(entry);
+  localStorage.setItem('ZAKIR_SCORE_HISTORY', JSON.stringify(history.slice(-80)));
+  window.ZAKIR_CURRENT_RESULT = entry;
+}
+
+function showZakirToast(message) {
+  let toast = document.getElementById('share-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'share-toast';
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+async function shareZakirResult() {
+  const r = window.ZAKIR_CURRENT_RESULT;
+  if (!r) return showZakirToast('Submit the test first');
+  const text = `Zakir Lab Score Card\n${r.title}\nScore: ${r.correct}/${r.total} (${r.percent}%)\nCorrect: ${r.correct} | Wrong: ${r.wrong} | Skipped: ${r.skip}\n\nTry the mock tests on Zakir Lab.`;
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: 'Zakir Lab Score', text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      showZakirToast('Score card copied');
+    }
+  } catch (e) {
+    try {
+      await navigator.clipboard.writeText(text);
+      showZakirToast('Score card copied');
+    } catch {
+      showZakirToast('Sharing not available');
+    }
+  }
+}
+
+
 document.getElementById('submit-btn').addEventListener('click', submitTest);
+document.getElementById('btn-share').addEventListener('click', shareZakirResult);
 document.getElementById('btn-retry').addEventListener('click', retry);
 document.getElementById('btn-review').addEventListener('click', () => {
   renderReview();

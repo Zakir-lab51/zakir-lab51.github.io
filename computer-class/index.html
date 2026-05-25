@@ -330,6 +330,52 @@
     }
   }
 
+
+  .study-tools-section {
+    margin-top: 42px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.52s;
+  }
+  .study-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 12px;
+  }
+  .study-tool-card {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--card-bg);
+    border: 1px solid rgba(26,23,20,0.08);
+    border-radius: 4px;
+    padding: 18px;
+    transition: transform .42s cubic-bezier(.16,1,.3,1), border-color .35s ease, box-shadow .42s ease;
+  }
+  .study-tool-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(200,75,47,.2);
+    box-shadow: 0 18px 44px rgba(26,23,20,.10);
+  }
+  .study-tool-card span {
+    display:block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 9px;
+  }
+  .study-tool-card strong {
+    font-family: 'Syne', sans-serif;
+    font-size: 19px;
+    letter-spacing: -.4px;
+  }
+  @media (max-width: 820px) {
+    .study-tools-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  }
+  @media (max-width: 520px) {
+    .study-tools-grid { grid-template-columns: 1fr; }
+  }
+
 </style>
 </head>
 <body>
@@ -460,8 +506,22 @@
     </a>
   </div>
 
+
+  <div class="study-tools-section">
+    <div class="section-header">
+      <span class="section-title">Extra Study Tools</span>
+      <span class="section-count">New</span>
+    </div>
+    <div class="study-tools-grid">
+      <a class="study-tool-card" href="../dashboard/"><span>Progress</span><strong>Dashboard</strong></a>
+      <a class="study-tool-card" href="../flashcards/"><span>Recall</span><strong>Flashcards</strong></a>
+      <a class="study-tool-card" href="../cheatsheets/"><span>Reference</span><strong>Cheatsheets</strong></a>
+      <a class="study-tool-card" href="../leaderboard/"><span>Scores</span><strong>Leaderboard</strong></a>
+    </div>
+  </div>
+
   <footer>
-    <span class="footer-text">© 2024 Zakir Lab</span>
+    <span class="footer-text">© 2026 Zakir Lab</span>
     <div class="status">
       <span class="dot"></span>
       <span>Active</span>

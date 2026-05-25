@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
 <style>
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
   :root {
     --cream: #F5F0E8;
     --ink: #1A1714;
@@ -17,10 +16,19 @@
     --muted: #7A7068;
     --surface: #EDE8DF;
     --card-bg: #FDFAF5;
+    --line: rgba(26,23,20,0.10);
   }
-
-  html, body { height: 100%; }
-
+  html[data-theme="dark"] {
+    --cream:#15120F;
+    --ink:#F5F0E8;
+    --accent:#E66A4E;
+    --gold:#DDB35A;
+    --muted:#B7AAA0;
+    --surface:#1A1714;
+    --card-bg:#211C18;
+    --line:rgba(245,240,232,0.12);
+  }
+  html, body { min-height: 100%; }
   body {
     font-family: 'DM Sans', sans-serif;
     background-color: var(--cream);
@@ -28,9 +36,8 @@
     min-height: 100vh;
     overflow-x: hidden;
     cursor: none;
+    transition: background .45s ease, color .45s ease;
   }
-
-  /* Custom cursor */
   .cursor {
     position: fixed;
     width: 10px; height: 10px;
@@ -39,12 +46,10 @@
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%,-50%);
-    transition: transform 0.1s ease, width 0.3s, height 0.3s;
+    transition: transform 0.1s ease, width 0.3s, height 0.3s, opacity .3s;
     mix-blend-mode: multiply;
   }
   .cursor.big { width:40px; height:40px; opacity:0.3; }
-
-  /* Noise overlay */
   body::before {
     content: '';
     position: fixed;
@@ -53,7 +58,6 @@
     pointer-events: none;
     z-index: 1;
   }
-
   .page {
     position: relative;
     z-index: 2;
@@ -64,15 +68,13 @@
     display: flex;
     flex-direction: column;
   }
-
-  /* NAV */
   nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap:16px;
     padding: 32px 0 0;
   }
-
   .logo {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
@@ -83,14 +85,8 @@
     align-items: center;
     gap: 8px;
   }
-
-  .logo-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: inline-block;
-  }
-
+  .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); display:inline-block; }
+  .nav-right { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
   .nav-tag {
     font-size: 12px;
     font-weight: 300;
@@ -98,39 +94,33 @@
     text-transform: uppercase;
     color: var(--muted);
   }
-
-  /* HERO */
+  .theme-toggle {
+    border:1px solid var(--line);
+    background:var(--card-bg);
+    color:var(--ink);
+    border-radius:999px;
+    padding:9px 12px;
+    font-family:'DM Sans', sans-serif;
+    font-size:11px;
+    letter-spacing:1.8px;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:transform .35s ease, border-color .35s ease;
+  }
+  .theme-toggle:hover { transform:translateY(-2px); border-color:rgba(200,75,47,.28); }
   .hero {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px 0 20px;
+    padding: 82px 0 20px;
     position: relative;
   }
-
   .hero-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.1s;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 0.9s cubic-bezier(.16,1,.3,1) forwards 0.1s;
   }
-
-  .eyebrow-line {
-    width: 40px; height: 1px;
-    background: var(--accent);
-  }
-
+  .eyebrow-line { width:40px; height:1px; background:var(--accent); }
   .eyebrow-text {
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 400;
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); font-weight: 400;
   }
-
   .hero-heading {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
@@ -139,55 +129,30 @@
     letter-spacing: -3px;
     margin-bottom: 36px;
     opacity: 0;
-    animation: fadeUp 0.9s ease forwards 0.25s;
+    animation: fadeUp 1s cubic-bezier(.16,1,.3,1) forwards 0.25s;
   }
-
   .hero-heading .line2 {
     display: block;
     color: var(--accent);
     font-style: italic;
   }
-
   .hero-row {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 40px;
-    opacity: 0;
-    animation: fadeUp 0.9s ease forwards 0.4s;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
+    opacity: 0; animation: fadeUp 1s cubic-bezier(.16,1,.3,1) forwards 0.4s;
   }
-
   .hero-sub {
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--muted);
-    max-width: 380px;
-    font-weight: 300;
+    font-size: 16px; line-height: 1.7; color: var(--muted);
+    max-width: 380px; font-weight: 300;
   }
-
-  .hero-counter {
-    text-align: right;
-    flex-shrink: 0;
-  }
-
+  .hero-counter { text-align:right; flex-shrink:0; }
   .counter-num {
     font-family: 'Syne', sans-serif;
-    font-size: 72px;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--ink);
-    opacity: 0.08;
+    font-size: 72px; font-weight: 700; line-height: 1; color: var(--ink); opacity: 0.08;
   }
-
   .counter-label {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 4px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-top: 4px;
   }
-
-  /* DIVIDER */
   .divider {
     height: 1px;
     background: linear-gradient(90deg, var(--accent) 0%, transparent 60%);
@@ -195,31 +160,32 @@
     opacity: 0;
     animation: fadeIn 1s ease forwards 0.6s;
   }
-
-  /* CARDS GRID */
-  .cards-section {
-    opacity: 0;
-    animation: fadeUp 0.9s ease forwards 0.55s;
-  }
-
   .section-label {
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 20px;
-    font-weight: 400;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 20px; font-weight: 400;
   }
-
-  .cards-grid {
+  .section-head {
+    display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+    margin-bottom:18px;
+  }
+  .section-title {
+    font-family:'Syne',sans-serif; font-size:13px; letter-spacing:3px;
+    text-transform:uppercase; font-weight:800;
+  }
+  .section-note { color:var(--muted); font-size:12px; letter-spacing:1px; text-transform:uppercase; }
+  .cards-section, .tools-section, .updates-section {
+    opacity: 0;
+    animation: fadeUp 0.95s cubic-bezier(.16,1,.3,1) forwards 0.55s;
+  }
+  .cards-grid, .tools-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
   }
-
+  .tools-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .card {
     background: var(--card-bg);
-    border: 1px solid rgba(26,23,20,0.08);
+    border: 1px solid var(--line);
     border-radius: 4px;
     padding: 32px 28px;
     text-decoration: none;
@@ -228,199 +194,208 @@
     overflow: hidden;
     transition: transform 0.58s cubic-bezier(0.16,1,0.3,1),
                 border-color 0.38s ease,
-                box-shadow 0.58s ease;
+                box-shadow 0.58s ease,
+                background .45s ease;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    box-shadow: 0 16px 40px rgba(26,23,20,0.055);
   }
-
+  html[data-theme="dark"] .card { box-shadow:0 16px 40px rgba(0,0,0,.22); }
   .card::after {
     content: '';
     position: absolute;
     left: 0; top: 0;
     width: 3px; height: 0%;
     background: var(--accent);
-    transition: height 0.4s cubic-bezier(0.16,1,0.3,1);
+    transition: height 0.45s cubic-bezier(0.16,1,0.3,1);
   }
-
   .card:hover {
     transform: translateY(-6px);
     border-color: rgba(200,75,47,0.2);
     box-shadow: 0 24px 60px rgba(26,23,20,0.1);
   }
-
-  .card:nth-child(1) { animation: cardIn 0.75s cubic-bezier(0.16,1,0.3,1) both 0.66s; }
-  .card:nth-child(2) { animation: cardIn 0.75s cubic-bezier(0.16,1,0.3,1) both 0.76s; }
-  .card:nth-child(3) { animation: cardIn 0.75s cubic-bezier(0.16,1,0.3,1) both 0.86s; }
-
+  html[data-theme="dark"] .card:hover { box-shadow:0 24px 60px rgba(0,0,0,.35); }
   .card:hover::after { height: 100%; }
-
   .card-tag {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 400;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); font-weight: 400;
   }
-
   .card-title {
     font-family: 'Syne', sans-serif;
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    line-height: 1.1;
+    font-size: 26px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1;
   }
-
   .card-desc {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.65;
-    font-weight: 300;
-    flex: 1;
+    font-size: 14px; color: var(--muted); line-height: 1.65; font-weight: 300; flex: 1;
   }
-
   .card-cta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--ink);
-    margin-top: 8px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 400; color: var(--ink); margin-top: 8px;
   }
-
   .cta-arrow {
-    width: 28px; height: 28px;
-    border: 1px solid var(--ink);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    transition: background 0.3s, color 0.3s, transform 0.3s;
+    width: 28px; height: 28px; border: 1px solid var(--ink);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; transition: background 0.3s, color 0.3s, transform 0.3s, border-color .3s;
   }
-
   .card:hover .cta-arrow {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
+    background: var(--accent); border-color: var(--accent); color: white;
     transform: translateX(4px) rotate(-45deg);
   }
-
-  /* Wide card */
   .card.wide {
-    grid-column: span 2;
-    flex-direction: row;
-    align-items: center;
-    padding: 28px 36px;
-    background: var(--ink);
-    color: #F5F0E8;
-    border-color: transparent;
-    gap: 32px;
+    grid-column: span 2; flex-direction: row; align-items: center; padding: 28px 36px;
+    background: var(--ink); color: var(--cream); border-color: transparent; gap: 32px;
   }
-
   .card.wide::after { background: var(--gold); }
-
-  .card.wide:hover {
-    border-color: transparent;
-    box-shadow: 0 24px 60px rgba(26,23,20,0.25);
-  }
-
   .card.wide .card-tag { color: var(--gold); }
   .card.wide .card-title { font-size: 22px; }
-  .card.wide .card-desc { color: rgba(245,240,232,0.6); margin: 0; }
-  .card.wide .card-cta { color: #F5F0E8; }
+  .card.wide .card-desc { color: rgba(245,240,232,0.62); margin: 0; }
+  html[data-theme="dark"] .card.wide .card-desc { color: rgba(245,240,232,0.68); }
+  .card.wide .card-cta { color: var(--cream); }
   .card.wide .cta-arrow { border-color: rgba(245,240,232,0.4); }
-  .card.wide:hover .cta-arrow { background: var(--gold); border-color: var(--gold); color: var(--ink); }
-
+  .card.wide:hover .cta-arrow { background: var(--gold); border-color: var(--gold); color: #1A1714; }
   .wide-content { flex: 1; }
   .wide-ornament {
-    font-family: 'Syne', sans-serif;
-    font-size: 80px;
-    font-weight: 800;
-    color: rgba(245,240,232,0.06);
-    line-height: 1;
-    flex-shrink: 0;
-    user-select: none;
+    font-family: 'Syne', sans-serif; font-size: 80px; font-weight: 800;
+    color: rgba(245,240,232,0.06); line-height: 1; flex-shrink: 0; user-select: none;
   }
-
-  /* FOOTER */
+  .search-panel {
+    margin: 0 0 42px;
+    background: var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:22px;
+    box-shadow:0 16px 40px rgba(26,23,20,.055);
+    opacity:0;
+    animation:fadeUp .9s cubic-bezier(.16,1,.3,1) forwards .5s;
+  }
+  .search-row { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; }
+  .search-input {
+    border:1px solid var(--line);
+    background:var(--cream);
+    color:var(--ink);
+    border-radius:999px;
+    padding:14px 18px;
+    font-family:'DM Sans',sans-serif;
+    outline:none;
+  }
+  .pulse-pill {
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:13px 16px;
+    color:var(--muted);
+    font-size:11px;
+    letter-spacing:1.6px;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .results {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+    margin-top:16px;
+  }
+  .result-item {
+    display:none;
+    text-decoration:none;
+    color:var(--ink);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:14px;
+    background:var(--cream);
+    transition:transform .35s ease, border-color .35s ease;
+  }
+  .result-item.show { display:block; animation:softPop .35s ease both; }
+  .result-item:hover { transform:translateY(-3px); border-color:rgba(200,75,47,.25); }
+  .result-item strong { display:block; font-family:'Syne',sans-serif; margin-bottom:6px; }
+  .result-item span { color:var(--muted); font-size:12px; line-height:1.45; display:block; }
+  .tools-section { margin-top:44px; }
+  .tool-card {
+    min-height:188px;
+    padding:22px;
+  }
+  .tool-card .card-title { font-size:22px; }
+  .updates-section { margin-top:48px; }
+  .update-panel {
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:16px;
+  }
+  .update-card {
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:24px;
+    position:relative;
+    overflow:hidden;
+  }
+  .update-card::after {
+    content:"";
+    position:absolute; left:0; top:0; height:0; width:3px; background:var(--gold);
+    transition:height .4s cubic-bezier(.16,1,.3,1);
+  }
+  .update-card:hover::after { height:100%; }
+  .update-card h3 {
+    font-family:'Syne',sans-serif; font-size:28px; letter-spacing:-.7px; margin-bottom:12px;
+  }
+  .update-list { display:grid; gap:12px; }
+  .update-line {
+    display:grid; grid-template-columns:auto 1fr; gap:12px;
+    color:var(--muted); line-height:1.55; font-size:14px;
+  }
+  .update-dot {
+    width:7px; height:7px; border-radius:50%; background:var(--accent); margin-top:8px;
+  }
   footer {
-    padding: 40px 0 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards 0.9s;
+    padding: 44px 0 0; display:flex; align-items:center; justify-content:space-between;
+    opacity:0; animation:fadeIn 1s ease forwards .9s;
   }
-
-  .footer-text {
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 0.5px;
-  }
-
+  .footer-text { font-size:12px; color:var(--muted); letter-spacing:.5px; }
   .footer-badge {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted);
+    display:flex; align-items:center; gap:6px;
   }
-
-  .status-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #5CB85C;
-    animation: pulse 2s ease infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
+  .status-dot { width:6px; height:6px; border-radius:50%; background:#5CB85C; animation:pulse 2s ease infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
   @keyframes fadeUp {
-    0% { opacity: 0; transform: translateY(34px) scale(0.985); }
-    65% { opacity: 1; transform: translateY(-2px) scale(1); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+    0% { opacity:0; transform:translateY(34px) scale(.985); }
+    65% { opacity:1; transform:translateY(-2px) scale(1); }
+    100% { opacity:1; transform:translateY(0) scale(1); }
   }
-
-  @keyframes fadeIn {
-    0% { opacity: 0; }
-    70% { opacity: 0.88; }
-    100% { opacity: 1; }
+  @keyframes fadeIn { 0%{opacity:0} 70%{opacity:.88} 100%{opacity:1} }
+  @keyframes softPop {
+    0% { opacity:0; transform:translateY(8px) scale(.98); }
+    100% { opacity:1; transform:translateY(0) scale(1); }
   }
-
-  @keyframes cardIn {
-    0% { opacity: 0; transform: translateY(28px) scale(0.98); }
-    70% { opacity: 1; transform: translateY(-2px) scale(1.002); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+  @media (max-width:900px) {
+    .tools-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .results { grid-template-columns:1fr 1fr; }
+    .update-panel { grid-template-columns:1fr; }
   }
-
-  @media (max-width: 640px) {
-    .page { padding: 0 20px 60px; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .card.wide { grid-column: span 1; flex-direction: column; }
-    .wide-ornament { display: none; }
-    .hero-row { flex-direction: column; align-items: flex-start; }
-    .hero-counter { text-align: left; }
+  @media (max-width:640px) {
+    body { cursor:auto; }
+    .cursor { display:none; }
+    .page { padding:0 20px 60px; }
+    nav { align-items:flex-start; }
+    .nav-right { flex-direction:column; align-items:flex-end; }
+    .cards-grid, .tools-grid, .results { grid-template-columns:1fr; }
+    .card.wide { grid-column:span 1; flex-direction:column; align-items:flex-start; }
+    .wide-ornament { display:none; }
+    .hero-row { flex-direction:column; align-items:flex-start; }
+    .hero-counter { text-align:left; }
+    .search-row { grid-template-columns:1fr; }
+    footer { flex-direction:column; align-items:flex-start; gap:10px; }
   }
 </style>
 </head>
 <body>
-
 <div class="cursor" id="cursor"></div>
-
 <div class="page">
   <nav>
-    <div class="logo">
-      <span class="logo-dot"></span>
-      Zakir Lab
+    <div class="logo"><span class="logo-dot"></span>Zakir Lab</div>
+    <div class="nav-right">
+      <button class="theme-toggle" onclick="toggleTheme()"><span data-theme-label>Dark</span> Mode</button>
+      <span class="nav-tag">Est. 2026</span>
     </div>
-    <span class="nav-tag">Est. 2026</span>
   </nav>
 
   <section class="hero">
@@ -428,19 +403,15 @@
       <span class="eyebrow-line"></span>
       <span class="eyebrow-text">Learning Space</span>
     </div>
-
     <h1 class="hero-heading">
       Welcome<br>
       <span class="line2">Enthusiasts,</span><br>
       Have a Look
     </h1>
-
     <div class="hero-row">
-      <p class="hero-sub">
-        Everything I build along the way.
-      </p>
+      <p class="hero-sub">Everything I build along the way.</p>
       <div class="hero-counter">
-        <div class="counter-num">02</div>
+        <div class="counter-num">10</div>
         <div class="counter-label">Sections live</div>
       </div>
     </div>
@@ -448,62 +419,188 @@
 
   <div class="divider"></div>
 
+  <div class="search-panel">
+    <div class="search-row">
+      <input class="search-input" id="site-search" type="search" placeholder="Search notes, mock tests, flashcards, cheatsheets, PYQs...">
+      <div class="pulse-pill" id="activity-pulse">Activity loading</div>
+    </div>
+    <div class="results" id="search-results"></div>
+  </div>
+
   <section class="cards-section">
     <p class="section-label">What's here</p>
     <div class="cards-grid">
-
       <a class="card" href="computer-class/">
         <span class="card-tag">Computer Science</span>
         <h2 class="card-title">Computer Class</h2>
         <p class="card-desc">Interactive mock tests, curated questions, instant review, and progress tracking for computer applications.</p>
-        <div class="card-cta">
-          <span>Enter</span>
-          <div class="cta-arrow">→</div>
-        </div>
+        <div class="card-cta"><span>Enter</span><div class="cta-arrow">→</div></div>
       </a>
 
       <a class="card" href="notes-and-guides/">
         <span class="card-tag">Study Library</span>
         <h2 class="card-title">Notes &amp; Guides</h2>
         <p class="card-desc">PDF notes, guides, and class materials arranged in clean study tiles.</p>
-        <div class="card-cta">
-          <span>Open</span>
-          <div class="cta-arrow">→</div>
-        </div>
+        <div class="card-cta"><span>Open</span><div class="cta-arrow">→</div></div>
       </a>
 
-      <a class="card wide" href="#">
+      <a class="card wide" href="dashboard/">
         <div class="wide-content">
-          <span class="card-tag">On the horizon</span>
-          <h2 class="card-title">More Coming Soon</h2>
-          <p class="card-desc">New tools, resources, and experiments are in the works. Stay tuned.</p>
-          <div class="card-cta" style="margin-top:20px;">
-            <span>Stay tuned</span>
-            <div class="cta-arrow">→</div>
-          </div>
+          <span class="card-tag">Live Progress</span>
+          <h2 class="card-title">Personal Learning Dashboard</h2>
+          <p class="card-desc">Track study streaks, completed topics, recent mock scores, and overall progress from your browser.</p>
+          <div class="card-cta" style="margin-top:20px;"><span>View dashboard</span><div class="cta-arrow">→</div></div>
         </div>
-        <div class="wide-ornament">∞</div>
+        <div class="wide-ornament">↗</div>
       </a>
+    </div>
+  </section>
 
+  <section class="tools-section">
+    <div class="section-head">
+      <span class="section-title">Study tools</span>
+      <span class="section-note">Built-in extras</span>
+    </div>
+    <div class="tools-grid">
+      <a class="card tool-card" href="flashcards/">
+        <span class="card-tag">Recall</span>
+        <h2 class="card-title">Flashcards</h2>
+        <p class="card-desc">Flip cards for quick revision of CS and exam terms.</p>
+        <div class="card-cta"><span>Study</span><div class="cta-arrow">→</div></div>
+      </a>
+      <a class="card tool-card" href="cheatsheets/">
+        <span class="card-tag">Quick Reference</span>
+        <h2 class="card-title">Cheatsheets</h2>
+        <p class="card-desc">Shortcuts, formulas, Office tools, and internet basics.</p>
+        <div class="card-cta"><span>Open</span><div class="cta-arrow">→</div></div>
+      </a>
+      <a class="card tool-card" href="pyqs/">
+        <span class="card-tag">Practice</span>
+        <h2 class="card-title">PYQs</h2>
+        <p class="card-desc">Previous-year style questions with simple explanations.</p>
+        <div class="card-cta"><span>Solve</span><div class="cta-arrow">→</div></div>
+      </a>
+      <a class="card tool-card" href="leaderboard/">
+        <span class="card-tag">Scores</span>
+        <h2 class="card-title">Leaderboard</h2>
+        <p class="card-desc">A local leaderboard powered by your saved quiz results.</p>
+        <div class="card-cta"><span>Rank</span><div class="cta-arrow">→</div></div>
+      </a>
+      <a class="card tool-card" href="dev-log/">
+        <span class="card-tag">Building in Public</span>
+        <h2 class="card-title">Dev Log</h2>
+        <p class="card-desc">Small posts about what is being built and improved.</p>
+        <div class="card-cta"><span>Read</span><div class="cta-arrow">→</div></div>
+      </a>
+      <a class="card tool-card" href="whats-new/">
+        <span class="card-tag">Changelog</span>
+        <h2 class="card-title">What's New</h2>
+        <p class="card-desc">Recent additions and upgrade notes in one clean place.</p>
+        <div class="card-cta"><span>Check</span><div class="cta-arrow">→</div></div>
+      </a>
+      <a class="card tool-card" href="suggest/">
+        <span class="card-tag">Community</span>
+        <h2 class="card-title">Suggest</h2>
+        <p class="card-desc">Suggest a question, topic, resource, or improvement.</p>
+        <div class="card-cta"><span>Send</span><div class="cta-arrow">→</div></div>
+      </a>
+      <a class="card tool-card" href="full-length-test/">
+        <span class="card-tag">Mock Exam</span>
+        <h2 class="card-title">Full Tests</h2>
+        <p class="card-desc">Four full-length 100-question computer application tests.</p>
+        <div class="card-cta"><span>Start</span><div class="cta-arrow">→</div></div>
+      </a>
+    </div>
+  </section>
+
+  <section class="updates-section">
+    <div class="section-head">
+      <span class="section-title">Activity & Updates</span>
+      <span class="section-note">Fresh additions</span>
+    </div>
+    <div class="update-panel">
+      <a class="update-card" href="whats-new/" style="text-decoration:none;color:var(--ink);">
+        <h3>What's New</h3>
+        <div class="update-list">
+          <div class="update-line"><span class="update-dot"></span><span>Added Notes & Guides library with PDF study materials.</span></div>
+          <div class="update-line"><span class="update-dot"></span><span>Added full-length computer application mock tests with 100 questions each.</span></div>
+          <div class="update-line"><span class="update-dot"></span><span>Added dashboard, flashcards, cheatsheets, PYQs, dev log, search, and dark mode.</span></div>
+        </div>
+      </a>
+      <a class="update-card" href="dev-log/" style="text-decoration:none;color:var(--ink);">
+        <h3>Building in Public</h3>
+        <p class="card-desc">A small dev log makes Zakir Lab feel alive, personal, and trustworthy. This is where the journey gets documented.</p>
+        <div class="card-cta" style="margin-top:18px;"><span>Read dev log</span><div class="cta-arrow">→</div></div>
+      </a>
     </div>
   </section>
 
   <footer>
-    <span class="footer-text">© 2024 Zakir Lab. All rights reserved.</span>
-    <div class="footer-badge">
-      <span class="status-dot"></span>
-      <span>Active</span>
-    </div>
+    <span class="footer-text">© 2026 Zakir Lab. All rights reserved.</span>
+    <div class="footer-badge"><span class="status-dot"></span><span>Active</span></div>
   </footer>
 </div>
 
 <script>
+  const root = document.documentElement;
+  const savedTheme = localStorage.getItem('ZAKIR_THEME') || 'light';
+  root.dataset.theme = savedTheme;
+  function toggleTheme(){
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    localStorage.setItem('ZAKIR_THEME', next);
+    document.querySelectorAll('[data-theme-label]').forEach(el => el.textContent = next === 'dark' ? 'Light' : 'Dark');
+  }
+  document.querySelectorAll('[data-theme-label]').forEach(el => el.textContent = root.dataset.theme === 'dark' ? 'Light' : 'Dark');
+
+  const SEARCH_INDEX = [
+    {title:'Computer Class', type:'Mock Tests', desc:'Chapter-wise computer application tests', url:'computer-class/', keys:'computer class mock test mcq intro virus word excel powerpoint internet operating system'},
+    {title:'Notes & Guides', type:'PDF Library', desc:'Communication, digestive system, HDPC, blood physiology and more', url:'notes-and-guides/', keys:'notes guides pdf communication digestive hdpc hemostasis hormones stomach small intestine blood physiology'},
+    {title:'Dashboard', type:'Progress', desc:'Study streak, completed topics and score history', url:'dashboard/', keys:'dashboard progress tracker streak scores topics'},
+    {title:'Flashcards', type:'Revision', desc:'Flip cards for terms and exam prep', url:'flashcards/', keys:'flashcards terms cs formulas revision'},
+    {title:'Cheatsheets', type:'Reference', desc:'Keyboard shortcuts, Office, SQL, Python and internet basics', url:'cheatsheets/', keys:'cheatsheet shortcuts sql python syntax word excel powerpoint'},
+    {title:'PYQs', type:'Practice', desc:'Previous-year style questions with answers', url:'pyqs/', keys:'pyq previous year questions solved explanations'},
+    {title:'Leaderboard', type:'Scores', desc:'Local leaderboard from saved quiz results', url:'leaderboard/', keys:'leaderboard score rank quiz result'},
+    {title:'Dev Log', type:'Blog', desc:'Building in public posts about Zakir Lab', url:'dev-log/', keys:'blog dev log building public updates'},
+    {title:"What's New", type:'Changelog', desc:'Recent updates and changes', url:'whats-new/', keys:'whats new changelog updates added'},
+    {title:'Suggest', type:'Community', desc:'Suggest a question, topic or resource', url:'suggest/', keys:'suggest question resource feedback form'}
+  ];
+
+  const results = document.getElementById('search-results');
+  function renderResults(query='') {
+    const q = query.trim().toLowerCase();
+    const matches = q ? SEARCH_INDEX.filter(item => (item.title + ' ' + item.type + ' ' + item.desc + ' ' + item.keys).toLowerCase().includes(q)) : SEARCH_INDEX.slice(0, 3);
+    results.innerHTML = matches.slice(0, 6).map(item => `
+      <a class="result-item show" href="${item.url}">
+        <strong>${item.title}</strong>
+        <span>${item.type} · ${item.desc}</span>
+      </a>
+    `).join('');
+  }
+  renderResults();
+  document.getElementById('site-search').addEventListener('input', e => renderResults(e.target.value));
+
+  function updateActivityPulse(){
+    const today = new Date().toISOString().slice(0,10);
+    const data = JSON.parse(localStorage.getItem('ZAKIR_VISITS') || '{}');
+    data[today] = (data[today] || 0) + 1;
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 6);
+    let weekly = 0;
+    Object.keys(data).forEach(day => {
+      if (new Date(day) >= cutoff) weekly += data[day];
+    });
+    localStorage.setItem('ZAKIR_VISITS', JSON.stringify(data));
+    document.getElementById('activity-pulse').textContent = weekly + ' local visits this week';
+  }
+  updateActivityPulse();
+
   const cursor = document.getElementById('cursor');
   document.addEventListener('mousemove', e => {
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
   });
-  document.querySelectorAll('a, button, .card').forEach(el => {
+  document.querySelectorAll('a, button, .card, input').forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('big'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
   });
