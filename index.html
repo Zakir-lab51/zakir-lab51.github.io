@@ -545,46 +545,39 @@
     flex-wrap: wrap;
   }
 
-  .hero-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 12px;
-  }
-
   .visitor-counter {
-    width: max-content;
-    max-width: 100%;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
+    gap: 8px;
+    padding: 5px 7px;
     border: 1px solid var(--line);
     border-radius: 999px;
-    background: rgba(255,255,255,.58);
+    background: transparent;
     color: var(--ink);
     text-decoration: none;
-    box-shadow: 0 12px 28px rgba(26,23,20,.08);
+    opacity: .78;
+    transition: opacity .25s ease, border-color .25s ease;
   }
 
-  html[data-theme="dark"] .visitor-counter {
-    background: rgba(255,255,255,.06);
-    box-shadow: 0 12px 28px rgba(0,0,0,.26);
+  .visitor-counter:hover {
+    opacity: 1;
+    border-color: rgba(200,75,47,.32);
   }
 
-  .visitor-counter span {
+  .visitor-counter-label {
     color: var(--muted);
-    font-size: 10px;
-    letter-spacing: 1.5px;
+    font-size: 9px;
+    letter-spacing: 1.4px;
     text-transform: uppercase;
     white-space: nowrap;
   }
 
   .visitor-counter img {
     display: block;
-    height: 20px;
+    height: 18px;
     width: auto;
-    max-width: 150px;
+    max-width: 116px;
+    filter: saturate(.7);
   }
 
   .primary-btn,
@@ -919,6 +912,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     gap: 18px;
     color: var(--muted);
     font-size: 12px;
@@ -1213,14 +1207,6 @@
     }
     .hero-cta {
       width: 100%;
-    }
-    .hero-actions {
-      width: 100%;
-      align-items: stretch;
-    }
-    .visitor-counter {
-      width: 100%;
-      justify-content: space-between;
     }
     .primary-btn,
     .secondary-btn {
@@ -1535,15 +1521,9 @@ html[data-theme="dark"] #cursor.big {
 
           <div class="hero-bottom">
             <p class="hero-sub">Everything I build along the way.</p>
-            <div class="hero-actions">
-              <div class="hero-cta">
-                <a class="primary-btn" href="study/">Start Studying</a>
-                <a class="secondary-btn" href="study/">All Subjects</a>
-              </div>
-              <a class="visitor-counter" href="https://hits.sh/zakir-lab51.github.io/" target="_blank" rel="noopener" aria-label="Zakir Lab visitor count">
-                <span>Visitor Count</span>
-                <img src="https://hits.sh/zakir-lab51.github.io.svg?style=flat-square&label=Visitors&color=c84b2f&labelColor=1a1714&view=total" alt="Zakir Lab visitor count">
-              </a>
+            <div class="hero-cta">
+              <a class="primary-btn" href="study/">Start Studying</a>
+              <a class="secondary-btn" href="study/">All Subjects</a>
             </div>
           </div>
         </div>
@@ -1648,6 +1628,10 @@ html[data-theme="dark"] #cursor.big {
 
       <footer>
         <span>© 2026 Zakir Lab. All rights reserved.</span>
+        <a class="visitor-counter" href="https://hits.sh/zakir-lab51.github.io/" target="_blank" rel="noopener" aria-label="Zakir Lab visitor count">
+          <span class="visitor-counter-label">Visits</span>
+          <img src="https://hits.sh/zakir-lab51.github.io.svg?style=flat-square&label=views&color=6f6256&labelColor=fdfaf5&view=total" alt="Zakir Lab visitor count">
+        </a>
         <span class="status"><span class="status-dot"></span>Active</span>
       </footer>
     </div>
