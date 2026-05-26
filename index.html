@@ -1400,7 +1400,7 @@ html[data-theme="dark"] #cursor.big {
         <span class="brand-dot"></span>
         <span class="brand-name">Zakir Lab</span>
       </div>
-      <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">‹</button>
+      <button class="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">‹</button>
     </div>
 
     <div class="side-meta">
@@ -1461,7 +1461,7 @@ html[data-theme="dark"] #cursor.big {
     <div class="main-inner">
       <header class="topbar">
         <div class="top-left">
-          <button class="mobile-menu" onclick="toggleMobileSidebar()">☰</button>
+          <button class="mobile-menu" type="button" onclick="toggleMobileSidebar()" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">☰</button>
           <div>
             <div class="top-kicker">Learning Space</div>
             <div class="top-sub">Desktop-optimized layout for computer class, mock tests, notes and tools.</div>
@@ -1643,30 +1643,70 @@ html[data-theme="dark"] #cursor.big {
     const canCollapse = window.matchMedia('(min-width: 981px)').matches;
     const collapsed = canCollapse && localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'collapsed';
     const sidebarToggle = sidebar.querySelector('.sidebar-toggle');
+    const mobileOpen = !canCollapse && sidebar.classList.contains('mobile-open');
+
+    if (canCollapse) {
+      sidebar.classList.remove('mobile-open');
+    }
 
     sidebar.classList.toggle('collapsed', collapsed);
     body.classList.toggle('sidebar-collapsed', collapsed);
 
     if (sidebarToggle) {
-      sidebarToggle.textContent = collapsed ? '›' : '‹';
-      sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
+      if (canCollapse) {
+        sidebarToggle.textContent = collapsed ? '\u203a' : '\u2039';
+        sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
+        sidebarToggle.setAttribute('aria-label', 'Toggle sidebar');
+      } else {
+        sidebarToggle.textContent = '\u00d7';
+        sidebarToggle.setAttribute('aria-expanded', String(mobileOpen));
+        sidebarToggle.setAttribute('aria-label', 'Close navigation');
+      }
     }
+
+    document.querySelectorAll('.mobile-menu').forEach(button => {
+      button.setAttribute('aria-expanded', String(!canCollapse && sidebar.classList.contains('mobile-open')));
+    });
   }
 
   function toggleSidebar() {
     const canCollapse = window.matchMedia('(min-width: 981px)').matches;
+    if (!canCollapse) {
+      toggleMobileSidebar();
+      return;
+    }
+
     const collapsed = canCollapse && !sidebar.classList.contains('collapsed');
 
     localStorage.setItem(SIDEBAR_STORAGE_KEY, collapsed ? 'collapsed' : 'open');
     applySidebarState();
   }
 
+  function closeMobileSidebar() {
+    sidebar.classList.remove('mobile-open');
+    applySidebarState();
+  }
+
   function toggleMobileSidebar() {
     sidebar.classList.toggle('mobile-open');
+    applySidebarState();
   }
 
   applySidebarState();
   window.addEventListener('resize', applySidebarState);
+  sidebar.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.matchMedia('(max-width: 980px)').matches) {
+        closeMobileSidebar();
+      }
+    });
+  });
+
+  document.addEventListener('click', e => {
+    if (!window.matchMedia('(max-width: 980px)').matches || !sidebar.classList.contains('mobile-open')) return;
+    if (sidebar.contains(e.target) || e.target.closest('.mobile-menu')) return;
+    closeMobileSidebar();
+  });
 
   const SEARCH_INDEX = [
     {title:'Computer Class', type:'Mock Tests', desc:'Chapter-wise computer application tests', url:'computer-class/', keys:'computer class mock test mcq intro virus word excel powerpoint internet operating system'},
@@ -1715,7 +1755,7 @@ html[data-theme="dark"] #cursor.big {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       closeSearch();
-      sidebar.classList.remove('mobile-open');
+      closeMobileSidebar();
     }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
