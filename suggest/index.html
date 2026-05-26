@@ -8,11 +8,45 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
 <script>
   (function() {
+    var themeKey = 'ZAKIR_THEME';
+
+    function normalizeTheme(value) {
+      return value === 'dark' ? 'dark' : 'light';
+    }
+
+    function updateThemeLabels(theme) {
+      document.querySelectorAll('[data-theme-label]').forEach(function(el) {
+        el.textContent = theme === 'dark' ? 'Light' : 'Dark';
+      });
+    }
+
+    window.applyZakirTheme = function(theme) {
+      var next = normalizeTheme(theme);
+      document.documentElement.dataset.theme = next;
+      try {
+        localStorage.setItem(themeKey, next);
+      } catch (error) {}
+      updateThemeLabels(next);
+      return next;
+    };
+
+    window.toggleTheme = function() {
+      var current = normalizeTheme(document.documentElement.dataset.theme);
+      return window.applyZakirTheme(current === 'dark' ? 'light' : 'dark');
+    };
+
     try {
-      var savedTheme = localStorage.getItem('ZAKIR_THEME') || 'light';
-      document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+      document.documentElement.dataset.theme = normalizeTheme(localStorage.getItem(themeKey) || 'light');
     } catch (error) {
       document.documentElement.dataset.theme = 'light';
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        updateThemeLabels(normalizeTheme(document.documentElement.dataset.theme));
+      });
+    } else {
+      updateThemeLabels(normalizeTheme(document.documentElement.dataset.theme));
     }
   })();
 </script>
@@ -389,6 +423,21 @@ body.pc-sidebar-collapsed .pc-side-link {
   padding: 11px;
   justify-items: center;
 }
+.pc-mobile-theme {
+  display: none;
+}
+button.pc-side-link {
+  width: 100%;
+  border: 1px solid var(--line, rgba(26,23,20,.10));
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+@media (max-width: 1100px) {
+  .pc-mobile-theme {
+    display: block;
+  }
+}
 .pc-mobile-menu {
   display: none;
   border: 1px solid var(--line, rgba(26,23,20,.10));
@@ -639,6 +688,15 @@ html[data-theme="dark"] #cursor.big {
   }
 }
 
+
+@media (min-width: 1101px) {
+  body.pc-sidebar-collapsed .pc-sidebar {
+    width: var(--pc-sidebar-collapsed) !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -655,6 +713,11 @@ html[data-theme="dark"] #cursor.big {
   <div class="pc-side-meta">
     <div class="pc-meta-box"><div class="pc-meta-num">10</div><div class="pc-meta-label">Sections</div></div>
     <div class="pc-meta-box"><div class="pc-meta-num">8</div><div class="pc-meta-label">PDF Notes</div></div>
+  </div>
+  <div class="pc-mobile-theme">
+    <button class="pc-side-link pc-theme-toggle" type="button" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <span class="pc-side-icon">M</span><span class="pc-side-text"><strong><span data-theme-label>Dark</span> Mode</strong><span>Mobile theme</span></span>
+    </button>
   </div>
   <div class="pc-side-label">Main</div>
   <div class="pc-side-links">
@@ -677,6 +740,7 @@ html[data-theme="dark"] #cursor.big {
 <div class="cursor" id="cursor"></div>
 <div class="page">
   <nav>
+    <button class="pc-mobile-menu" type="button" onclick="toggleMobileSidebar()" aria-label="Open navigation">Menu</button>
     <a class="back-link" href="../"><span class="back-arrow">←</span><span>Home</span></a>
     <div class="nav-actions">
       <button class="theme-toggle" onclick="toggleTheme()"><span data-theme-label>Dark</span> Mode</button>
@@ -749,5 +813,65 @@ html[data-theme="dark"] #cursor.big {
   }
 </script>
 
+<script>
+  (function() {
+    var pcSidebar = document.getElementById('pc-sidebar');
+    if (!pcSidebar) return;
+    var sidebarKey = 'ZAKIR_PC_SIDEBAR_V2';
+
+    try {
+      localStorage.removeItem('ZAKIR_PC_SIDEBAR');
+    } catch (error) {}
+
+    function canCollapseSidebar() {
+      return window.matchMedia('(min-width: 1101px)').matches;
+    }
+
+    window.applyPcSidebarState = function() {
+      var collapsed = false;
+      try {
+        collapsed = canCollapseSidebar() && localStorage.getItem(sidebarKey) === 'collapsed';
+      } catch (error) {}
+
+      document.body.classList.toggle('pc-sidebar-collapsed', collapsed);
+      if (canCollapseSidebar()) {
+        pcSidebar.classList.remove('mobile-open');
+      }
+
+      var toggle = pcSidebar.querySelector('.pc-side-toggle');
+      if (toggle) {
+        toggle.textContent = collapsed ? '\u203a' : '\u2039';
+        toggle.setAttribute('aria-expanded', String(!collapsed));
+      }
+    };
+
+    window.togglePcSidebar = function() {
+      if (!canCollapseSidebar()) {
+        window.toggleMobileSidebar();
+        return;
+      }
+      var collapsed = !document.body.classList.contains('pc-sidebar-collapsed');
+      try {
+        localStorage.setItem(sidebarKey, collapsed ? 'collapsed' : 'open');
+      } catch (error) {}
+      window.applyPcSidebarState();
+    };
+
+    window.toggleMobileSidebar = function() {
+      pcSidebar.classList.toggle('mobile-open');
+    };
+
+    pcSidebar.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (!canCollapseSidebar()) {
+          pcSidebar.classList.remove('mobile-open');
+        }
+      });
+    });
+
+    window.applyPcSidebarState();
+    window.addEventListener('resize', window.applyPcSidebarState);
+  })();
+</script>
 </body>
 </html>
