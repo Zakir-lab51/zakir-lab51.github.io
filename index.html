@@ -195,6 +195,7 @@
   .side-links {
     display: grid;
     gap: 8px;
+    min-height: 0;
     overflow-y: auto;
     padding-right: 2px;
   }
@@ -241,6 +242,10 @@
     color: var(--accent);
     font-family: 'Syne', sans-serif;
     font-weight: 800;
+  }
+
+  .side-text {
+    min-width: 0;
   }
 
   .side-text strong {
@@ -292,10 +297,22 @@
     display: none;
   }
 
+  .sidebar.collapsed .side-links {
+    width: 100%;
+    padding-right: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .sidebar.collapsed .side-links::-webkit-scrollbar {
+    display: none;
+  }
+
   .sidebar.collapsed .side-link {
     grid-template-columns: 1fr;
     padding: 11px;
     justify-items: center;
+    min-height: 58px;
   }
 
   /* Main layout */
@@ -1084,8 +1101,9 @@
       padding: 30px 24px;
     }
     .hero-title {
-      font-size: clamp(48px, 16vw, 76px);
-      letter-spacing: -2.6px;
+      font-size: clamp(42px, 13.5vw, 60px);
+      line-height: .95;
+      letter-spacing: -1.6px;
     }
     .hero-bottom {
       align-items: flex-start;
@@ -1261,7 +1279,7 @@ html[data-theme="dark"] #cursor.big {
         <span class="brand-dot"></span>
         <span class="brand-name">Zakir Lab</span>
       </div>
-      <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">‹</button>
+      <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-expanded="true">‹</button>
     </div>
 
     <div class="side-meta">
@@ -1508,15 +1526,28 @@ html[data-theme="dark"] #cursor.big {
 
   updateThemeLabels();
 
+  const SIDEBAR_STORAGE_KEY = 'ZAKIR_PC_SIDEBAR_V2';
+  localStorage.removeItem('ZAKIR_PC_SIDEBAR');
+
   function applySidebarState() {
-    const collapsed = localStorage.getItem('ZAKIR_PC_SIDEBAR') === 'collapsed';
+    const canCollapse = window.matchMedia('(min-width: 981px)').matches;
+    const collapsed = canCollapse && localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'collapsed';
+    const sidebarToggle = sidebar.querySelector('.sidebar-toggle');
+
     sidebar.classList.toggle('collapsed', collapsed);
     body.classList.toggle('sidebar-collapsed', collapsed);
+
+    if (sidebarToggle) {
+      sidebarToggle.textContent = collapsed ? '›' : '‹';
+      sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
+    }
   }
 
   function toggleSidebar() {
-    const collapsed = !sidebar.classList.contains('collapsed');
-    localStorage.setItem('ZAKIR_PC_SIDEBAR', collapsed ? 'collapsed' : 'open');
+    const canCollapse = window.matchMedia('(min-width: 981px)').matches;
+    const collapsed = canCollapse && !sidebar.classList.contains('collapsed');
+
+    localStorage.setItem(SIDEBAR_STORAGE_KEY, collapsed ? 'collapsed' : 'open');
     applySidebarState();
   }
 
@@ -1525,6 +1556,7 @@ html[data-theme="dark"] #cursor.big {
   }
 
   applySidebarState();
+  window.addEventListener('resize', applySidebarState);
 
   const SEARCH_INDEX = [
     {title:'Computer Class', type:'Mock Tests', desc:'Chapter-wise computer application tests', url:'computer-class/', keys:'computer class mock test mcq intro virus word excel powerpoint internet operating system'},
