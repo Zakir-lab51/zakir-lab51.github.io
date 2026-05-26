@@ -751,7 +751,7 @@ html[data-theme="dark"] #cursor.big {
   </div>
   <div class="pc-side-meta">
     <div class="pc-meta-box"><div class="pc-meta-num">10</div><div class="pc-meta-label">Sections</div></div>
-    <div class="pc-meta-box"><div class="pc-meta-num">0</div><div class="pc-meta-label">PDFs</div></div>
+    <div class="pc-meta-box"><div class="pc-meta-num">5</div><div class="pc-meta-label">PDFs</div></div>
   </div>
   <div class="pc-mobile-theme">
     <button class="pc-side-link pc-theme-toggle" type="button" onclick="toggleTheme()" aria-label="Toggle dark mode">
@@ -789,7 +789,7 @@ html[data-theme="dark"] #cursor.big {
   <section class="hero">
     <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Physiology</span></div>
     <h1>Physiology<br><span>Library</span></h1>
-    <p>Physiology PDFs will be arranged here.</p>
+    <p>5 physiology PDFs arranged for quick study.</p>
   </section>
 
   <div class="divider"></div>
@@ -797,9 +797,35 @@ html[data-theme="dark"] #cursor.big {
   <section>
     <div class="section-row">
       <span class="section-title">Physiology PDFs</span>
-      <span class="section-count">Ready for PDFs</span>
+      <span class="section-count">5 files</span>
     </div>
-    <div class="recent-empty">PDFs not added yet.</div>
+        <div class="notes-grid">
+      <a class="note-card" href="files/blood-physiology.pdf" target="_blank" rel="noopener" data-num="01">
+        <div class="note-top"><span class="note-tag">Physiology</span><span class="note-mark">BP</span></div>
+        <h2>Blood Physiology</h2>
+        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
+      </a>
+      <a class="note-card" href="files/digestive-system-physiology.pdf" target="_blank" rel="noopener" data-num="02">
+        <div class="note-top"><span class="note-tag">Physiology</span><span class="note-mark">DS</span></div>
+        <h2>Digestive System Physiology</h2>
+        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
+      </a>
+      <a class="note-card" href="files/hemostasis.pdf" target="_blank" rel="noopener" data-num="03">
+        <div class="note-top"><span class="note-tag">Blood</span><span class="note-mark">H</span></div>
+        <h2>Hemostasis</h2>
+        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
+      </a>
+      <a class="note-card" href="files/hormones-of-stomach.pdf" target="_blank" rel="noopener" data-num="04">
+        <div class="note-top"><span class="note-tag">GIT</span><span class="note-mark">HO</span></div>
+        <h2>Hormones of Stomach</h2>
+        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
+      </a>
+      <a class="note-card" href="files/small-intestine.pdf" target="_blank" rel="noopener" data-num="05">
+        <div class="note-top"><span class="note-tag">Histology</span><span class="note-mark">SI</span></div>
+        <h2>Small Intestine</h2>
+        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
+      </a>
+    </div>
   </section>
 
   <footer>
@@ -881,5 +907,50 @@ html[data-theme="dark"] #cursor.big {
   })();
 </script>
 
+<script data-zakir-recents-tracker>
+(function() {
+  var storageKey = 'ZAKIR_RECENT_FILES_V1';
+  function readRecents() {
+    try {
+      var parsed = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+    } catch (error) {
+      return [];
+    }
+  }
+  function saveRecents(items) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(items.slice(0, 20)));
+    } catch (error) {}
+  }
+  function cleanText(node, fallback) {
+    var text = node ? node.textContent : '';
+    text = text ? text.replace(/\s+/g, ' ').trim() : '';
+    return text || fallback;
+  }
+  function currentSection() {
+    var label = cleanText(document.querySelector('.eyebrow-text'), 'PDF Library');
+    return label === 'Notes & Guides' ? 'Other Notes' : label;
+  }
+  document.querySelectorAll('a.note-card[href$=".pdf"]').forEach(function(link) {
+    link.addEventListener('click', function() {
+      var href = link.getAttribute('href');
+      if (!href) return;
+      var url;
+      try { url = new URL(href, window.location.href).href; } catch (error) { return; }
+      var item = {
+        title: cleanText(link.querySelector('h2'), 'PDF file'),
+        url: url,
+        section: currentSection(),
+        tag: cleanText(link.querySelector('.note-tag'), currentSection()),
+        openedAt: new Date().toISOString()
+      };
+      var next = readRecents().filter(function(existing) { return existing && existing.url !== item.url; });
+      next.unshift(item);
+      saveRecents(next);
+    });
+  });
+})();
+</script>
 </body>
 </html>

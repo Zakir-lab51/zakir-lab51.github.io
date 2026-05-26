@@ -200,6 +200,11 @@ html[data-theme="dark"] :where(.note-open, .note-arrow) {
     background:var(--accent); color:var(--cream); border-color:var(--accent);
     transform:translateX(4px) rotate(-45deg);
   }
+  .recent-empty {
+    border:1px dashed rgba(26,23,20,.18); border-radius:18px; padding:28px;
+    color:var(--muted); background:rgba(255,255,255,.32); line-height:1.6;
+  }
+  html[data-theme="dark"] .recent-empty { border-color:var(--line); background:rgba(245,240,232,.04); }
   footer {
     margin-top:50px; display:flex; align-items:center; justify-content:space-between;
     color:var(--muted); font-size:12px; animation:fadeUp .9s ease both .28s;
@@ -737,7 +742,7 @@ html[data-theme="dark"] #cursor.big {
   </div>
   <div class="pc-side-meta">
     <div class="pc-meta-box"><div class="pc-meta-num">10</div><div class="pc-meta-label">Sections</div></div>
-    <div class="pc-meta-box"><div class="pc-meta-num">8</div><div class="pc-meta-label">Other Notes</div></div>
+    <div class="pc-meta-box"><div class="pc-meta-num">0</div><div class="pc-meta-label">Other Notes</div></div>
   </div>
   <div class="pc-mobile-theme">
     <button class="pc-side-link pc-theme-toggle" type="button" onclick="toggleTheme()" aria-label="Toggle dark mode">
@@ -774,7 +779,7 @@ html[data-theme="dark"] #cursor.big {
   <section class="hero">
     <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Other Notes</span></div>
     <h1>Study<br><span>Library</span></h1>
-    <p>Clean PDF notes and class guides, arranged for quick access.</p>
+    <p>Subject PDFs have been moved into their dedicated pages.</p>
   </section>
 
   <div class="divider"></div>
@@ -782,98 +787,25 @@ html[data-theme="dark"] #cursor.big {
   <section>
     <div class="section-row">
       <span class="section-title">Available PDFs</span>
-      <span class="section-count">8 files</span>
+      <span class="section-count">Moved to subjects</span>
     </div>
 
-    <div class="notes-grid">
-      
-      <a class="note-card" href="files/communication-skills.pdf" target="_blank" rel="noopener" data-num="01">
-        <div class="note-top">
-          <span class="note-tag">Health Education</span>
-          <span class="note-mark">CS</span>
-        </div>
+        <div class="recent-empty">These PDFs were moved into their subject pages: Physiology, HDPC, and Communication Skills.</div>
+    <div class="notes-grid" style="margin-top:16px;">
+      <a class="note-card" href="../physiology/" data-num="01">
+        <div class="note-top"><span class="note-tag">Body Function</span><span class="note-mark">PHY</span></div>
+        <h2>Physiology</h2>
+        <div class="note-footer"><span>Open Subject</span><span class="note-arrow">&rarr;</span></div>
+      </a>
+      <a class="note-card" href="../hdpc/" data-num="02">
+        <div class="note-top"><span class="note-tag">Patient Care</span><span class="note-mark">HD</span></div>
+        <h2>HDPC</h2>
+        <div class="note-footer"><span>Open Subject</span><span class="note-arrow">&rarr;</span></div>
+      </a>
+      <a class="note-card" href="../communication-skills/" data-num="03">
+        <div class="note-top"><span class="note-tag">Health Education</span><span class="note-mark">CS</span></div>
         <h2>Communication Skills</h2>
-        <div class="note-footer">
-          <span>Open PDF</span>
-          <span class="note-arrow">&rarr;</span>
-        </div>
-      </a>
-      <a class="note-card" href="files/digestive-system-physiology.pdf" target="_blank" rel="noopener" data-num="02">
-        <div class="note-top">
-          <span class="note-tag">Physiology</span>
-          <span class="note-mark">DS</span>
-        </div>
-        <h2>Digestive System Physiology</h2>
-        <div class="note-footer">
-          <span>Open PDF</span>
-          <span class="note-arrow">&rarr;</span>
-        </div>
-      </a>
-      <a class="note-card" href="files/hdpc-2026.pdf" target="_blank" rel="noopener" data-num="03">
-        <div class="note-top">
-          <span class="note-tag">Patient Care</span>
-          <span class="note-mark">H2</span>
-        </div>
-        <h2>HDPC 2026</h2>
-        <div class="note-footer">
-          <span>Open PDF</span>
-          <span class="note-arrow">&rarr;</span>
-        </div>
-      </a>
-      <a class="note-card" href="files/hdpc-last-part.pdf" target="_blank" rel="noopener" data-num="04">
-        <div class="note-top">
-          <span class="note-tag">Patient Care</span>
-          <span class="note-mark">HL</span>
-        </div>
-        <h2>HDPC Last Part</h2>
-        <div class="note-footer">
-          <span>Open PDF</span>
-          <span class="note-arrow">&rarr;</span>
-        </div>
-      </a>
-      <a class="note-card" href="files/hemostasis.pdf" target="_blank" rel="noopener" data-num="05">
-        <div class="note-top">
-          <span class="note-tag">Blood</span>
-          <span class="note-mark">H</span>
-        </div>
-        <h2>Hemostasis</h2>
-        <div class="note-footer">
-          <span>Open PDF</span>
-          <span class="note-arrow">&rarr;</span>
-        </div>
-      </a>
-      <a class="note-card" href="files/hormones-of-stomach.pdf" target="_blank" rel="noopener" data-num="06">
-        <div class="note-top">
-          <span class="note-tag">GIT</span>
-          <span class="note-mark">HO</span>
-        </div>
-        <h2>Hormones of Stomach</h2>
-        <div class="note-footer">
-          <span>Open PDF</span>
-          <span class="note-arrow">&rarr;</span>
-        </div>
-      </a>
-      <a class="note-card" href="files/small-intestine.pdf" target="_blank" rel="noopener" data-num="07">
-        <div class="note-top">
-          <span class="note-tag">Histology</span>
-          <span class="note-mark">SI</span>
-        </div>
-        <h2>Small Intestine</h2>
-        <div class="note-footer">
-          <span>Open PDF</span>
-          <span class="note-arrow">&rarr;</span>
-        </div>
-      </a>
-      <a class="note-card" href="files/blood-physiology.pdf" target="_blank" rel="noopener" data-num="08">
-        <div class="note-top">
-          <span class="note-tag">Physiology</span>
-          <span class="note-mark">BP</span>
-        </div>
-        <h2>Blood Physiology</h2>
-        <div class="note-footer">
-          <span>Open PDF</span>
-          <span class="note-arrow">&rarr;</span>
-        </div>
+        <div class="note-footer"><span>Open Subject</span><span class="note-arrow">&rarr;</span></div>
       </a>
     </div>
   </section>
