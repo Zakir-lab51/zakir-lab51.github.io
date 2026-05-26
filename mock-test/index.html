@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Computer Application Mixed Mock Tests</title>
 
+<script>
+  (function() {
+    try {
+      var savedTheme = localStorage.getItem('ZAKIR_THEME') || 'light';
+      document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+    } catch (error) {
+      document.documentElement.dataset.theme = 'light';
+    }
+  })();
+</script>
 <style>
   :root {
     --bg1: #f7fff9;
@@ -24,6 +34,45 @@
     --shadow: 0 24px 70px rgba(25,85,52,0.08);
     --soft-shadow: 0 14px 34px rgba(25,85,52,0.055);
   }
+  html[data-theme="dark"] {
+  --bg1:#0F1712;
+  --bg2:#172219;
+  --text:#F2FFF5;
+  --muted:rgba(242,255,245,0.66);
+  --glass:rgba(18,31,23,0.72);
+  --glass2:rgba(245,255,249,0.08);
+  --glass3:rgba(245,255,249,0.13);
+  --line:rgba(213,255,226,0.13);
+  --line2:rgba(213,255,226,0.22);
+  --accent:#5DE89A;
+  --accent2:#9BFFC4;
+  --correct:#5DE89A;
+  --wrong:#FF6F86;
+  --skip:#FFD166;
+  --shadow:0 24px 70px rgba(0,0,0,0.34);
+  --soft-shadow:0 14px 34px rgba(0,0,0,0.24);
+}
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(93,232,154,0.16), transparent 27%),
+    radial-gradient(circle at 86% 8%, rgba(18,168,93,0.10), transparent 30%),
+    radial-gradient(circle at 44% 94%, rgba(11,31,18,0.72), transparent 34%),
+    linear-gradient(135deg, var(--bg1), var(--bg2) 58%, #101712);
+}
+html[data-theme="dark"] body::before { opacity:.42; }
+html[data-theme="dark"] body::after { opacity:.24; }
+html[data-theme="dark"] :where(.glass, .test-card, .q-card, .review-card, .result-card, .timer-card, .setup-card, .modal-card, .stat-card, .top-pill, .action-card) {
+  background:
+    linear-gradient(135deg, rgba(245,255,249,0.10), rgba(245,255,249,0.035) 55%, rgba(93,232,154,0.09)),
+    rgba(18,31,23,0.58);
+  border-color:var(--line);
+  box-shadow:var(--soft-shadow), inset 0 1px 0 rgba(245,255,249,0.10);
+}
+html[data-theme="dark"] :where(.option-btn, .review-opt, input, select) {
+  background:rgba(18,31,23,0.70);
+  border-color:var(--line);
+  color:var(--text);
+}
 
   * {
     margin: 0;
