@@ -1133,6 +1133,22 @@
       align-items: flex-start;
       flex-direction: column;
     }
+    .top-left {
+      width: 100%;
+      align-items: flex-start;
+    }
+    .top-left > div {
+      min-width: 0;
+      flex: 1;
+    }
+    .top-kicker,
+    .top-sub {
+      width: auto;
+      max-width: 100%;
+    }
+    .top-sub {
+      overflow-wrap: anywhere;
+    }
     .top-actions {
       width: 100%;
       flex-wrap: wrap;
@@ -1162,13 +1178,67 @@
       text-align: center;
     }
     .stat-column,
-    .cards-grid,
+    .cards-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
     .mini-links,
     .results {
       grid-template-columns: 1fr;
     }
-    .wide-panel {
-      grid-column: span 1;
+    .stat-card {
+      min-height: 156px;
+      padding: 18px;
+      border-radius: 16px;
+    }
+    .stat-num {
+      font-size: clamp(44px, 15vw, 58px);
+      letter-spacing: -3px;
+    }
+    .stat-label {
+      left: 16px;
+      right: 14px;
+      bottom: 16px;
+    }
+    .stat-label strong {
+      font-size: 18px;
+      letter-spacing: -.45px;
+      margin-bottom: 5px;
+    }
+    .stat-label span {
+      font-size: 11px;
+      line-height: 1.35;
+    }
+    .feature-card {
+      min-height: 190px;
+      padding: 18px;
+      border-radius: 16px;
+    }
+    .feature-card h2 {
+      font-size: clamp(22px, 7vw, 27px);
+      letter-spacing: -.6px;
+      margin-top: 10px;
+    }
+    .feature-card p {
+      font-size: 12px;
+      line-height: 1.45;
+      max-width: 100%;
+    }
+    .feature-card::before {
+      right: 10px;
+      bottom: -2px;
+      font-size: 64px;
+      letter-spacing: -3px;
+    }
+    .card-tag {
+      font-size: 9px;
+      letter-spacing: 1.7px;
+    }
+    .arrow {
+      width: 34px;
+      height: 34px;
+      margin-top: 12px;
+      font-size: 16px;
     }
     .sidebar {
       left: 12px;
@@ -1180,6 +1250,13 @@
     footer {
       align-items: flex-start;
       flex-direction: column;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .stat-column,
+    .cards-grid {
+      grid-template-columns: 1fr;
     }
   }
 
