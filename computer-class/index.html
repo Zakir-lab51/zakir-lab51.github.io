@@ -951,9 +951,357 @@ html[data-theme="dark"] #cursor.big {
   }
 }
 
+
+/* MINIMAL ACADEMIC PREVIEW OVERRIDE */
+:root {
+  --preview-paper:#F7F7F5;
+  --preview-ink:#0D281F;
+  --preview-muted:#525A56;
+  --preview-line:rgba(13,40,31,.16);
+  --preview-soft:rgba(13,40,31,.06);
+}
+html,
+body {
+  background:var(--preview-paper) !important;
+  color:var(--preview-ink) !important;
+  cursor:auto !important;
+}
+body {
+  font-family:'Inter', sans-serif !important;
+  min-height:100vh !important;
+  overflow-x:hidden !important;
+}
+body::before {
+  content:"" !important;
+  position:fixed !important;
+  inset:0 !important;
+  pointer-events:none !important;
+  z-index:0 !important;
+  background:linear-gradient(90deg, rgba(255,255,255,.46), transparent 48%), radial-gradient(circle at 20% 34%, rgba(13,40,31,.035), transparent 34%) !important;
+}
+body::after {
+  content:"";
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  width:min(39vw, 500px);
+  pointer-events:none;
+  z-index:0;
+  opacity:.18;
+  filter:grayscale(1) contrast(1.05);
+  background:linear-gradient(90deg, var(--preview-paper) 0%, rgba(247,247,245,.62) 18%, rgba(247,247,245,.08) 48%), url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/A_System_of_Anatomical_Plates_of_the_Human_Body%2C_vol._2_MET_DP355583.jpg/960px-A_System_of_Anatomical_Plates_of_the_Human_Body%2C_vol._2_MET_DP355583.jpg") center top / cover no-repeat;
+  mix-blend-mode:multiply;
+}
+.pc-sidebar,
+.pc-cursor,
+.cursor,
+#cursor,
+.pc-mobile-menu,
+.page > nav,
+body > nav:not(.minimal-nav) {
+  display:none !important;
+}
+.minimal-nav {
+  position:relative;
+  z-index:20;
+  width:min(88vw, 900px);
+  margin-left:clamp(28px, 7.2vw, 92px);
+  padding-top:18px;
+  display:flex;
+  align-items:center;
+  gap:clamp(18px, 3vw, 34px);
+  color:var(--preview-muted);
+  font:500 13px/1 'Inter', sans-serif;
+  letter-spacing:-.01em;
+}
+.minimal-nav a {
+  position:relative;
+  padding:4px 0 7px;
+  color:inherit !important;
+  text-decoration:none !important;
+  white-space:nowrap;
+}
+.minimal-nav a::after {
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:3px;
+  height:1px;
+  background:currentColor;
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .24s ease;
+}
+.minimal-nav a:hover::after,
+.minimal-nav a.active::after {
+  transform:scaleX(1);
+}
+.page,
+main,
+.app {
+  position:relative !important;
+  z-index:1 !important;
+}
+.page {
+  width:auto !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 clamp(28px, 8vw, 112px) 88px !important;
+}
+.hero {
+  max-width:760px !important;
+  min-height:0 !important;
+  padding:clamp(76px, 11vh, 128px) 0 46px !important;
+  text-align:center !important;
+  animation:none !important;
+}
+.hero .eyebrow,
+.eyebrow {
+  justify-content:center !important;
+  gap:12px !important;
+  margin-bottom:22px !important;
+}
+.eyebrow-line {
+  background:var(--preview-ink) !important;
+  opacity:.5 !important;
+}
+.eyebrow-text,
+.kicker,
+.note-tag,
+.card-tag,
+.tag,
+.section-title,
+.start-kicker {
+  color:var(--preview-muted) !important;
+  font-family:'Inter', sans-serif !important;
+  font-weight:600 !important;
+  letter-spacing:.08em !important;
+}
+h1,
+.hero h1,
+.logo,
+.note-card h2,
+.card h2,
+.tile h2,
+.panel h2,
+.start-panel h2,
+.section-card h3,
+.updates h3,
+.result-card h2 {
+  font-family:'Cormorant Garamond', serif !important;
+  color:var(--preview-ink) !important;
+  letter-spacing:-.045em !important;
+}
+.hero h1 {
+  font-size:clamp(64px, 9vw, 126px) !important;
+  line-height:.9 !important;
+  font-weight:600 !important;
+  max-width:780px !important;
+  margin:0 auto !important;
+}
+.hero h1 span,
+.hero-title span {
+  color:var(--preview-ink) !important;
+  font-style:normal !important;
+}
+.hero p,
+.intro,
+.section-count,
+.note-footer,
+.card p,
+.tile p,
+.panel p,
+.update-line,
+.start-panel p,
+footer,
+.result-card p {
+  color:var(--preview-muted) !important;
+}
+.divider {
+  max-width:720px !important;
+  margin:0 0 34px !important;
+  background:var(--preview-line) !important;
+  opacity:1 !important;
+}
+.notes-grid,
+.chapter-grid,
+.test-grid,
+.cards-grid,
+.grid,
+.mini-grid,
+.mini-links,
+.study-tools-grid {
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)) !important;
+  gap:1px !important;
+  border:1px solid var(--preview-soft) !important;
+  background:var(--preview-soft) !important;
+}
+.note-card,
+.chapter-card,
+.test-card,
+.card,
+.tile,
+.mini,
+.mini-link,
+.feature-card,
+.section-card,
+.panel,
+.start-panel,
+.result-card,
+.question-card,
+.review-card,
+.search-box,
+.result-item,
+.stat,
+.stat-pill,
+.full-length-card {
+  background:rgba(247,247,245,.88) !important;
+  color:var(--preview-ink) !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  filter:none !important;
+}
+.note-card,
+.chapter-card,
+.test-card,
+.card,
+.tile,
+.mini,
+.mini-link,
+.feature-card,
+.full-length-card {
+  min-height:150px !important;
+  padding:24px !important;
+  transition:background .22s ease, color .22s ease !important;
+}
+.note-card:hover,
+.chapter-card:hover,
+.test-card:hover,
+.card:hover,
+.tile:hover,
+.mini:hover,
+.mini-link:hover,
+.feature-card:hover,
+.full-length-card:hover {
+  transform:none !important;
+  background:var(--preview-ink) !important;
+  color:var(--preview-paper) !important;
+}
+.note-card:hover *,
+.chapter-card:hover *,
+.test-card:hover *,
+.card:hover *,
+.tile:hover *,
+.mini:hover *,
+.mini-link:hover *,
+.feature-card:hover *,
+.full-length-card:hover * {
+  color:var(--preview-paper) !important;
+}
+.note-card::before,
+.note-card::after,
+.chapter-card::before,
+.chapter-card::after,
+.test-card::before,
+.test-card::after,
+.card::before,
+.card::after,
+.tile::before,
+.tile::after,
+.feature-card::before,
+.feature-card::after {
+  opacity:.08 !important;
+}
+.note-mark,
+.note-arrow,
+.back-arrow,
+.primary-btn,
+.secondary-btn,
+.submit-btn,
+.review-close,
+.timer-chip,
+.timer-start-btn,
+.timer-cancel-btn,
+.clear-recents,
+.icon-btn,
+.nav-btn,
+.opt-btn,
+.review-opt,
+.option-btn,
+button {
+  border:1px solid var(--preview-line) !important;
+  background:transparent !important;
+  color:var(--preview-ink) !important;
+  border-radius:999px !important;
+  box-shadow:none !important;
+  font-family:'Inter', sans-serif !important;
+}
+.primary-btn:hover,
+.secondary-btn:hover,
+.submit-btn:hover,
+.review-close:hover,
+.timer-chip:hover,
+.timer-start-btn:hover,
+.timer-cancel-btn:hover,
+.clear-recents:hover,
+.opt-btn:hover,
+.review-opt:hover,
+.option-btn:hover,
+button:hover {
+  background:var(--preview-ink) !important;
+  color:var(--preview-paper) !important;
+  transform:none !important;
+}
+footer {
+  position:relative !important;
+  z-index:1 !important;
+  margin-top:54px !important;
+  border-top:1px solid var(--preview-soft) !important;
+  padding-top:18px !important;
+}
+@media (max-width:900px) {
+  .minimal-nav {
+    width:auto;
+    margin:0;
+    padding:18px 20px 0;
+    justify-content:flex-start;
+    overflow-x:auto;
+  }
+  body::after {
+    width:100%;
+    top:auto;
+    height:260px;
+    opacity:.10;
+  }
+  .page {
+    padding:0 20px 72px !important;
+  }
+  .hero {
+    padding-top:64px !important;
+  }
+  .hero h1 {
+    font-size:clamp(54px, 16vw, 86px) !important;
+  }
+}
+
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 </head>
 <body>
+<!-- MINIMAL_PREVIEW_NAV_START -->
+<nav class="minimal-nav" aria-label="Primary navigation">
+  <a href="../">Home</a>
+  <a href="../study/">Subjects</a>
+  <a href="../anatomy/">Anatomy</a>
+  <a href="../physiology/">Physiology</a>
+  <a href="../recents/">Recents</a>
+  <a href="../suggest/">Contact</a>
+</nav>
+<!-- MINIMAL_PREVIEW_NAV_END -->
 
 <div class="pc-cursor" id="pc-cursor"></div>
 <aside class="pc-sidebar" id="pc-sidebar" aria-label="Zakir Lab navigation">
