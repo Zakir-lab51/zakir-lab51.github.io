@@ -798,19 +798,33 @@ body > nav:not(.minimal-nav) {
   pointer-events:none !important;
 }
 .minimal-nav {
-  position:relative;
-  z-index:20;
-  width:min(100%, 920px);
-  margin:0 auto;
-  padding:18px 20px 0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:clamp(16px, 3vw, 34px);
+  position:relative !important;
+  top:auto !important;
+  z-index:20 !important;
+  width:min(100%, 920px) !important;
+  max-width:920px !important;
+  margin:0 auto !important;
+  padding:18px 20px 0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:clamp(16px, 3vw, 34px) !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  min-height:auto !important;
   color:var(--preview-muted);
   font:500 13px/1 'Inter', sans-serif;
   letter-spacing:-.01em;
   overflow-x:auto;
+}
+html[data-theme="dark"] .minimal-nav {
+  background:transparent !important;
+  border-color:transparent !important;
+  box-shadow:none !important;
 }
 .minimal-nav a {
   position:relative;
