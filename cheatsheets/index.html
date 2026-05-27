@@ -1809,7 +1809,7 @@ footer {
 /* ZAKIR_HOME_TILE_HOVER_START */
 body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.result-inner,.review-card,.timer-box,.panel,.stat-pill,form,.form-card) {
   --zl-tile-accent: var(--zl-green, #50dc8c);
-  --zl-tile-glow: var(--zl-green-glow, rgba(80,220,140,.18));
+  --zl-tile-glow: rgba(80,220,140,.16);
   --zl-tile-border: var(--zl-border-bright, rgba(80,220,140,.28));
   position: relative !important;
   min-width: 0 !important;
@@ -1839,12 +1839,19 @@ body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,
   pointer-events: none !important;
   z-index: 0 !important;
 }
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.result-inner,.review-card,.timer-box,.panel,.stat-pill,form,.form-card)::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+}
 body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.result-inner,.review-card,.timer-box,.panel,.stat-pill,form,.form-card) > * {
   position: relative !important;
   z-index: 1 !important;
 }
 body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.review-card,.timer-box,.panel,.stat-pill,form,.form-card):hover {
   border-color: var(--zl-tile-border) !important;
+  background: var(--zl-card, #112319) !important;
   transform: translateY(-4px) !important;
   box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px var(--zl-tile-border) !important;
 }
@@ -1853,15 +1860,18 @@ body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,
 }
 body :is(.notes-grid,.chapter-grid,.chapters-grid,.test-grid,.cards-grid,.grid,.mini-grid,.mini-links,.study-tools-grid,.quick-links,.questions-wrap,.stats-row,.result-actions) > :is(a,article,div,button,form):nth-child(3n+2) {
   --zl-tile-accent: var(--zl-amber, #f0b429);
-  --zl-tile-glow: rgba(240,180,41,.12);
+  --zl-tile-glow: rgba(240,180,41,.10);
   --zl-tile-border: rgba(240,180,41,.35);
 }
 body :is(.notes-grid,.chapter-grid,.chapters-grid,.test-grid,.cards-grid,.grid,.mini-grid,.mini-links,.study-tools-grid,.quick-links,.questions-wrap,.stats-row,.result-actions) > :is(a,article,div,button,form):nth-child(3n) {
   --zl-tile-accent: var(--zl-coral, #ff6b6b);
-  --zl-tile-glow: rgba(255,107,107,.1);
+  --zl-tile-glow: rgba(255,107,107,.09);
   --zl-tile-border: rgba(255,107,107,.35);
 }
-body :is(.note-card h2,.note-tag,.note-mark,.card-title,.card-tag,.ch-title,.full-title,.test-card-title,.test-title-bar,.section-card h3,.update-card h3,.mini h3,.mini-link h3,.feature-card h2,.feature-card h3,.study-tool-card h2,.study-tool-card h3,.full-length-card h2,.q-num,.q-text,.card-num,.ch-num,.test-num,.timer-title,.result-title,.review-title) {
+body :is(.note-top,.card-tag,.full-tag) {
+  display: none !important;
+}
+body :is(.note-card h2,.note-tag,.note-mark,.card-title,.ch-title,.full-title,.test-card-title,.test-title-bar,.section-card h3,.update-card h3,.mini h3,.mini-link h3,.feature-card h2,.feature-card h3,.study-tool-card h2,.study-tool-card h3,.full-length-card h2,.q-num,.q-text,.card-num,.ch-num,.test-num,.timer-title,.result-title,.review-title) {
   font-family: 'DM Mono', monospace !important;
   font-size: clamp(11px, 1.4vw, 13px) !important;
   line-height: 1.35 !important;
@@ -1998,32 +2008,26 @@ body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,
   
 <section class="grid">
   <div class="card">
-    <span class="card-tag">Keyboard</span>
     <h2>Common Shortcuts</h2>
     <p>Ctrl + C: Copy<br>Ctrl + V: Paste<br>Ctrl + X: Cut<br>Ctrl + Z: Undo<br>Ctrl + Y: Redo<br>Ctrl + S: Save<br>Ctrl + P: Print</p>
   </div>
   <div class="card">
-    <span class="card-tag">MS Word</span>
     <h2>Word Basics</h2>
     <p>Bold: Ctrl + B<br>Italic: Ctrl + I<br>Underline: Ctrl + U<br>Find: Ctrl + F<br>Replace: Ctrl + H<br>New document: Ctrl + N</p>
   </div>
   <div class="card">
-    <span class="card-tag">Excel</span>
     <h2>Excel Basics</h2>
     <p>Formula starts with =<br>SUM adds values<br>AVERAGE finds mean<br>Rows are numbered<br>Columns are lettered<br>Cell = column + row</p>
   </div>
   <div class="card">
-    <span class="card-tag">PowerPoint</span>
     <h2>Presentation</h2>
     <p>F5: Start slideshow<br>Slide Sorter: arrange slides<br>Transitions: between slides<br>Animations: object movement<br>Ctrl + M: New slide</p>
   </div>
   <div class="card">
-    <span class="card-tag">Internet</span>
     <h2>Web Basics</h2>
     <p>HTTPS is secure<br>DNS converts names to IP<br>URL is webpage address<br>Browser opens websites<br>Search engine finds information</p>
   </div>
   <div class="card">
-    <span class="card-tag">Python</span>
     <h2>Syntax Mini</h2>
     <p>print(): output<br>input(): user input<br>if: condition<br>for: loop<br>list: collection<br># comment</p>
   </div>

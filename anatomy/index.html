@@ -1834,7 +1834,7 @@ footer {
 /* ZAKIR_HOME_TILE_HOVER_START */
 body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.result-inner,.review-card,.timer-box,.panel,.stat-pill,form,.form-card) {
   --zl-tile-accent: var(--zl-green, #50dc8c);
-  --zl-tile-glow: var(--zl-green-glow, rgba(80,220,140,.18));
+  --zl-tile-glow: rgba(80,220,140,.16);
   --zl-tile-border: var(--zl-border-bright, rgba(80,220,140,.28));
   position: relative !important;
   min-width: 0 !important;
@@ -1864,12 +1864,19 @@ body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,
   pointer-events: none !important;
   z-index: 0 !important;
 }
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.result-inner,.review-card,.timer-box,.panel,.stat-pill,form,.form-card)::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+}
 body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.result-inner,.review-card,.timer-box,.panel,.stat-pill,form,.form-card) > * {
   position: relative !important;
   z-index: 1 !important;
 }
 body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.review-card,.timer-box,.panel,.stat-pill,form,.form-card):hover {
   border-color: var(--zl-tile-border) !important;
+  background: var(--zl-card, #112319) !important;
   transform: translateY(-4px) !important;
   box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px var(--zl-tile-border) !important;
 }
@@ -1878,15 +1885,18 @@ body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,
 }
 body :is(.notes-grid,.chapter-grid,.chapters-grid,.test-grid,.cards-grid,.grid,.mini-grid,.mini-links,.study-tools-grid,.quick-links,.questions-wrap,.stats-row,.result-actions) > :is(a,article,div,button,form):nth-child(3n+2) {
   --zl-tile-accent: var(--zl-amber, #f0b429);
-  --zl-tile-glow: rgba(240,180,41,.12);
+  --zl-tile-glow: rgba(240,180,41,.10);
   --zl-tile-border: rgba(240,180,41,.35);
 }
 body :is(.notes-grid,.chapter-grid,.chapters-grid,.test-grid,.cards-grid,.grid,.mini-grid,.mini-links,.study-tools-grid,.quick-links,.questions-wrap,.stats-row,.result-actions) > :is(a,article,div,button,form):nth-child(3n) {
   --zl-tile-accent: var(--zl-coral, #ff6b6b);
-  --zl-tile-glow: rgba(255,107,107,.1);
+  --zl-tile-glow: rgba(255,107,107,.09);
   --zl-tile-border: rgba(255,107,107,.35);
 }
-body :is(.note-card h2,.note-tag,.note-mark,.card-title,.card-tag,.ch-title,.full-title,.test-card-title,.test-title-bar,.section-card h3,.update-card h3,.mini h3,.mini-link h3,.feature-card h2,.feature-card h3,.study-tool-card h2,.study-tool-card h3,.full-length-card h2,.q-num,.q-text,.card-num,.ch-num,.test-num,.timer-title,.result-title,.review-title) {
+body :is(.note-top,.card-tag,.full-tag) {
+  display: none !important;
+}
+body :is(.note-card h2,.note-tag,.note-mark,.card-title,.ch-title,.full-title,.test-card-title,.test-title-bar,.section-card h3,.update-card h3,.mini h3,.mini-link h3,.feature-card h2,.feature-card h3,.study-tool-card h2,.study-tool-card h3,.full-length-card h2,.q-num,.q-text,.card-num,.ch-num,.test-num,.timer-title,.result-title,.review-title) {
   font-family: 'DM Mono', monospace !important;
   font-size: clamp(11px, 1.4vw, 13px) !important;
   line-height: 1.35 !important;
@@ -2030,82 +2040,66 @@ body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,
     <div class="notes-grid">
       
       <a class="note-card" href="files/axilla-anatomy.pdf" target="_blank" rel="noopener" data-num="01">
-        <div class="note-top"><span class="note-tag">Upper Limb</span><span class="note-mark">PDF</span></div>
         <h2>Axilla Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/cuboital-fossae.pdf" target="_blank" rel="noopener" data-num="02">
-        <div class="note-top"><span class="note-tag">Upper Limb</span><span class="note-mark">PDF</span></div>
         <h2>Cuboital Fossae</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/gall-bladder-anatomy.pdf" target="_blank" rel="noopener" data-num="03">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
         <h2>Gall Bladder Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/hand-anatomy.pdf" target="_blank" rel="noopener" data-num="04">
-        <div class="note-top"><span class="note-tag">Upper Limb</span><span class="note-mark">PDF</span></div>
         <h2>Hand Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/hip-joint-anatomy.pdf" target="_blank" rel="noopener" data-num="05">
-        <div class="note-top"><span class="note-tag">Lower Limb</span><span class="note-mark">PDF</span></div>
         <h2>Hip Joint Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/large-intestine.pdf" target="_blank" rel="noopener" data-num="06">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
         <h2>Large Intestine</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/larynx-anatomy.pdf" target="_blank" rel="noopener" data-num="07">
-        <div class="note-top"><span class="note-tag">Respiratory Tract</span><span class="note-mark">PDF</span></div>
         <h2>Larynx Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/liver-anatomy.pdf" target="_blank" rel="noopener" data-num="08">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
         <h2>Liver Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/lung-and-bronchopulmonary-segments.pdf" target="_blank" rel="noopener" data-num="09">
-        <div class="note-top"><span class="note-tag">Thorax</span><span class="note-mark">PDF</span></div>
         <h2>Lung and Bronchopulmonary Segments</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/mediastinum-anatomy.pdf" target="_blank" rel="noopener" data-num="10">
-        <div class="note-top"><span class="note-tag">Thorax</span><span class="note-mark">PDF</span></div>
         <h2>Mediastinum Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/oesophagus.pdf" target="_blank" rel="noopener" data-num="11">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
         <h2>Oesophagus</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/pancreas-anatomy.pdf" target="_blank" rel="noopener" data-num="12">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
         <h2>Pancreas Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/small-intestine-anatomy.pdf" target="_blank" rel="noopener" data-num="13">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
         <h2>Small Intestine Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/stomach-anatomy.pdf" target="_blank" rel="noopener" data-num="14">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
         <h2>Stomach Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/thorax-and-mechanism-of-respiration.pdf" target="_blank" rel="noopener" data-num="15">
-        <div class="note-top"><span class="note-tag">Thorax</span><span class="note-mark">PDF</span></div>
         <h2>Thorax and Mechanism of Respiration</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
       <a class="note-card" href="files/trachea-anatomy.pdf" target="_blank" rel="noopener" data-num="16">
-        <div class="note-top"><span class="note-tag">Respiratory Tract</span><span class="note-mark">PDF</span></div>
         <h2>Trachea Anatomy</h2>
         <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
       </a>
