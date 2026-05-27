@@ -1918,6 +1918,112 @@ footer {
   }
 }
 
+/* ZAKIR_HOME_TILE_HOVER_START */
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.result-inner,.review-card,.timer-box,.panel,.stat-pill,form,.form-card) {
+  --zl-tile-accent: var(--zl-green, #50dc8c);
+  --zl-tile-glow: var(--zl-green-glow, rgba(80,220,140,.18));
+  --zl-tile-border: var(--zl-border-bright, rgba(80,220,140,.28));
+  position: relative !important;
+  min-width: 0 !important;
+  border: 1px solid var(--zl-border, rgba(80,220,140,.12)) !important;
+  border-radius: 16px !important;
+  background: var(--zl-card, #112319) !important;
+  color: var(--zl-text, #e8f5ee) !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  transition: border-color .26s, transform .26s cubic-bezier(.2,0,0,1), box-shadow .26s, background .26s !important;
+}
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,form,.form-card) {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.result-inner,.review-card,.timer-box,.panel,.stat-pill,form,.form-card)::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  opacity: 0 !important;
+  transition: opacity .26s !important;
+  background: radial-gradient(circle at 60% 30%, var(--zl-tile-glow), transparent 65%) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.result-inner,.review-card,.timer-box,.panel,.stat-pill,form,.form-card) > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.review-card,.timer-box,.panel,.stat-pill,form,.form-card):hover {
+  border-color: var(--zl-tile-border) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px var(--zl-tile-border) !important;
+}
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.review-card,.timer-box,.panel,.stat-pill,form,.form-card):hover::before {
+  opacity: 1 !important;
+}
+body :is(.notes-grid,.chapter-grid,.chapters-grid,.test-grid,.cards-grid,.grid,.mini-grid,.mini-links,.study-tools-grid,.quick-links,.questions-wrap,.stats-row,.result-actions) > :is(a,article,div,button,form):nth-child(3n+2) {
+  --zl-tile-accent: var(--zl-amber, #f0b429);
+  --zl-tile-glow: rgba(240,180,41,.12);
+  --zl-tile-border: rgba(240,180,41,.35);
+}
+body :is(.notes-grid,.chapter-grid,.chapters-grid,.test-grid,.cards-grid,.grid,.mini-grid,.mini-links,.study-tools-grid,.quick-links,.questions-wrap,.stats-row,.result-actions) > :is(a,article,div,button,form):nth-child(3n) {
+  --zl-tile-accent: var(--zl-coral, #ff6b6b);
+  --zl-tile-glow: rgba(255,107,107,.1);
+  --zl-tile-border: rgba(255,107,107,.35);
+}
+body :is(.note-card h2,.note-tag,.note-mark,.card-title,.card-tag,.ch-title,.full-title,.test-card-title,.test-title-bar,.section-card h3,.update-card h3,.mini h3,.mini-link h3,.feature-card h2,.feature-card h3,.study-tool-card h2,.study-tool-card h3,.full-length-card h2,.q-num,.q-text,.card-num,.ch-num,.test-num,.timer-title,.result-title,.review-title) {
+  font-family: 'DM Mono', monospace !important;
+  font-size: clamp(11px, 1.4vw, 13px) !important;
+  line-height: 1.35 !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase !important;
+  color: var(--zl-tile-accent) !important;
+  -webkit-text-fill-color: currentColor !important;
+  background: none !important;
+}
+body :is(.note-mark,.card-icon,.card-num,.ch-num,.test-num,.q-num,.rank-num,.timer-kicker,.result-badge) {
+  min-width: 38px !important;
+  min-height: 38px !important;
+  border-radius: 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--zl-faint, rgba(232,245,238,.06)) !important;
+  border: 1px solid var(--zl-border, rgba(80,220,140,.12)) !important;
+  color: var(--zl-tile-accent) !important;
+}
+body :is(.note-card p,.chapter-card p,.test-card p,.full-length-card p,.study-tool-card p,.card-desc,.tile p,.mini p,.mini-link p,.feature-card p,.section-card p,.update-line,.ch-desc,.full-desc,.test-desc,.note-footer,.test-card-footer,.q-text,.review-q-text,.timer-sub,.score-msg,.result-card p,.panel p,form p,.form-card p) {
+  color: var(--zl-muted, #7aad8e) !important;
+  line-height: 1.55 !important;
+}
+body :is(.note-footer,.test-card-footer,.card-arrow,.ch-arrow,.full-arrow) {
+  margin-top: auto !important;
+  padding-top: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-family: 'DM Mono', monospace !important;
+  font-size: 11px !important;
+  letter-spacing: .06em !important;
+  color: var(--zl-muted, #7aad8e) !important;
+  transition: color .2s, gap .2s, transform .2s !important;
+}
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.review-card,.timer-box,.panel,.stat-pill,form,.form-card):hover :is(.note-footer,.test-card-footer,.card-arrow,.ch-arrow,.full-arrow) {
+  color: var(--zl-tile-accent) !important;
+  gap: 10px !important;
+}
+body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.review-card,.timer-box,.panel,.stat-pill,form,.form-card):hover :is(.note-arrow,.test-card-arrow,.card-arrow,.ch-arrow,.full-arrow) {
+  color: var(--zl-tile-accent) !important;
+  transform: translateX(4px) !important;
+}
+@media (hover: none) {
+  body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.review-card,.timer-box,.panel,.stat-pill,form,.form-card):hover {
+    transform: none !important;
+  }
+}
+/* ZAKIR_HOME_TILE_HOVER_END */
 /* ZAKIR_NEON_GRID_DESIGN_END */
 </style>
 <script>
