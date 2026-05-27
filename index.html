@@ -6,65 +6,100 @@
 <title>Zakir Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --paper: #F7F7F5;
-    --ink: #0D281F;
-    --muted: #535D58;
-    --line: rgba(13,40,31,.16);
-    --soft: rgba(13,40,31,.055);
+    --bg: #06100d;
+    --surface: #0d1f18;
+    --card: #112319;
+    --border: rgba(80,220,140,.12);
+    --border-bright: rgba(80,220,140,.28);
+    --green: #50dc8c;
+    --green-dim: #2ecc72;
+    --green-glow: rgba(80,220,140,.18);
+    --amber: #f0b429;
+    --coral: #ff6b6b;
+    --text: #e8f5ee;
+    --muted: #7aad8e;
+    --faint: rgba(232,245,238,.06);
+    --cursor-size: 12px;
   }
 
-  html {
-    min-height: 100%;
-    scroll-behavior: smooth;
-  }
-
+  html { min-height: 100%; scroll-behavior: smooth; cursor: none; }
   body {
     min-height: 100vh;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: "Inter", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
     overflow-x: hidden;
+    cursor: none;
   }
 
+  /* ── CUSTOM CURSOR ── */
+  #cursor-dot {
+    position: fixed;
+    width: var(--cursor-size);
+    height: var(--cursor-size);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width .15s, height .15s, background .15s, box-shadow .15s;
+    mix-blend-mode: screen;
+  }
+  #cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--green);
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: width .22s ease, height .22s ease, border-color .22s ease, opacity .22s ease;
+    opacity: .55;
+  }
+  body.hovering #cursor-dot {
+    width: 18px;
+    height: 18px;
+    box-shadow: 0 0 18px 6px var(--green-glow);
+  }
+  body.hovering #cursor-ring {
+    width: 54px;
+    height: 54px;
+    border-color: var(--amber);
+    opacity: .7;
+  }
+
+  /* ── NOISE TEXTURE ── */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.58), transparent 48%),
-      radial-gradient(circle at 50% 32%, rgba(13,40,31,.045), transparent 38%);
+    opacity: .032;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
   }
 
+  /* ── GRID LINES ── */
   body::after {
     content: "";
     position: fixed;
-    inset: auto 0 0 0;
-    height: min(44vh, 360px);
+    inset: 0;
     z-index: 0;
     pointer-events: none;
-    opacity: .09;
-    filter: grayscale(1) contrast(1.05);
-    background:
-      linear-gradient(180deg, var(--paper) 0%, rgba(247,247,245,.18) 38%, var(--paper) 100%),
-      url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/A_System_of_Anatomical_Plates_of_the_Human_Body%2C_vol._2_MET_DP355583.jpg/960px-A_System_of_Anatomical_Plates_of_the_Human_Body%2C_vol._2_MET_DP355583.jpg") center 20% / min(820px, 110vw) auto no-repeat;
-    mix-blend-mode: multiply;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 0%, transparent 80%);
   }
 
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+  a { color: inherit; text-decoration: none; cursor: none; }
 
   .page {
     position: relative;
@@ -74,193 +109,340 @@
     grid-template-rows: auto 1fr auto;
   }
 
+  /* ── NAV ── */
   .top-nav {
-    position: relative !important;
-    top: auto !important;
-    width: min(100%, 920px) !important;
-    max-width: 920px !important;
-    margin: 0 auto !important;
-    padding: 18px 20px 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: clamp(16px, 3vw, 34px);
-    background: transparent !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    min-height: auto !important;
+    width: min(100%, 980px);
+    margin: 0 auto;
+    padding: 28px 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(18px, 3vw, 40px);
     color: var(--muted);
-    font-size: 13px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
     font-weight: 500;
-    letter-spacing: -.01em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
     overflow-x: auto;
   }
 
   .top-nav a {
     position: relative;
-    padding: 4px 0 7px;
+    padding: 4px 0 8px;
     white-space: nowrap;
+    transition: color .22s;
   }
-
   .top-nav a::after {
     content: "";
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 3px;
+    left: 0; right: 0; bottom: 3px;
     height: 1px;
-    background: currentColor;
+    background: var(--green);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform .24s ease;
+    transition: transform .26s cubic-bezier(.4,0,.2,1);
   }
-
+  .top-nav a:hover,
+  .top-nav a.active { color: var(--text); }
   .top-nav a:hover::after,
-  .top-nav a.active::after {
-    transform: scaleX(1);
+  .top-nav a.active::after { transform: scaleX(1); }
+
+  /* ── LOGO MARK ── */
+  .nav-logo {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    margin-right: 4px;
   }
 
+  /* ── MAIN ── */
   main {
     display: grid;
     place-items: center;
-    padding: clamp(62px, 10vh, 108px) 24px 64px;
+    padding: clamp(56px, 9vh, 100px) 24px 56px;
   }
 
   .hero {
-    width: min(820px, 100%);
+    width: min(860px, 100%);
     text-align: center;
   }
 
+  /* ── KICKER ── */
   .kicker {
-    display: none;
-    margin-bottom: 24px;
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .1em;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    padding: 6px 14px 6px 10px;
+    border: 1px solid var(--border-bright);
+    border-radius: 99px;
+    background: var(--faint);
+    color: var(--green);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .13em;
     text-transform: uppercase;
   }
+  .kicker-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px 2px var(--green);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .4; transform: scale(.7); }
+  }
 
+  /* ── HEADING ── */
   h1 {
-    font-family: "Cormorant Garamond", serif;
-    font-size: clamp(70px, 11vw, 138px);
-    line-height: .94;
-    font-weight: 600;
-    letter-spacing: -.045em;
-    max-width: 820px;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(72px, 12vw, 148px);
+    line-height: .92;
+    font-weight: 900;
+    letter-spacing: -.04em;
     margin: 0 auto;
-    text-align: center;
+    background: linear-gradient(155deg, #e8f5ee 0%, #a3d4b8 38%, var(--green) 68%, var(--amber) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 8s ease-in-out infinite alternate;
+    background-size: 200% 200%;
+  }
+  @keyframes shimmer {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
   }
 
   .intro {
-    max-width: 620px;
-    margin: clamp(24px, 4vh, 36px) auto 0;
+    max-width: 580px;
+    margin: clamp(22px, 4vh, 34px) auto 0;
     color: var(--muted);
-    font-size: clamp(16px, 1.65vw, 19px);
-    line-height: 1.58;
+    font-size: clamp(15px, 1.55vw, 18px);
+    line-height: 1.65;
     letter-spacing: -.01em;
-    text-align: center;
   }
 
+  /* ── SUBJECT PILLS ── */
+  .subject-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 26px auto 0;
+    max-width: 560px;
+  }
+  .pill {
+    padding: 5px 13px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .06em;
+    color: var(--muted);
+    background: var(--faint);
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .pill:hover { border-color: var(--green); color: var(--green); background: var(--green-glow); }
+
+  /* ── CARDS ── */
   .quick-links {
-    width: min(680px, 100%);
-    margin: clamp(34px, 6vh, 58px) auto 0;
+    width: min(720px, 100%);
+    margin: clamp(36px, 6vh, 60px) auto 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1px;
-    border: 1px solid var(--soft);
-    background: var(--soft);
+    gap: 16px;
   }
 
-  .quick-links a {
-    min-height: 62px;
-    display: grid;
-    place-items: center;
-    background: rgba(247,247,245,.88);
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    transition: background .22s ease, color .22s ease;
-  }
-
-  .quick-links a:hover {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  footer {
+  .card {
     position: relative;
-    z-index: 1;
-    width: min(920px, calc(100vw - 40px));
-    margin: 0 auto;
-    padding: 18px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px 22px 22px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card);
+    overflow: hidden;
+    transition: border-color .26s, transform .26s cubic-bezier(.2,0,0,1), box-shadow .26s;
+    color: var(--text);
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    opacity: 0;
+    transition: opacity .26s;
+    background: radial-gradient(circle at 60% 30%, var(--green-glow), transparent 65%);
+    pointer-events: none;
+  }
+  .card:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px var(--border-bright);
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px;
+    background: var(--faint);
+    border: 1px solid var(--border);
+    font-size: 18px;
+  }
+
+  .card-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .card-arrow {
+    margin-top: auto;
+    padding-top: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .06em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color .2s, gap .2s;
+  }
+  .card:hover .card-arrow { color: var(--green); gap: 10px; }
+
+  /* Card accent variants */
+  .card-amber .card-title { color: var(--amber); }
+  .card-amber:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(240,180,41,.35); }
+  .card-amber:hover::before { background: radial-gradient(circle at 60% 30%, rgba(240,180,41,.12), transparent 65%); }
+  .card-amber .card-arrow { }
+  .card-amber:hover .card-arrow { color: var(--amber); }
+
+  .card-coral .card-title { color: var(--coral); }
+  .card-coral:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(255,107,107,.35); }
+  .card-coral:hover::before { background: radial-gradient(circle at 60% 30%, rgba(255,107,107,.1), transparent 65%); }
+  .card-coral:hover .card-arrow { color: var(--coral); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    width: min(980px, calc(100vw - 48px));
+    margin: 0 auto;
+    padding: 18px 0 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
     flex-wrap: wrap;
     color: var(--muted);
     font-size: 12px;
-    border-top: 1px solid var(--soft);
+    font-family: 'DM Mono', monospace;
+    border-top: 1px solid var(--border);
+    letter-spacing: .05em;
   }
 
   .visitor-counter {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 5px 7px;
-    border: 1px solid var(--soft);
-    border-radius: 999px;
-    opacity: .8;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    opacity: .75;
+    transition: opacity .2s, border-color .2s;
   }
-
+  .visitor-counter:hover { opacity: 1; border-color: var(--border-bright); }
   .visitor-counter span {
     font-size: 9px;
     letter-spacing: .12em;
     text-transform: uppercase;
+    color: var(--muted);
   }
-
   .visitor-counter img {
     display: block;
-    height: 18px;
+    height: 16px;
     width: auto;
-    max-width: 116px;
-    filter: grayscale(1) saturate(.6);
+    max-width: 110px;
+    filter: grayscale(1) invert(1) opacity(.55);
   }
 
-  @media (max-width: 700px) {
-    .top-nav {
-      justify-content: flex-start;
-    }
+  /* ── AMBIENT GLOW ── */
+  .ambient {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 50%;
+    filter: blur(80px);
+  }
+  .ambient-1 {
+    width: 500px; height: 400px;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse, rgba(80,220,140,.07), transparent 70%);
+  }
+  .ambient-2 {
+    width: 300px; height: 260px;
+    bottom: 60px; right: 8%;
+    background: radial-gradient(ellipse, rgba(240,180,41,.05), transparent 70%);
+  }
 
-    main {
-      padding-top: 62px;
-    }
+  /* ── ENTRY ANIMATIONS ── */
+  .hero > * {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp .7s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  .kicker  { animation-delay: .08s; }
+  h1       { animation-delay: .18s; }
+  .intro   { animation-delay: .30s; }
+  .subject-pills { animation-delay: .40s; }
+  .quick-links { animation-delay: .50s; }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-    h1 {
-      font-size: clamp(62px, 20vw, 92px);
-    }
-
-    .intro {
-      margin-top: 28px;
-      max-width: min(100%, 360px);
-    }
-
-    .quick-links {
-      grid-template-columns: 1fr;
-      width: min(390px, 100%);
-    }
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    h1 { font-size: clamp(60px, 19vw, 88px); }
+    .quick-links { grid-template-columns: 1fr; max-width: 340px; }
+    .top-nav { justify-content: flex-start; }
   }
 </style>
 </head>
 <body>
+
+<!-- Ambient glows -->
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+
+<!-- Custom cursor -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
 <div class="page">
   <nav class="top-nav" aria-label="Primary navigation">
+    <!-- tiny hex logo -->
+    <svg class="nav-logo" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <polygon points="13,2 24,8 24,18 13,24 2,18 2,8" stroke="rgba(80,220,140,.45)" stroke-width="1" fill="rgba(80,220,140,.06)"/>
+      <polygon points="13,6 20,10 20,16 13,20 6,16 6,10" stroke="rgba(80,220,140,.3)" stroke-width=".8" fill="none"/>
+      <circle cx="13" cy="13" r="2" fill="rgba(80,220,140,.7)"/>
+    </svg>
     <a class="active" href="./">Home</a>
     <a href="study/">Subjects</a>
     <a href="anatomy/">Anatomy</a>
@@ -271,25 +453,115 @@
 
   <main>
     <section class="hero" aria-label="Zakir Lab homepage">
-      <div class="kicker">Medical Study Hub</div>
+      <div class="kicker">
+        <span class="kicker-dot"></span>
+        Medical Study Hub
+      </div>
+
       <h1>Zakir Lab</h1>
-      <p class="intro">A focused study space for anatomy, physiology, HDPC, communication skills and biochemistry notes.</p>
+
+      <p class="intro">A focused study space for anatomy, physiology,&nbsp;HDPC, communication skills and biochemistry notes.</p>
+
+      <div class="subject-pills">
+        <span class="pill">Anatomy</span>
+        <span class="pill">Physiology</span>
+        <span class="pill">Biochemistry</span>
+        <span class="pill">HDPC</span>
+        <span class="pill">Communication</span>
+      </div>
 
       <div class="quick-links" aria-label="Quick study links">
-        <a href="study/">Start Studying</a>
-        <a href="anatomy/">Anatomy PDFs</a>
-        <a href="recents/">Recent Files</a>
+
+        <a class="card" href="study/">
+          <div class="card-icon">📖</div>
+          <div class="card-title">Start Studying</div>
+          <div class="card-desc">Browse all subject notes and study materials in one place.</div>
+          <div class="card-arrow">Open → </div>
+        </a>
+
+        <a class="card card-amber" href="anatomy/">
+          <div class="card-icon">🫀</div>
+          <div class="card-title">Anatomy PDFs</div>
+          <div class="card-desc">Download and view structured anatomical diagrams and PDFs.</div>
+          <div class="card-arrow">Open →</div>
+        </a>
+
+        <a class="card card-coral" href="recents/">
+          <div class="card-icon">🕒</div>
+          <div class="card-title">Recent Files</div>
+          <div class="card-desc">Jump back to the latest uploaded notes and resources.</div>
+          <div class="card-arrow">Open →</div>
+        </a>
+
       </div>
     </section>
   </main>
 
   <footer>
-    <span>&copy; 2026 Zakir Lab</span>
+    <span>© 2026 Zakir Lab</span>
     <a class="visitor-counter" href="https://hits.sh/zakir-lab51.github.io/" target="_blank" rel="noopener" aria-label="Zakir Lab visitor count">
       <span>Visits</span>
       <img src="https://hits.sh/zakir-lab51.github.io.svg?style=flat-square&label=views&color=6f6256&labelColor=fdfaf5&view=total" alt="Zakir Lab visitor count">
     </a>
   </footer>
 </div>
+
+<script>
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+
+  const COLORS = ['#50dc8c','#f0b429','#ff6b6b','#85b7eb','#ed93b1'];
+  let colorIdx = 0;
+  let mx = -100, my = -100;
+  let rx = -100, ry = -100;
+  let raf;
+
+  function setColor(c) {
+    dot.style.background = c;
+    dot.style.boxShadow = `0 0 10px 3px ${c}55`;
+    ring.style.borderColor = c;
+  }
+  setColor(COLORS[0]);
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  });
+
+  /* ring lags behind for smooth follow */
+  function animateRing() {
+    rx += (mx - rx) * .13;
+    ry += (my - ry) * .13;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    raf = requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  /* change color on click with ripple */
+  document.addEventListener('click', e => {
+    colorIdx = (colorIdx + 1) % COLORS.length;
+    setColor(COLORS[colorIdx]);
+
+    /* tiny ripple */
+    const r = document.createElement('div');
+    r.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;width:0;height:0;border-radius:50%;border:1.5px solid ${COLORS[colorIdx]};transform:translate(-50%,-50%);pointer-events:none;z-index:9997;transition:width .5s ease,height .5s ease,opacity .5s ease;opacity:.8`;
+    document.body.appendChild(r);
+    requestAnimationFrame(() => {
+      r.style.width = '80px';
+      r.style.height = '80px';
+      r.style.opacity = '0';
+    });
+    setTimeout(() => r.remove(), 600);
+  });
+
+  /* hover detection */
+  const interactables = 'a, button, .card, .pill';
+  document.querySelectorAll(interactables).forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+  });
+</script>
 </body>
 </html>
