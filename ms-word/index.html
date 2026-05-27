@@ -995,13 +995,14 @@ body.review-open #review-modal {
 }
 
 
-/* MINIMAL ACADEMIC PREVIEW OVERRIDE */
+
+/* ZAKIR MINIMAL STABLE DESIGN */
 :root {
   --preview-paper:#F7F7F5;
   --preview-ink:#0D281F;
-  --preview-muted:#525A56;
-  --preview-line:rgba(13,40,31,.16);
-  --preview-soft:rgba(13,40,31,.06);
+  --preview-muted:#535D58;
+  --preview-line:rgba(13,40,31,.14);
+  --preview-soft:rgba(13,40,31,.055);
 }
 html,
 body {
@@ -1020,7 +1021,7 @@ body::before {
   inset:0 !important;
   pointer-events:none !important;
   z-index:0 !important;
-  background:linear-gradient(90deg, rgba(255,255,255,.46), transparent 48%), radial-gradient(circle at 20% 34%, rgba(13,40,31,.035), transparent 34%) !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.54), transparent 42%), radial-gradient(circle at 50% 18%, rgba(13,40,31,.04), transparent 36%) !important;
 }
 body::after {
   content:"";
@@ -1028,12 +1029,12 @@ body::after {
   top:0;
   right:0;
   bottom:0;
-  width:min(39vw, 500px);
+  width:min(34vw, 440px);
   pointer-events:none;
   z-index:0;
-  opacity:.18;
+  opacity:.11;
   filter:grayscale(1) contrast(1.05);
-  background:linear-gradient(90deg, var(--preview-paper) 0%, rgba(247,247,245,.62) 18%, rgba(247,247,245,.08) 48%), url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/A_System_of_Anatomical_Plates_of_the_Human_Body%2C_vol._2_MET_DP355583.jpg/960px-A_System_of_Anatomical_Plates_of_the_Human_Body%2C_vol._2_MET_DP355583.jpg") center top / cover no-repeat;
+  background:linear-gradient(90deg, var(--preview-paper) 0%, rgba(247,247,245,.58) 23%, rgba(247,247,245,.12) 55%), url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/A_System_of_Anatomical_Plates_of_the_Human_Body%2C_vol._2_MET_DP355583.jpg/960px-A_System_of_Anatomical_Plates_of_the_Human_Body%2C_vol._2_MET_DP355583.jpg") center top / cover no-repeat;
   mix-blend-mode:multiply;
 }
 .pc-sidebar,
@@ -1048,15 +1049,17 @@ body > nav:not(.minimal-nav) {
 .minimal-nav {
   position:relative;
   z-index:20;
-  width:min(88vw, 900px);
-  margin-left:clamp(28px, 7.2vw, 92px);
-  padding-top:18px;
+  width:min(100%, 920px);
+  margin:0 auto;
+  padding:18px 20px 0;
   display:flex;
   align-items:center;
-  gap:clamp(18px, 3vw, 34px);
+  justify-content:center;
+  gap:clamp(16px, 3vw, 34px);
   color:var(--preview-muted);
   font:500 13px/1 'Inter', sans-serif;
   letter-spacing:-.01em;
+  overflow-x:auto;
 }
 .minimal-nav a {
   position:relative;
@@ -1088,15 +1091,16 @@ main,
   z-index:1 !important;
 }
 .page {
-  width:auto !important;
-  max-width:none !important;
-  margin:0 !important;
-  padding:0 clamp(28px, 8vw, 112px) 88px !important;
+  width:min(1120px, calc(100vw - 48px)) !important;
+  max-width:1120px !important;
+  margin:0 auto !important;
+  padding:0 0 84px !important;
 }
 .hero {
   max-width:760px !important;
   min-height:0 !important;
-  padding:clamp(76px, 11vh, 128px) 0 46px !important;
+  margin:0 auto !important;
+  padding:clamp(66px, 10vh, 112px) 0 42px !important;
   text-align:center !important;
   animation:none !important;
 }
@@ -1104,11 +1108,11 @@ main,
 .eyebrow {
   justify-content:center !important;
   gap:12px !important;
-  margin-bottom:22px !important;
+  margin-bottom:20px !important;
 }
 .eyebrow-line {
   background:var(--preview-ink) !important;
-  opacity:.5 !important;
+  opacity:.45 !important;
 }
 .eyebrow-text,
 .kicker,
@@ -1135,11 +1139,11 @@ h1,
 .result-card h2 {
   font-family:'Cormorant Garamond', serif !important;
   color:var(--preview-ink) !important;
-  letter-spacing:-.045em !important;
+  letter-spacing:-.04em !important;
 }
 .hero h1 {
-  font-size:clamp(64px, 9vw, 126px) !important;
-  line-height:.9 !important;
+  font-size:clamp(58px, 8.5vw, 116px) !important;
+  line-height:.92 !important;
   font-weight:600 !important;
   max-width:780px !important;
   margin:0 auto !important;
@@ -1163,7 +1167,7 @@ footer,
   color:var(--preview-muted) !important;
 }
 .divider {
-  max-width:720px !important;
+  max-width:100% !important;
   margin:0 0 34px !important;
   background:var(--preview-line) !important;
   opacity:1 !important;
@@ -1176,11 +1180,7 @@ footer,
 .mini-grid,
 .mini-links,
 .study-tools-grid {
-  display:grid !important;
-  grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)) !important;
-  gap:1px !important;
-  border:1px solid var(--preview-soft) !important;
-  background:var(--preview-soft) !important;
+  gap:14px !important;
 }
 .note-card,
 .chapter-card,
@@ -1194,17 +1194,14 @@ footer,
 .panel,
 .start-panel,
 .result-card,
-.question-card,
-.review-card,
 .search-box,
 .result-item,
 .stat,
 .stat-pill,
 .full-length-card {
-  background:rgba(247,247,245,.88) !important;
+  background:rgba(247,247,245,.86) !important;
   color:var(--preview-ink) !important;
-  border:0 !important;
-  border-radius:0 !important;
+  border:1px solid var(--preview-soft) !important;
   box-shadow:none !important;
   filter:none !important;
 }
@@ -1217,9 +1214,8 @@ footer,
 .mini-link,
 .feature-card,
 .full-length-card {
-  min-height:150px !important;
-  padding:24px !important;
-  transition:background .22s ease, color .22s ease !important;
+  border-radius:2px !important;
+  transition:border-color .22s ease, background .22s ease !important;
 }
 .note-card:hover,
 .chapter-card:hover,
@@ -1231,19 +1227,8 @@ footer,
 .feature-card:hover,
 .full-length-card:hover {
   transform:none !important;
-  background:var(--preview-ink) !important;
-  color:var(--preview-paper) !important;
-}
-.note-card:hover *,
-.chapter-card:hover *,
-.test-card:hover *,
-.card:hover *,
-.tile:hover *,
-.mini:hover *,
-.mini-link:hover *,
-.feature-card:hover *,
-.full-length-card:hover * {
-  color:var(--preview-paper) !important;
+  border-color:rgba(13,40,31,.24) !important;
+  background:rgba(255,255,255,.72) !important;
 }
 .note-card::before,
 .note-card::after,
@@ -1259,45 +1244,17 @@ footer,
 .feature-card::after {
   opacity:.08 !important;
 }
-.note-mark,
-.note-arrow,
-.back-arrow,
-.primary-btn,
-.secondary-btn,
-.submit-btn,
-.review-close,
-.timer-chip,
-.timer-start-btn,
-.timer-cancel-btn,
-.clear-recents,
-.icon-btn,
-.nav-btn,
+.question-card,
+.review-card,
+.question-box,
+.option-btn,
 .opt-btn,
 .review-opt,
-.option-btn,
-button {
-  border:1px solid var(--preview-line) !important;
-  background:transparent !important;
-  color:var(--preview-ink) !important;
-  border-radius:999px !important;
-  box-shadow:none !important;
-  font-family:'Inter', sans-serif !important;
-}
-.primary-btn:hover,
-.secondary-btn:hover,
-.submit-btn:hover,
-.review-close:hover,
-.timer-chip:hover,
-.timer-start-btn:hover,
-.timer-cancel-btn:hover,
-.clear-recents:hover,
-.opt-btn:hover,
-.review-opt:hover,
-.option-btn:hover,
-button:hover {
-  background:var(--preview-ink) !important;
-  color:var(--preview-paper) !important;
-  transform:none !important;
+.timer-input,
+input,
+select,
+textarea {
+  border-color:var(--preview-line) !important;
 }
 footer {
   position:relative !important;
@@ -1308,32 +1265,28 @@ footer {
 }
 @media (max-width:900px) {
   .minimal-nav {
-    width:auto;
-    margin:0;
-    padding:18px 20px 0;
     justify-content:flex-start;
-    overflow-x:auto;
   }
   body::after {
     width:100%;
     top:auto;
-    height:260px;
-    opacity:.10;
+    height:240px;
+    opacity:.08;
   }
   .page {
-    padding:0 20px 72px !important;
+    width:calc(100vw - 36px) !important;
+    padding-bottom:72px !important;
   }
   .hero {
-    padding-top:64px !important;
+    padding-top:58px !important;
   }
   .hero h1 {
-    font-size:clamp(54px, 16vw, 86px) !important;
+    font-size:clamp(50px, 15vw, 82px) !important;
   }
 }
 
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="../assets/zakir-unified.css" data-zakir-unified="css"/>
 </head>
 <body>
 <!-- MINIMAL_PREVIEW_NAV_START -->
@@ -2675,6 +2628,5 @@ document.addEventListener('keydown', e => {
     window.addEventListener('resize', window.applyPcSidebarState);
   })();
 </script>
-<script src="../assets/zakir-unified.js" data-root="../" data-zakir-unified="js"></script>
 </body>
 </html>
