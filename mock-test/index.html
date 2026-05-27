@@ -2474,6 +2474,10 @@ html,
 body {
   background:var(--preview-paper) !important;
   color:var(--preview-ink) !important;
+}
+*,
+*::before,
+*::after {
   cursor:auto !important;
 }
 body {
@@ -2508,9 +2512,28 @@ body::after {
 .cursor,
 #cursor,
 .pc-mobile-menu,
+.pc-mobile-theme,
+.pc-brand,
+.pc-brand-dot,
+.pc-brand-left,
+.pc-brand-name,
+.pc-side-toggle,
+.pc-side-meta,
+.pc-side-label,
+.pc-side-links,
+.pc-side-link,
+.pc-side-icon,
+.pc-side-text,
+.pc-side-footer,
+.pc-meta-box,
+.pc-meta-label,
+.pc-meta-num,
 .page > nav,
 body > nav:not(.minimal-nav) {
   display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
 }
 .minimal-nav {
   position:relative;
