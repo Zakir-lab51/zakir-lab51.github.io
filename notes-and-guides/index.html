@@ -1901,7 +1901,24 @@ body :is(.notes-grid,.chapter-grid,.chapters-grid,.test-grid,.cards-grid,.grid,.
 body :is(.note-top,.card-tag,.full-tag) {
   display: none !important;
 }
-body :is(.note-card h2,.note-tag,.note-mark,.card-title,.ch-title,.full-title,.test-card-title,.test-title-bar,.section-card h3,.update-card h3,.mini h3,.mini-link h3,.feature-card h2,.feature-card h3,.study-tool-card h2,.study-tool-card h3,.full-length-card h2,.q-num,.q-text,.card-num,.ch-num,.test-num,.timer-title,.result-title,.review-title) {
+body :is(.note-card h2) {
+  max-width: 100% !important;
+  margin: 0 !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: clamp(19px, 1.8vw, 25px) !important;
+  line-height: 1.08 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  font-weight: 700 !important;
+  color: var(--zl-tile-accent) !important;
+  -webkit-text-fill-color: currentColor !important;
+  background: none !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  hyphens: auto !important;
+  text-wrap: balance !important;
+}
+body :is(.card-title,.ch-title,.full-title,.test-card-title,.test-title-bar,.section-card h3,.update-card h3,.mini h3,.mini-link h3,.feature-card h2,.feature-card h3,.study-tool-card h2,.study-tool-card h3,.full-length-card h2,.q-num,.q-text,.card-num,.ch-num,.test-num,.timer-title,.result-title,.review-title) {
   font-family: 'DM Mono', monospace !important;
   font-size: clamp(11px, 1.4vw, 13px) !important;
   line-height: 1.35 !important;
@@ -1946,12 +1963,68 @@ body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,
   color: var(--zl-tile-accent) !important;
   transform: translateX(4px) !important;
 }
+@media (max-width: 680px) {
+  body :is(.note-card h2) {
+    font-size: clamp(20px, 6vw, 26px) !important;
+    line-height: 1.08 !important;
+  }
+}
 @media (hover: none) {
   body :is(.note-card,.chapter-card,.test-card,.full-length-card,.study-tool-card,.card,.tile,.mini,.mini-link,.feature-card,.section-card,.update-card,.flashcard,.leaderboard-row,.recent-item,.empty-state,.recent-empty,.q-card,.start-panel,.result-card,.review-card,.timer-box,.panel,.stat-pill,form,.form-card):hover {
     transform: none !important;
   }
 }
 /* ZAKIR_HOME_TILE_HOVER_END */
+/* ZAKIR_PDF_TITLE_FIT_START */
+body .note-card {
+  justify-content: space-between !important;
+}
+body .note-card h2 {
+  max-width: 100% !important;
+  margin: 0 !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: clamp(19px, 1.8vw, 25px) !important;
+  line-height: 1.08 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  font-weight: 700 !important;
+  color: var(--zl-tile-accent) !important;
+  -webkit-text-fill-color: currentColor !important;
+  background: none !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  hyphens: auto !important;
+  text-wrap: balance !important;
+}
+@media (max-width: 680px) {
+  html,
+  body {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  .minimal-nav {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    box-sizing: border-box !important;
+    padding-inline: 10px !important;
+    gap: 16px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .minimal-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+  .ambient {
+    max-width: 100vw !important;
+  }
+  body .note-card h2 {
+    font-size: clamp(20px, 6vw, 26px) !important;
+    line-height: 1.08 !important;
+  }
+}
+/* ZAKIR_PDF_TITLE_FIT_END */
 /* ZAKIR_NEON_GRID_DESIGN_END */
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
