@@ -291,6 +291,34 @@
     line-height: 1.55;
   }
 
+  .new-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    padding: 5px 8px;
+    border-radius: 99px;
+    border: 1px solid rgba(240,180,41,.45);
+    background: rgba(240,180,41,.12);
+    color: var(--amber);
+    font: 10px/1 'DM Mono', monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    box-shadow: 0 0 0 0 rgba(240,180,41,.26);
+    animation: newPulse 1.7s ease-in-out infinite;
+  }
+
+  @keyframes newPulse {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+      box-shadow: 0 0 0 0 rgba(240,180,41,.24);
+    }
+    50% {
+      transform: translateY(-1px) scale(1.04);
+      box-shadow: 0 0 0 6px rgba(240,180,41,0);
+    }
+  }
+
   .card-arrow {
     margin-top: auto;
     padding-top: 10px;
@@ -449,10 +477,11 @@
           <div class="card-arrow">Open → </div>
         </a>
 
-        <a class="card card-amber" href="anatomy/">
-          <div class="card-icon">🫀</div>
-          <div class="card-title">Anatomy PDFs</div>
-          <div class="card-desc">Download and view structured anatomical diagrams and PDFs.</div>
+        <a class="card card-amber" href="physiology/">
+          <span class="new-badge">New</span>
+          <div class="card-icon">PHY</div>
+          <div class="card-title">Physiology PDFs</div>
+          <div class="card-desc">Study blood, digestion, hemostasis, PYQs and physiology notes.</div>
           <div class="card-arrow">Open →</div>
         </a>
 
