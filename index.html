@@ -226,27 +226,6 @@
   }
 
   /* ── SUBJECT PILLS ── */
-  .subject-pills {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin: 26px auto 0;
-    max-width: 560px;
-  }
-  .pill {
-    padding: 5px 13px;
-    border-radius: 99px;
-    border: 1px solid var(--border);
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: .06em;
-    color: var(--muted);
-    background: var(--faint);
-    transition: border-color .2s, color .2s, background .2s;
-  }
-  .pill:hover { border-color: var(--green); color: var(--green); background: var(--green-glow); }
-
   /* ── CARDS ── */
   .quick-links {
     width: min(720px, 100%);
@@ -411,7 +390,6 @@
   .kicker  { animation-delay: .08s; }
   h1       { animation-delay: .18s; }
   .intro   { animation-delay: .30s; }
-  .subject-pills { animation-delay: .40s; }
   .quick-links { animation-delay: .50s; }
   @keyframes fadeUp {
     to { opacity: 1; transform: translateY(0); }
@@ -461,14 +439,6 @@
       <h1>Zakir Lab</h1>
 
       <p class="intro">A focused study space for anatomy, physiology,&nbsp;HDPC, communication skills and biochemistry notes.</p>
-
-      <div class="subject-pills">
-        <span class="pill">Anatomy</span>
-        <span class="pill">Physiology</span>
-        <span class="pill">Biochemistry</span>
-        <span class="pill">HDPC</span>
-        <span class="pill">Communication</span>
-      </div>
 
       <div class="quick-links" aria-label="Quick study links">
 
@@ -557,7 +527,7 @@
   });
 
   /* hover detection */
-  const interactables = 'a, button, .card, .pill';
+  const interactables = 'a, button, .card';
   document.querySelectorAll(interactables).forEach(el => {
     el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
     el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
