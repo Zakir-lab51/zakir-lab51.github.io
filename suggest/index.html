@@ -1955,7 +1955,6 @@ footer {
     <textarea id="suggest-message" placeholder="Write your question, resource idea, or improvement suggestion..." maxlength="2000" required></textarea>
     <div style="display:flex;flex-wrap:wrap;gap:10px;">
       <button class="button primary-btn" id="send-suggestion">Send Suggestion</button>
-      <button class="button" id="copy-suggestion">Copy Text</button>
     </div>
     <p class="muted" id="suggest-status">Your suggestion is sent privately; only the site owner can read it.</p>
   </div>
@@ -1973,7 +1972,7 @@ footer {
       return;
     }
     if (!window.ZakirCloud) {
-      suggestStatus.textContent = 'Sending is unavailable right now. Use “Copy Text” instead.';
+      suggestStatus.textContent = 'Sending is unavailable right now. Please try again later.';
       return;
     }
     sendBtn.disabled = true;
@@ -1985,24 +1984,12 @@ footer {
       suggestStatus.textContent = 'Thanks! Your suggestion was sent.';
     } catch (err) {
       console.warn(err);
-      suggestStatus.textContent = 'Could not send right now. Check your connection, or use “Copy Text” and share it another way.';
+      suggestStatus.textContent = 'Could not send right now. Check your connection and try again.';
     } finally {
       sendBtn.disabled = false;
     }
   });
 
-  document.getElementById('copy-suggestion').addEventListener('click', async () => {
-    const name = document.getElementById('suggest-name').value || 'Anonymous';
-    const topic = document.getElementById('suggest-topic').value || 'General';
-    const msg = document.getElementById('suggest-message').value || '';
-    const text = `Zakir Lab Suggestion\nName: ${name}\nTopic: ${topic}\nSuggestion:\n${msg}`;
-    try {
-      await navigator.clipboard.writeText(text);
-      document.getElementById('suggest-status').textContent = 'Suggestion copied. Paste it wherever you want to send it.';
-    } catch {
-      document.getElementById('suggest-status').textContent = text;
-    }
-  });
 </script>
 
   <footer>
