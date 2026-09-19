@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Zakir Lab</title>
+<meta name="description" content="A focused study space for anatomy, physiology, biochemistry, HDPC, communication skills and computer application mock tests."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -21,6 +22,8 @@
     --green-glow: rgba(80,220,140,.18);
     --amber: #f0b429;
     --coral: #ff6b6b;
+    --blue: #85b7eb;
+    --pink: #ed93b1;
     --text: #e8f5ee;
     --muted: #7aad8e;
     --faint: rgba(232,245,238,.06);
@@ -96,28 +99,23 @@
       linear-gradient(var(--border) 1px, transparent 1px),
       linear-gradient(90deg, var(--border) 1px, transparent 1px);
     background-size: 64px 64px;
-    mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 0%, transparent 80%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 22%, black 0%, transparent 78%);
   }
 
   a { color: inherit; text-decoration: none; cursor: none; }
 
-  .page {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-  }
+  .page { position: relative; z-index: 1; min-height: 100vh; }
+  .wrap { width: min(1120px, 100%); margin: 0 auto; padding-inline: 24px; }
 
   /* ── NAV ── */
   .top-nav {
-    width: min(100%, 980px);
+    width: min(1120px, 100%);
     margin: 0 auto;
-    padding: 28px 28px 0;
+    padding: 28px 24px 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(18px, 3vw, 40px);
+    gap: clamp(16px, 2.6vw, 36px);
     color: var(--muted);
     font-size: 11px;
     font-family: 'DM Mono', monospace;
@@ -126,7 +124,6 @@
     text-transform: uppercase;
     overflow-x: auto;
   }
-
   .top-nav a {
     position: relative;
     padding: 4px 0 8px;
@@ -143,37 +140,22 @@
     transform-origin: left;
     transition: transform .26s cubic-bezier(.4,0,.2,1);
   }
-  .top-nav a:hover,
-  .top-nav a.active { color: var(--text); }
-  .top-nav a:hover::after,
-  .top-nav a.active::after { transform: scaleX(1); }
+  .top-nav a:hover, .top-nav a.active { color: var(--text); }
+  .top-nav a:hover::after, .top-nav a.active::after { transform: scaleX(1); }
 
-  /* ── LOGO MARK ── */
-  .nav-logo {
-    width: 26px;
-    height: 26px;
-    flex-shrink: 0;
-    margin-right: 4px;
-  }
+  .nav-logo { width: 26px; height: 26px; flex-shrink: 0; margin-right: 4px; }
 
-  /* ── MAIN ── */
-  main {
-    display: grid;
-    place-items: center;
-    padding: clamp(56px, 9vh, 100px) 24px 56px;
-  }
-
+  /* ── HERO ── */
   .hero {
-    width: min(1080px, 100%);
     text-align: center;
+    padding: clamp(48px, 8vh, 88px) 0 clamp(36px, 5vh, 56px);
   }
 
-  /* ── KICKER ── */
   .kicker {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 28px;
+    margin-bottom: 26px;
     padding: 6px 14px 6px 10px;
     border: 1px solid var(--border-bright);
     border-radius: 99px;
@@ -196,14 +178,12 @@
     50% { opacity: .4; transform: scale(.7); }
   }
 
-  /* ── HEADING ── */
   h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(72px, 12vw, 148px);
+    font-size: clamp(62px, 10.5vw, 132px);
     line-height: .92;
     font-weight: 900;
     letter-spacing: -.04em;
-    margin: 0 auto;
     background: linear-gradient(155deg, #e8f5ee 0%, #a3d4b8 38%, var(--green) 68%, var(--amber) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -217,36 +197,96 @@
   }
 
   .intro {
-    max-width: 580px;
-    margin: clamp(22px, 4vh, 34px) auto 0;
+    max-width: 560px;
+    margin: clamp(20px, 3.4vh, 30px) auto 0;
     color: var(--muted);
-    font-size: clamp(15px, 1.55vw, 18px);
+    font-size: clamp(15px, 1.5vw, 17px);
     line-height: 1.65;
     letter-spacing: -.01em;
   }
 
-  /* ── SUBJECT PILLS ── */
-  /* ── CARDS ── */
-  .quick-links {
-    width: min(1080px, 100%);
-    margin: clamp(36px, 6vh, 60px) auto 0;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+  /* ── PRIMARY ACTIONS ── */
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: clamp(28px, 4vh, 38px);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 22px;
+    border-radius: 99px;
+    border: 1px solid var(--border-bright);
+    background: var(--faint);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: border-color .24s, background .24s, transform .24s, color .24s;
+  }
+  .btn:hover { transform: translateY(-2px); border-color: var(--green); color: var(--green); }
+  .btn-primary {
+    background: linear-gradient(140deg, rgba(80,220,140,.16), rgba(80,220,140,.06));
+    border-color: rgba(80,220,140,.42);
+    color: var(--green);
+  }
+  .btn-primary:hover { background: linear-gradient(140deg, rgba(80,220,140,.26), rgba(80,220,140,.1)); }
+
+  /* ── SECTIONS ── */
+  .section { padding-top: clamp(34px, 5.5vh, 58px); }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+  .section-label b { color: var(--text); font-weight: 500; }
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
   }
 
+  /* ── GRIDS ── */
+  .grid { display: grid; gap: 14px; }
+  .grid-5 { grid-template-columns: repeat(5, minmax(0,1fr)); }
+  .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+
+  /* ── CARD ── */
   .card {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 24px 22px 22px;
+    gap: 11px;
+    padding: 22px 20px 20px;
     border: 1px solid var(--border);
     border-radius: 16px;
     background: var(--card);
     overflow: hidden;
-    transition: border-color .26s, transform .26s cubic-bezier(.2,0,0,1), box-shadow .26s;
     color: var(--text);
+    transition: border-color .26s, transform .26s cubic-bezier(.2,0,0,1), box-shadow .26s;
   }
   .card::before {
     content: "";
@@ -255,7 +295,7 @@
     border-radius: 16px;
     opacity: 0;
     transition: opacity .26s;
-    background: radial-gradient(circle at 60% 30%, var(--green-glow), transparent 65%);
+    background: radial-gradient(circle at 60% 25%, var(--green-glow), transparent 65%);
     pointer-events: none;
   }
   .card:hover {
@@ -266,17 +306,19 @@
   .card:hover::before { opacity: 1; }
 
   .card-icon {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--faint);
     border: 1px solid var(--border);
-    font-size: 18px;
+    font-size: 16px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .06em;
+    color: var(--green);
   }
-
   .card-title {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
@@ -284,41 +326,7 @@
     text-transform: uppercase;
     color: var(--green);
   }
-
-  .card-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.55;
-  }
-
-  .new-badge {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    z-index: 2;
-    padding: 5px 8px;
-    border-radius: 99px;
-    border: 1px solid rgba(240,180,41,.45);
-    background: rgba(240,180,41,.12);
-    color: var(--amber);
-    font: 10px/1 'DM Mono', monospace;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    box-shadow: 0 0 0 0 rgba(240,180,41,.26);
-    animation: newPulse 1.7s ease-in-out infinite;
-  }
-
-  @keyframes newPulse {
-    0%, 100% {
-      transform: translateY(0) scale(1);
-      box-shadow: 0 0 0 0 rgba(240,180,41,.24);
-    }
-    50% {
-      transform: translateY(-1px) scale(1.04);
-      box-shadow: 0 0 0 6px rgba(240,180,41,0);
-    }
-  }
-
+  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
   .card-arrow {
     margin-top: auto;
     padding-top: 10px;
@@ -333,55 +341,170 @@
   }
   .card:hover .card-arrow { color: var(--green); gap: 10px; }
 
-  /* Card accent variants */
-  .card-amber .card-title { color: var(--amber); }
-  .card-amber:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(240,180,41,.35); }
-  .card-amber:hover::before { background: radial-gradient(circle at 60% 30%, rgba(240,180,41,.12), transparent 65%); }
-  .card-amber .card-arrow { }
-  .card-amber:hover .card-arrow { color: var(--amber); }
+  /* Accent variants */
+  .a-amber .card-title, .a-amber .card-icon { color: var(--amber); }
+  .a-amber:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(240,180,41,.35); }
+  .a-amber:hover::before { background: radial-gradient(circle at 60% 25%, rgba(240,180,41,.12), transparent 65%); }
+  .a-amber:hover .card-arrow { color: var(--amber); }
 
-  .card-coral .card-title { color: var(--coral); }
-  .card-coral:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(255,107,107,.35); }
-  .card-coral:hover::before { background: radial-gradient(circle at 60% 30%, rgba(255,107,107,.1), transparent 65%); }
-  .card-coral:hover .card-arrow { color: var(--coral); }
+  .a-coral .card-title, .a-coral .card-icon { color: var(--coral); }
+  .a-coral:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(255,107,107,.35); }
+  .a-coral:hover::before { background: radial-gradient(circle at 60% 25%, rgba(255,107,107,.1), transparent 65%); }
+  .a-coral:hover .card-arrow { color: var(--coral); }
 
-  .card-blue .card-title { color: #85b7eb; }
-  .card-blue:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(133,183,235,.35); }
-  .card-blue:hover::before { background: radial-gradient(circle at 60% 30%, rgba(133,183,235,.11), transparent 65%); }
-  .card-blue:hover .card-arrow { color: #85b7eb; }
+  .a-blue .card-title, .a-blue .card-icon { color: var(--blue); }
+  .a-blue:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(133,183,235,.35); }
+  .a-blue:hover::before { background: radial-gradient(circle at 60% 25%, rgba(133,183,235,.11), transparent 65%); }
+  .a-blue:hover .card-arrow { color: var(--blue); }
 
-  .card-spotting .card-icon {
-    color: var(--green);
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    letter-spacing: .08em;
+  .a-pink .card-title, .a-pink .card-icon { color: var(--pink); }
+  .a-pink:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(237,147,177,.35); }
+  .a-pink:hover::before { background: radial-gradient(circle at 60% 25%, rgba(237,147,177,.11), transparent 65%); }
+  .a-pink:hover .card-arrow { color: var(--pink); }
+
+  .new-badge {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    z-index: 2;
+    padding: 5px 8px;
+    border-radius: 99px;
+    border: 1px solid rgba(240,180,41,.45);
+    background: rgba(240,180,41,.12);
+    color: var(--amber);
+    font: 10px/1 'DM Mono', monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    animation: newPulse 1.7s ease-in-out infinite;
   }
-  .spotting-title {
+  @keyframes newPulse {
+    0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 0 0 0 rgba(240,180,41,.24); }
+    50% { transform: translateY(-1px) scale(1.04); box-shadow: 0 0 0 6px rgba(240,180,41,0); }
+  }
+
+  /* ── FEATURE CARD (histology) ── */
+  .feature-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(34px, 3.6vw, 44px);
-    line-height: .92;
+    font-size: clamp(30px, 3.2vw, 40px);
+    line-height: .94;
     font-weight: 900;
     letter-spacing: -.04em;
     color: var(--text);
+    transition: color .26s;
   }
-  .spotting-subtitle {
-    margin-top: -4px;
+  .feature-sub {
+    margin-top: -2px;
     color: var(--muted);
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     letter-spacing: .14em;
     text-transform: uppercase;
   }
-  .card-spotting:hover { box-shadow: 0 20px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(80,220,140,.35); }
-  .card-spotting:hover .spotting-title { color: var(--green); }
+  .card:hover .feature-title { color: var(--green); }
+  .a-blue:hover .feature-title { color: var(--blue); }
+  .a-pink:hover .feature-title { color: var(--pink); }
+
+  /* ── MOCK TEST PANEL ── */
+  .panel {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: linear-gradient(150deg, var(--card), rgba(13,31,24,.6));
+    padding: clamp(22px, 3vw, 30px);
+    display: grid;
+    grid-template-columns: minmax(0, 320px) 1fr;
+    gap: clamp(22px, 3vw, 38px);
+    align-items: start;
+  }
+  .panel-lead h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3vw, 38px);
+    line-height: .96;
+    font-weight: 900;
+    letter-spacing: -.03em;
+    color: var(--text);
+  }
+  .panel-lead p {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .panel-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; align-content: flex-start; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    background: rgba(232,245,238,.03);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .05em;
+    transition: color .22s, border-color .22s, transform .22s, background .22s;
+  }
+  .chip::before {
+    content: "";
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: .6;
+    flex-shrink: 0;
+  }
+  .chip:hover {
+    color: var(--blue);
+    border-color: rgba(133,183,235,.4);
+    background: rgba(133,183,235,.07);
+    transform: translateY(-2px);
+  }
+
+  /* ── RESOURCE ROW ── */
+  .res {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 15px 17px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: var(--card);
+    transition: border-color .24s, transform .24s, background .24s;
+  }
+  .res:hover { border-color: var(--border-bright); transform: translateY(-3px); background: var(--surface); }
+  .res-icon {
+    width: 30px; height: 30px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: var(--faint);
+    border: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .res-text { min-width: 0; }
+  .res-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .res-desc {
+    margin-top: 3px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
 
   /* ── FOOTER ── */
   footer {
     position: relative;
     z-index: 1;
-    width: min(980px, calc(100vw - 48px));
-    margin: 0 auto;
-    padding: 18px 0 26px;
+    width: min(1120px, 100%);
+    margin: clamp(46px, 7vh, 76px) auto 0;
+    padding: 18px 24px 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -393,7 +516,6 @@
     border-top: 1px solid var(--border);
     letter-spacing: .05em;
   }
-
   .visitor-counter {
     display: inline-flex;
     align-items: center;
@@ -420,13 +542,7 @@
   }
 
   /* ── AMBIENT GLOW ── */
-  .ambient {
-    position: fixed;
-    pointer-events: none;
-    z-index: 0;
-    border-radius: 50%;
-    filter: blur(80px);
-  }
+  .ambient { position: fixed; pointer-events: none; z-index: 0; border-radius: 50%; filter: blur(80px); }
   .ambient-1 {
     width: 500px; height: 400px;
     top: -80px; left: 50%;
@@ -440,27 +556,48 @@
   }
 
   /* ── ENTRY ANIMATIONS ── */
-  .hero > * {
+  .reveal {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(16px);
     animation: fadeUp .7s cubic-bezier(.22,1,.36,1) forwards;
   }
-  .kicker  { animation-delay: .08s; }
-  h1       { animation-delay: .18s; }
-  .intro   { animation-delay: .30s; }
-  .quick-links { animation-delay: .50s; }
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
+  .kicker  { animation-delay: .06s; }
+  h1       { animation-delay: .14s; }
+  .intro   { animation-delay: .24s; }
+  .actions { animation-delay: .34s; }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* Sections fade in as they scroll into view */
+  .section { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1); }
+  .section.in { opacity: 1; transform: translateY(0); }
+
+  /* ── TOUCH DEVICES: restore the real cursor ── */
+  @media (hover: none), (pointer: coarse) {
+    html, body, a { cursor: auto; }
+    #cursor-dot, #cursor-ring { display: none; }
+  }
+
+  /* ── REDUCED MOTION ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    .section { opacity: 1; transform: none; }
+    .reveal { opacity: 1; transform: none; }
   }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .quick-links { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 520px; }
+  @media (max-width: 1000px) {
+    .grid-5 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid-4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .panel { grid-template-columns: 1fr; }
   }
-  @media (max-width: 680px) {
-    h1 { font-size: clamp(60px, 19vw, 88px); }
-    .quick-links { grid-template-columns: 1fr; max-width: 340px; }
+  @media (max-width: 760px) {
+    .grid-3 { grid-template-columns: repeat(2, minmax(0,1fr)); }
     .top-nav { justify-content: flex-start; }
+  }
+  @media (max-width: 560px) {
+    h1 { font-size: clamp(52px, 16vw, 78px); }
+    .grid-5, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .section-head { flex-direction: column; align-items: flex-start; gap: 6px; }
   }
 </style>
 </head>
@@ -476,7 +613,6 @@
 
 <div class="page">
   <nav class="top-nav" aria-label="Primary navigation">
-    <!-- tiny hex logo -->
     <svg class="nav-logo" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <polygon points="13,2 24,8 24,18 13,24 2,18 2,8" stroke="rgba(80,220,140,.45)" stroke-width="1" fill="rgba(80,220,140,.06)"/>
       <polygon points="13,6 20,10 20,16 13,20 6,16 6,10" stroke="rgba(80,220,140,.3)" stroke-width=".8" fill="none"/>
@@ -484,67 +620,220 @@
     </svg>
     <a class="active" href="./">Home</a>
     <a href="study/">Subjects</a>
-    <a href="anatomy/">Anatomy</a>
-    <a href="physiology/">Physiology</a>
+    <a href="#practice">Practice</a>
+    <a href="#tests">Tests</a>
     <a href="recents/">Recents</a>
     <a href="suggest/">Contact</a>
   </nav>
 
+  <header class="hero wrap">
+    <div class="kicker reveal">
+      <span class="kicker-dot"></span>
+      Medical Study Hub
+    </div>
+
+    <h1 class="reveal">Zakir Lab</h1>
+
+    <p class="intro reveal">Notes, flashcards and mock tests for anatomy, physiology, biochemistry, HDPC and communication skills &mdash; plus the full computer application syllabus.</p>
+
+    <div class="actions reveal">
+      <a class="btn btn-primary" href="study/">Start Studying &rarr;</a>
+      <a class="btn" href="whats-new/">What&rsquo;s New</a>
+      <a class="btn" href="recents/">Recent Files</a>
+    </div>
+  </header>
+
   <main>
-    <section class="hero" aria-label="Zakir Lab homepage">
-      <div class="kicker">
-        <span class="kicker-dot"></span>
-        Medical Study Hub
+
+    <!-- ── SUBJECTS ── -->
+    <section class="section wrap" id="subjects" aria-labelledby="subjects-h">
+      <div class="section-head">
+        <div class="section-label" id="subjects-h">01 &mdash; <b>Subjects</b></div>
+        <div class="section-count">5 subjects</div>
       </div>
 
-      <h1>Zakir Lab</h1>
-
-      <p class="intro">A focused study space for anatomy, physiology,&nbsp;HDPC, communication skills and biochemistry notes.</p>
-
-      <div class="quick-links" aria-label="Quick study links">
-
-        <a class="card" href="study/">
-          <div class="card-icon">📖</div>
-          <div class="card-title">Start Studying</div>
-          <div class="card-desc">Browse all subject notes and study materials in one place.</div>
-          <div class="card-arrow">Open → </div>
-        </a>
-
-        <a class="card card-spotting" href="spotting/">
-          <div class="card-icon">SP</div>
-          <div class="spotting-title">Spotting</div>
-          <div class="spotting-subtitle">Anatomy</div>
+      <div class="grid grid-5">
+        <a class="card" href="anatomy/">
+          <div class="card-icon">AN</div>
+          <div class="card-title">Anatomy</div>
+          <div class="card-desc">Structure, regions and surface landmarks.</div>
           <div class="card-arrow">Open &rarr;</div>
         </a>
 
-        <a class="card card-blue" href="microscope-photos/">
-          <div class="card-icon">MP</div>
-          <div class="card-title">Microscope Photos</div>
-          <div class="card-desc">Practice histology slides from microscope photo flashcards.</div>
+        <a class="card a-blue" href="physiology/">
+          <div class="card-icon">PH</div>
+          <div class="card-title">Physiology</div>
+          <div class="card-desc">Systems, mechanisms and regulation.</div>
           <div class="card-arrow">Open &rarr;</div>
         </a>
 
-        <a class="card card-amber" href="communication-skills/">
+        <a class="card a-amber" href="biochemistry/">
+          <div class="card-icon">BC</div>
+          <div class="card-title">Biochemistry</div>
+          <div class="card-desc">Metabolism, enzymes and molecular pathways.</div>
+          <div class="card-arrow">Open &rarr;</div>
+        </a>
+
+        <a class="card a-coral" href="hdpc/">
+          <div class="card-icon">HD</div>
+          <div class="card-title">HDPC</div>
+          <div class="card-desc">Health, development and patient care notes.</div>
+          <div class="card-arrow">Open &rarr;</div>
+        </a>
+
+        <a class="card a-pink" href="communication-skills/">
           <span class="new-badge">New</span>
           <div class="card-icon">CS</div>
-          <div class="card-title">Communication Skills</div>
-          <div class="card-desc">Study communication notes and patient-care skills.</div>
-          <div class="card-arrow">Open →</div>
+          <div class="card-title">Communication</div>
+          <div class="card-desc">Patient interaction and communication skills.</div>
+          <div class="card-arrow">Open &rarr;</div>
         </a>
-
-        <a class="card card-coral" href="recents/">
-          <div class="card-icon">🕒</div>
-          <div class="card-title">Recent Files</div>
-          <div class="card-desc">Jump back to the latest uploaded notes and resources.</div>
-          <div class="card-arrow">Open →</div>
-        </a>
-
       </div>
     </section>
+
+    <!-- ── PRACTICE ── -->
+    <section class="section wrap" id="practice" aria-labelledby="practice-h">
+      <div class="section-head">
+        <div class="section-label" id="practice-h">02 &mdash; <b>Practice</b></div>
+        <div class="section-count">Flashcards &amp; spotting</div>
+      </div>
+
+      <div class="grid grid-3">
+        <a class="card" href="spotting/">
+          <div class="card-icon">SP</div>
+          <div class="feature-title">Spotting</div>
+          <div class="feature-sub">Anatomy</div>
+          <div class="card-desc">Timed spotting practice on histology and anatomy specimens.</div>
+          <div class="card-arrow">Open &rarr;</div>
+        </a>
+
+        <a class="card a-blue" href="microscope-photos/">
+          <div class="card-icon">MP</div>
+          <div class="feature-title">Microscope</div>
+          <div class="feature-sub">Histology slides</div>
+          <div class="card-desc">Identify real microscope slides from photo flashcards.</div>
+          <div class="card-arrow">Open &rarr;</div>
+        </a>
+
+        <a class="card a-pink" href="flashcards/">
+          <div class="card-icon">FC</div>
+          <div class="feature-title">Flashcards</div>
+          <div class="feature-sub">All subjects</div>
+          <div class="card-desc">Quick recall decks across every subject in the lab.</div>
+          <div class="card-arrow">Open &rarr;</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── COMPUTER APPLICATION TESTS ── -->
+    <section class="section wrap" id="tests" aria-labelledby="tests-h">
+      <div class="section-head">
+        <div class="section-label" id="tests-h">03 &mdash; <b>Computer Application</b></div>
+        <div class="section-count">8 topics &middot; mock tests</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-lead">
+          <h3>Mock tests, topic by topic</h3>
+          <p>Work through a single topic, mix them together, or sit a full-length paper under exam conditions.</p>
+          <div class="panel-actions">
+            <a class="btn btn-primary" href="mock-test/">Mixed Mock Tests &rarr;</a>
+            <a class="btn" href="full-length-test/">Full Length</a>
+          </div>
+        </div>
+
+        <div class="chips">
+          <a class="chip" href="introduction-to-computer/">Introduction to Computers</a>
+          <a class="chip" href="basics-of-operating-systems/">Basics of Operating Systems</a>
+          <a class="chip" href="windows-operating-system/">Windows OS</a>
+          <a class="chip" href="ms-word/">MS Word</a>
+          <a class="chip" href="excel/">Excel</a>
+          <a class="chip" href="powerpoint/">PowerPoint</a>
+          <a class="chip" href="internet-and-internet-applications/">Internet &amp; Applications</a>
+          <a class="chip" href="computer-virus/">Computer Virus</a>
+          <a class="chip" href="computer-class/">Computer Class</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── RESOURCES ── -->
+    <section class="section wrap" id="resources" aria-labelledby="resources-h">
+      <div class="section-head">
+        <div class="section-label" id="resources-h">04 &mdash; <b>Resources</b></div>
+        <div class="section-count">Notes, papers &amp; more</div>
+      </div>
+
+      <div class="grid grid-4">
+        <a class="res" href="notes-and-guides/">
+          <div class="res-icon">📘</div>
+          <div class="res-text">
+            <div class="res-name">Notes &amp; Guides</div>
+            <div class="res-desc">Long-form notes and study guides</div>
+          </div>
+        </a>
+
+        <a class="res" href="cheatsheets/">
+          <div class="res-icon">⚡</div>
+          <div class="res-text">
+            <div class="res-name">Cheatsheets</div>
+            <div class="res-desc">Condensed one-page revision</div>
+          </div>
+        </a>
+
+        <a class="res" href="pyqs/">
+          <div class="res-icon">📄</div>
+          <div class="res-text">
+            <div class="res-name">PYQs</div>
+            <div class="res-desc">Previous year question papers</div>
+          </div>
+        </a>
+
+        <a class="res" href="whats-new/">
+          <div class="res-icon">✨</div>
+          <div class="res-text">
+            <div class="res-name">What&rsquo;s New</div>
+            <div class="res-desc">Latest additions to the lab</div>
+          </div>
+        </a>
+
+        <a class="res" href="recents/">
+          <div class="res-icon">🕒</div>
+          <div class="res-text">
+            <div class="res-name">Recents</div>
+            <div class="res-desc">Recently uploaded files</div>
+          </div>
+        </a>
+
+        <a class="res" href="leaderboard/">
+          <div class="res-icon">🏆</div>
+          <div class="res-text">
+            <div class="res-name">Leaderboard</div>
+            <div class="res-desc">Test scores and rankings</div>
+          </div>
+        </a>
+
+        <a class="res" href="dev-log/">
+          <div class="res-icon">🛠</div>
+          <div class="res-text">
+            <div class="res-name">Dev Log</div>
+            <div class="res-desc">Changes and build notes</div>
+          </div>
+        </a>
+
+        <a class="res" href="suggest/">
+          <div class="res-icon">💬</div>
+          <div class="res-text">
+            <div class="res-name">Suggest</div>
+            <div class="res-desc">Request notes or report an issue</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
   </main>
 
   <footer>
-    <span>© 2026 Zakir Lab</span>
+    <span>&copy; 2026 Zakir Lab</span>
     <a class="visitor-counter" href="https://hits.sh/zakir-lab51.github.io/" target="_blank" rel="noopener" aria-label="Zakir Lab visitor count">
       <span>Visits</span>
       <img src="https://hits.sh/zakir-lab51.github.io.svg?style=flat-square&label=views&color=6f6256&labelColor=fdfaf5&view=total" alt="Zakir Lab visitor count">
@@ -590,7 +879,6 @@
     colorIdx = (colorIdx + 1) % COLORS.length;
     setColor(COLORS[colorIdx]);
 
-    /* tiny ripple */
     const r = document.createElement('div');
     r.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;width:0;height:0;border-radius:50%;border:1.5px solid ${COLORS[colorIdx]};transform:translate(-50%,-50%);pointer-events:none;z-index:9997;transition:width .5s ease,height .5s ease,opacity .5s ease;opacity:.8`;
     document.body.appendChild(r);
@@ -603,11 +891,22 @@
   });
 
   /* hover detection */
-  const interactables = 'a, button, .card';
-  document.querySelectorAll(interactables).forEach(el => {
+  document.querySelectorAll('a, button, .card, .chip, .res, .btn').forEach(el => {
     el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
     el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
   });
+
+  /* reveal sections on scroll */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: .08 });
+
+  document.querySelectorAll('.section').forEach(s => io.observe(s));
 </script>
 </body>
 </html>
