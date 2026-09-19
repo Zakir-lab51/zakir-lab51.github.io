@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>1st Semester · Zakir Lab</title>
+<meta name="description" content="1st semester study hub: anatomy, physiology, biochemistry, HDPC, communication skills, practice tools, computer application mock tests and resources."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #111111;
+    --paper: #ffffff;
+    --panel: #ececec;
+    --yellow: #ffd21f;
+    --yellow-soft: #fff4c2;
+    --muted: #555555;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    min-height: 100vh;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+
+  /* ── DOTS ── */
+  .dots { display: flex; justify-content: flex-end; gap: 18px; padding: 14px 8px 12px; }
+  .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+
+  /* ── NAV ── */
+  .site-header {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 16px;
+    height: 72px;
+    padding-inline: clamp(16px, 4vw, 48px);
+    background: var(--panel);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 15px;
+    line-height: .95;
+    text-transform: uppercase;
+  }
+  .nav { display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background .2s;
+  }
+  .nav a:hover { background: rgba(255,210,31,.4); }
+  .nav a.active { background: var(--yellow); box-shadow: inset 0 -3px 0 var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--panel);
+    padding: clamp(28px, 5vw, 56px) clamp(20px, 4vw, 48px) clamp(36px, 5vw, 56px);
+  }
+  .tag {
+    display: inline-block;
+    padding: 5px 12px;
+    border: 2px solid var(--ink);
+    background: var(--yellow);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  h1 {
+    position: relative;
+    isolation: isolate;
+    margin-top: 22px;
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+    font-size: clamp(44px, 7vw, 92px);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .o { position: relative; display: inline-block; }
+  .o::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: .34em; height: .42em;
+    border-radius: 50%;
+    background: var(--yellow);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+  }
+  .rule { height: 6px; background: var(--ink); margin: 20px 0 22px; }
+  .hero-foot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px 32px;
+    flex-wrap: wrap;
+  }
+  .lede { max-width: 560px; color: #333; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background .2s, transform .2s, box-shadow .2s;
+  }
+  .btn:hover { background: var(--yellow); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+  .btn-primary { background: var(--yellow); }
+
+  /* ── JUMP LINKS ── */
+  .jump {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 14px 8px 0;
+  }
+  .jump a {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 4px 2px;
+    box-shadow: inset 0 -4px 0 var(--yellow);
+    transition: box-shadow .2s;
+  }
+  .jump a:hover { box-shadow: inset 0 -14px 0 var(--yellow); }
+
+  /* ── SECTIONS ── */
+  .section { padding-top: clamp(48px, 7vw, 80px); scroll-margin-top: 16px; }
+  .sec-head { display: flex; align-items: center; gap: 18px; margin-bottom: 24px; }
+  .sec-num {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--yellow);
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+  }
+  .sec-head h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .sec-head .bar { flex: 1; height: 6px; background: var(--ink); }
+  .count {
+    flex-shrink: 0;
+    padding: 4px 12px;
+    border: 2px solid var(--ink);
+    background: var(--yellow);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .grid { display: grid; gap: 18px; }
+  .grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+  /* ── CARD ── */
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 22px 20px 20px;
+    border: 2px solid var(--ink);
+    background: var(--panel);
+    transition: transform .2s, box-shadow .2s, background .2s;
+  }
+  .card:hover { background: var(--paper); transform: translate(-4px, -4px); box-shadow: 8px 8px 0 var(--ink); }
+  .card-icon {
+    width: 42px; height: 42px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--yellow);
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 13px;
+    letter-spacing: .02em;
+  }
+  .card-title { font-weight: 700; font-size: 15px; letter-spacing: .03em; text-transform: uppercase; }
+  .card-desc { font-size: 13px; color: #333; line-height: 1.5; }
+  .card-arrow {
+    margin-top: auto;
+    padding-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .card-arrow i {
+    width: 30px; height: 30px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--yellow);
+    font-style: normal;
+    transition: background .2s, color .2s, transform .2s;
+  }
+  .card:hover .card-arrow i { background: var(--yellow); color: var(--ink); transform: translateX(3px); }
+  .new-badge {
+    position: absolute;
+    top: 16px; right: 16px;
+    padding: 3px 10px;
+    border: 2px solid var(--ink);
+    background: var(--yellow);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* practice feature cards */
+  .feature-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(24px, 2.6vw, 32px);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .feature-sub {
+    align-self: flex-start;
+    padding: 2px 10px;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  /* ── TESTS PANEL ── */
+  .panel {
+    display: grid;
+    grid-template-columns: minmax(0, 340px) 1fr;
+    border: 2px solid var(--ink);
+  }
+  .panel-lead { padding: clamp(22px, 3vw, 34px); background: var(--yellow); border-right: 2px solid var(--ink); }
+  .panel-lead h3 {
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 400;
+    font-size: clamp(26px, 2.8vw, 34px);
+    line-height: 1.02;
+    text-transform: uppercase;
+  }
+  .panel-lead p { margin-top: 12px; font-size: 14px; }
+  .panel-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .panel-actions .btn-primary { background: var(--ink); color: var(--yellow); }
+  .panel-actions .btn-primary:hover { background: var(--paper); color: var(--ink); }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: flex-start;
+    padding: clamp(22px, 3vw, 34px);
+    background: var(--panel);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    font-size: 13px;
+    font-weight: 600;
+    transition: background .2s, transform .2s, box-shadow .2s;
+  }
+  .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ink); }
+  .chip:hover { background: var(--yellow); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+
+  /* ── RESOURCES ── */
+  .res {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    transition: transform .2s, box-shadow .2s, background .2s;
+  }
+  .res:hover { background: var(--yellow-soft); transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--ink); }
+  .res-icon {
+    width: 36px; height: 36px;
+    flex-shrink: 0;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--panel);
+    border: 2px solid var(--ink);
+    font-size: 15px;
+  }
+  .res-name { font-size: 13px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+  .res-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+  /* ── FOOTER ── */
+  footer { padding-top: clamp(56px, 8vw, 96px); padding-bottom: 28px; }
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 2px solid var(--ink);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .foot a { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .foot a:hover { box-shadow: inset 0 -6px 0 var(--yellow); }
+
+  /* ── MOTION ── */
+  .rise { opacity: 0; transform: translateY(14px); animation: rise .7s cubic-bezier(.22,1,.36,1) forwards; }
+  .d1 { animation-delay: .05s; } .d2 { animation-delay: .15s; } .d3 { animation-delay: .25s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .rise { animation: none; opacity: 1; transform: none; }
+    .card, .btn, .chip, .res { transition: none; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1000px) {
+    .grid-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .panel { grid-template-columns: 1fr; }
+    .panel-lead { border-right: 0; border-bottom: 2px solid var(--ink); }
+  }
+  @media (max-width: 760px) {
+    .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .site-header { height: 60px; padding-inline: 12px; }
+    .logo { font-size: 13px; padding-right: 10px; }
+    .nav a { padding: 0 10px; font-size: 11px; }
+    .nav .hide-sm { display: none; }
+    .grid-5, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .sec-head { flex-wrap: wrap; }
+    .sec-head .bar { order: 3; flex-basis: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <header class="site-header">
+    <a class="logo" href="../" aria-label="Zakir Lab home">Zakir<br>Lab</a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="../">Home</a>
+      <a class="active" href="./">1st Sem</a>
+      <a class="hide-sm" href="../study/">Subjects</a>
+      <a href="../recents/">Recents</a>
+      <a href="../suggest/">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <span class="tag rise d1">Zakir Lab &middot; Semester 01</span>
+    <h1 class="rise d2">1st Semester</h1>
+    <div class="rule rise d2"></div>
+    <div class="hero-foot rise d3">
+      <p class="lede">Notes, flashcards and mock tests for anatomy, physiology, biochemistry, HDPC and communication skills &mdash; plus the full computer application syllabus.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="../study/">Start Studying &rarr;</a>
+        <a class="btn" href="../recents/">Recent Files</a>
+      </div>
+    </div>
+  </section>
+
+  <nav class="jump" aria-label="On this page">
+    <a href="#subjects">Subjects</a>
+    <a href="#practice">Practice</a>
+    <a href="#tests">Computer Application</a>
+    <a href="#resources">Resources</a>
+  </nav>
+
+  <main>
+
+    <!-- ── SUBJECTS ── -->
+    <section class="section" id="subjects" aria-labelledby="subjects-h">
+      <div class="sec-head">
+        <span class="sec-num">01</span>
+        <h2 id="subjects-h">Subjects</h2>
+        <div class="bar"></div>
+        <span class="count">5 subjects</span>
+      </div>
+
+      <div class="grid grid-5">
+        <a class="card" href="../anatomy/">
+          <div class="card-icon">AN</div>
+          <div class="card-title">Anatomy</div>
+          <div class="card-desc">Structure, regions and surface landmarks.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
+        </a>
+
+        <a class="card" href="../physiology/">
+          <div class="card-icon">PH</div>
+          <div class="card-title">Physiology</div>
+          <div class="card-desc">Systems, mechanisms and regulation.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
+        </a>
+
+        <a class="card" href="../biochemistry/">
+          <div class="card-icon">BC</div>
+          <div class="card-title">Biochemistry</div>
+          <div class="card-desc">Metabolism, enzymes and molecular pathways.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
+        </a>
+
+        <a class="card" href="../hdpc/">
+          <div class="card-icon">HD</div>
+          <div class="card-title">HDPC</div>
+          <div class="card-desc">Health, development and patient care notes.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
+        </a>
+
+        <a class="card" href="../communication-skills/">
+          <span class="new-badge">New</span>
+          <div class="card-icon">CS</div>
+          <div class="card-title">Communication</div>
+          <div class="card-desc">Patient interaction and communication skills.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── PRACTICE ── -->
+    <section class="section" id="practice" aria-labelledby="practice-h">
+      <div class="sec-head">
+        <span class="sec-num">02</span>
+        <h2 id="practice-h">Practice</h2>
+        <div class="bar"></div>
+        <span class="count">Flashcards &amp; spotting</span>
+      </div>
+
+      <div class="grid grid-3">
+        <a class="card" href="../spotting/">
+          <div class="card-icon">SP</div>
+          <div class="feature-title">Spotting</div>
+          <div class="feature-sub">Anatomy</div>
+          <div class="card-desc">Timed spotting practice on histology and anatomy specimens.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
+        </a>
+
+        <a class="card" href="../microscope-photos/">
+          <div class="card-icon">MP</div>
+          <div class="feature-title">Microscope</div>
+          <div class="feature-sub">Histology slides</div>
+          <div class="card-desc">Identify real microscope slides from photo flashcards.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
+        </a>
+
+        <a class="card" href="../flashcards/">
+          <div class="card-icon">FC</div>
+          <div class="feature-title">Flashcards</div>
+          <div class="feature-sub">All subjects</div>
+          <div class="card-desc">Quick recall decks across every subject in the lab.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── COMPUTER APPLICATION TESTS ── -->
+    <section class="section" id="tests" aria-labelledby="tests-h">
+      <div class="sec-head">
+        <span class="sec-num">03</span>
+        <h2 id="tests-h">Computer Application</h2>
+        <div class="bar"></div>
+        <span class="count">Mock tests</span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-lead">
+          <h3>Mock tests, topic by topic</h3>
+          <p>Work through a single topic, mix them together, or sit a full-length paper under exam conditions.</p>
+          <div class="panel-actions">
+            <a class="btn btn-primary" href="../mock-test/">Mixed Mock Tests &rarr;</a>
+            <a class="btn" href="../full-length-test/">Full Length</a>
+          </div>
+        </div>
+
+        <div class="chips">
+          <a class="chip" href="../introduction-to-computer/">Introduction to Computers</a>
+          <a class="chip" href="../basics-of-operating-systems/">Basics of Operating Systems</a>
+          <a class="chip" href="../windows-operating-system/">Windows OS</a>
+          <a class="chip" href="../ms-word/">MS Word</a>
+          <a class="chip" href="../excel/">Excel</a>
+          <a class="chip" href="../powerpoint/">PowerPoint</a>
+          <a class="chip" href="../internet-and-internet-applications/">Internet &amp; Applications</a>
+          <a class="chip" href="../computer-virus/">Computer Virus</a>
+          <a class="chip" href="../computer-class/">Computer Class</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── RESOURCES ── -->
+    <section class="section" id="resources" aria-labelledby="resources-h">
+      <div class="sec-head">
+        <span class="sec-num">04</span>
+        <h2 id="resources-h">Resources</h2>
+        <div class="bar"></div>
+        <span class="count">Notes, papers &amp; more</span>
+      </div>
+
+      <div class="grid grid-4">
+        <a class="res" href="../notes-and-guides/">
+          <div class="res-icon">📘</div>
+          <div>
+            <div class="res-name">Notes &amp; Guides</div>
+            <div class="res-desc">Long-form notes and study guides</div>
+          </div>
+        </a>
+
+        <a class="res" href="../cheatsheets/">
+          <div class="res-icon">⚡</div>
+          <div>
+            <div class="res-name">Cheatsheets</div>
+            <div class="res-desc">Condensed one-page revision</div>
+          </div>
+        </a>
+
+        <a class="res" href="../pyqs/">
+          <div class="res-icon">📄</div>
+          <div>
+            <div class="res-name">PYQs</div>
+            <div class="res-desc">Previous year question papers</div>
+          </div>
+        </a>
+
+        <a class="res" href="../whats-new/">
+          <div class="res-icon">✨</div>
+          <div>
+            <div class="res-name">What&rsquo;s New</div>
+            <div class="res-desc">Latest additions to the lab</div>
+          </div>
+        </a>
+
+        <a class="res" href="../recents/">
+          <div class="res-icon">🕒</div>
+          <div>
+            <div class="res-name">Recents</div>
+            <div class="res-desc">Recently uploaded files</div>
+          </div>
+        </a>
+
+        <a class="res" href="../leaderboard/">
+          <div class="res-icon">🏆</div>
+          <div>
+            <div class="res-name">Leaderboard</div>
+            <div class="res-desc">Test scores and rankings</div>
+          </div>
+        </a>
+
+        <a class="res" href="../dev-log/">
+          <div class="res-icon">🛠</div>
+          <div>
+            <div class="res-name">Dev Log</div>
+            <div class="res-desc">Changes and build notes</div>
+          </div>
+        </a>
+
+        <a class="res" href="../suggest/">
+          <div class="res-icon">💬</div>
+          <div>
+            <div class="res-name">Suggest</div>
+            <div class="res-desc">Request notes or report an issue</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="foot">
+      <span>&copy; 2026 Zakir Lab</span>
+      <a href="../">&larr; Back to home</a>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

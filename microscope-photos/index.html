@@ -58,8 +58,85 @@ button{appearance:none;border:none;cursor:pointer}
 .small{font-size:13px;line-height:1.6;color:#b8af9f}
 .footer-note{margin-top:14px;font-size:12px;color:#756d60;line-height:1.6}
 </style>
+<!-- ZAKIR_POP_PAGE_START -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root { --zl-ink:#111; --zl-paper:#fff; --zl-panel:#ececec; --zl-yellow:#ffd21f; --zl-yellow-soft:#fff4c2; --zl-good-bg:#dcf5e3; --zl-bad-bg:#fde2de; }
+html, body { background:var(--zl-paper) !important; color:var(--zl-ink) !important; font-family:'Poppins', system-ui, sans-serif !important; -webkit-font-smoothing:antialiased; }
+::selection { background:var(--zl-yellow); color:var(--zl-ink); }
+.zl-dots { width:min(1120px, calc(100vw - 32px)); margin:0 auto; display:flex; justify-content:flex-end; gap:18px; padding:14px 8px 12px; }
+.zl-dots i { width:8px; height:8px; border-radius:50%; background:var(--zl-yellow); }
+.minimal-nav { width:min(1120px, calc(100vw - 32px)); height:72px; margin:0 auto; padding:0 clamp(16px, 4vw, 48px); display:flex; align-items:stretch; justify-content:flex-end; background:var(--zl-panel); font:600 12px/1 'Poppins', sans-serif; letter-spacing:.04em; text-transform:uppercase; overflow-x:auto; scrollbar-width:none; }
+.minimal-nav::-webkit-scrollbar { display:none; }
+.minimal-nav a { display:flex; align-items:center; padding:0 16px; color:var(--zl-ink); text-decoration:none; white-space:nowrap; transition:background .2s; }
+.minimal-nav a:hover { background:rgba(255,210,31,.4); }
+.minimal-nav a.active { background:var(--zl-yellow); box-shadow:inset 0 -3px 0 var(--zl-ink); }
+.minimal-nav a.zl-brand { margin-right:auto; padding:0; font:400 15px/.95 'Archivo Black', sans-serif; letter-spacing:.01em; }
+.minimal-nav a.zl-brand:hover { background:transparent; }
+@media (max-width:680px) {
+  .minimal-nav, .zl-dots { width:calc(100vw - 24px); }
+  .minimal-nav { height:60px; padding-inline:12px; }
+  .minimal-nav a { padding:0 10px; font-size:11px; }
+  .minimal-nav a.zl-brand { font-size:13px; padding-right:10px; }
+  .minimal-nav a.zl-hide-sm { display:none; }
+}
+
+.wrap { max-width:min(1120px, calc(100vw - 32px)); padding:0 0 40px; }
+.header { padding:clamp(28px, 5vw, 52px) clamp(20px, 4vw, 48px) clamp(28px, 4vw, 44px); margin-bottom:22px; background:var(--zl-panel); border:0; align-items:flex-end; }
+.header > div:first-child { flex:1 1 100%; }
+.title { font-family:'Archivo Black', sans-serif; font-weight:400; font-size:clamp(34px, 5.6vw, 72px); line-height:1; letter-spacing:-.01em; text-transform:uppercase; color:var(--zl-ink); }
+.title::after { content:""; display:block; height:6px; margin:18px 0 16px; background:var(--zl-ink); }
+.subtitle { color:#333; font-size:12px; font-weight:600; letter-spacing:.06em; }
+.hint { color:var(--zl-ink); font-size:11px; font-weight:700; letter-spacing:.06em; padding:4px 10px; background:var(--zl-yellow); border:2px solid var(--zl-ink); }
+.progress { height:12px; background:var(--zl-paper); border:2px solid var(--zl-ink); }
+.progress > span { background:var(--zl-yellow); }
+.counter { color:var(--zl-ink); font-weight:700; }
+.stage { gap:28px; }
+.scene { padding:0 8px 8px 0; }
+.face { border:2px solid var(--zl-ink); border-radius:0; background:var(--zl-panel); box-shadow:8px 8px 0 var(--zl-ink); }
+.back { background:var(--zl-paper); border-color:var(--zl-ink); }
+.front-top, .back-top { border-bottom:2px solid var(--zl-ink); }
+.tag { font-family:'Poppins', sans-serif; font-size:11px; font-weight:700; letter-spacing:.06em; color:var(--zl-ink); background:var(--zl-yellow); border:2px solid var(--zl-ink); border-radius:0; }
+.tag.green { color:var(--zl-ink); background:var(--zl-paper); border-color:var(--zl-ink); }
+.dots span, .dots.green span { background:var(--zl-ink); }
+.dots span:first-child, .dots.green span:first-child { background:var(--zl-yellow); box-shadow:0 0 0 2px var(--zl-ink); }
+.img-frame { background:#111; border:2px solid var(--zl-ink); border-radius:0; }
+.prompt { font-family:'Archivo Black', sans-serif; font-weight:400; font-size:clamp(24px, 3vw, 34px); text-transform:uppercase; color:var(--zl-ink); }
+.tap { color:#555; font-weight:600; }
+.answer-title { font-family:'Archivo Black', sans-serif; font-weight:400; font-size:clamp(24px, 3vw, 34px); line-height:1.1; text-transform:uppercase; color:var(--zl-ink); }
+.answer-sub { align-self:flex-start; padding:3px 10px; color:var(--zl-ink); background:var(--zl-yellow); border:2px solid var(--zl-ink); font-weight:700; letter-spacing:.06em; }
+.rule { width:64px; height:6px; background:var(--zl-ink); }
+.points li { color:#222; font-size:15px; }
+.points li::marker { color:var(--zl-ink); font-weight:700; }
+.panel { background:var(--zl-panel); border:2px solid var(--zl-ink); border-radius:0; }
+.panel h3 { font-family:'Archivo Black', sans-serif; font-weight:400; font-size:16px; letter-spacing:.02em; color:var(--zl-ink); }
+.stat { background:var(--zl-paper); border:2px solid var(--zl-ink); border-radius:0; }
+.stat b { font-family:'Archivo Black', sans-serif; font-weight:400; font-size:30px; color:var(--zl-ink); }
+.stat span { color:#555; font-weight:600; }
+.btn { font-family:'Poppins', sans-serif; font-size:12px; font-weight:700; letter-spacing:.03em; padding:9px 16px; border-radius:999px; border:2px solid var(--zl-ink); background:var(--zl-paper); color:var(--zl-ink); transition:background .2s, transform .2s, box-shadow .2s; }
+.btn:hover { background:var(--zl-yellow); transform:translate(-2px, -2px); box-shadow:4px 4px 0 var(--zl-ink); }
+.btn.primary { background:var(--zl-yellow); border-color:var(--zl-ink); color:var(--zl-ink); }
+.btn.primary:hover { background:var(--zl-yellow); }
+.btn.success { background:var(--zl-good-bg); border-color:var(--zl-ink); color:var(--zl-ink); }
+.btn.warn { background:var(--zl-yellow-soft); border-color:var(--zl-ink); color:var(--zl-ink); }
+.btn.bad { background:var(--zl-bad-bg); border-color:var(--zl-ink); color:var(--zl-ink); }
+.small { color:#333; }
+.footer-note { color:#555; }
+</style>
+<!-- ZAKIR_POP_PAGE_END -->
 </head>
 <body>
+<!-- MINIMAL_PREVIEW_NAV_START -->
+<div class="zl-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<nav class="minimal-nav" aria-label="Primary navigation">
+  <a class="zl-brand" href="../">Zakir<br>Lab</a>
+  <a href="../">Home</a>
+  <a class="active" href="../semester-1/">1st Sem</a>
+  <a class="zl-hide-sm" href="../study/">Subjects</a>
+  <a href="../recents/">Recents</a>
+  <a href="../suggest/">Contact</a>
+</nav>
+<!-- MINIMAL_PREVIEW_NAV_END -->
 <div class="wrap">
   <div class="header">
     <div>

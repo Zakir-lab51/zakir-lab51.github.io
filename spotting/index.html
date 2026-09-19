@@ -166,8 +166,95 @@
   .fc-front .fc-hint { display: none !important; }
   .fc-front .fc-page { display: none !important; }
 </style>
+<!-- ZAKIR_POP_PAGE_START -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root { --zl-ink:#111; --zl-paper:#fff; --zl-panel:#ececec; --zl-yellow:#ffd21f; --zl-yellow-soft:#fff4c2; --zl-good-bg:#dcf5e3; --zl-bad-bg:#fde2de; }
+html, body { background:var(--zl-paper) !important; color:var(--zl-ink) !important; font-family:'Poppins', system-ui, sans-serif !important; -webkit-font-smoothing:antialiased; }
+::selection { background:var(--zl-yellow); color:var(--zl-ink); }
+.zl-dots { width:min(1120px, calc(100vw - 32px)); margin:0 auto; display:flex; justify-content:flex-end; gap:18px; padding:14px 8px 12px; }
+.zl-dots i { width:8px; height:8px; border-radius:50%; background:var(--zl-yellow); }
+.minimal-nav { width:min(1120px, calc(100vw - 32px)); height:72px; margin:0 auto; padding:0 clamp(16px, 4vw, 48px); display:flex; align-items:stretch; justify-content:flex-end; background:var(--zl-panel); font:600 12px/1 'Poppins', sans-serif; letter-spacing:.04em; text-transform:uppercase; overflow-x:auto; scrollbar-width:none; }
+.minimal-nav::-webkit-scrollbar { display:none; }
+.minimal-nav a { display:flex; align-items:center; padding:0 16px; color:var(--zl-ink); text-decoration:none; white-space:nowrap; transition:background .2s; }
+.minimal-nav a:hover { background:rgba(255,210,31,.4); }
+.minimal-nav a.active { background:var(--zl-yellow); box-shadow:inset 0 -3px 0 var(--zl-ink); }
+.minimal-nav a.zl-brand { margin-right:auto; padding:0; font:400 15px/.95 'Archivo Black', sans-serif; letter-spacing:.01em; }
+.minimal-nav a.zl-brand:hover { background:transparent; }
+@media (max-width:680px) {
+  .minimal-nav, .zl-dots { width:calc(100vw - 24px); }
+  .minimal-nav { height:60px; padding-inline:12px; }
+  .minimal-nav a { padding:0 10px; font-size:11px; }
+  .minimal-nav a.zl-brand { font-size:13px; padding-right:10px; }
+  .minimal-nav a.zl-hide-sm { display:none; }
+}
+
+body > :not(.zoom-modal):not(script):not(.zl-dots):not(.minimal-nav) { width:min(1120px, calc(100vw - 32px)); margin-inline:auto; }
+.fc-header { padding:clamp(28px, 5vw, 52px) clamp(20px, 4vw, 48px) clamp(28px, 4vw, 44px); background:var(--zl-panel); border:0; flex-direction:column; align-items:flex-start; gap:14px; }
+.fc-title { font-family:'Archivo Black', sans-serif; font-weight:400; font-size:clamp(34px, 5.6vw, 72px); line-height:1; letter-spacing:-.01em; text-transform:uppercase; color:var(--zl-ink); width:100%; }
+.fc-title::after { content:""; display:block; height:6px; margin-top:18px; background:var(--zl-ink); }
+.fc-subtitle { color:#333; font-size:12px; font-weight:600; letter-spacing:.06em; }
+.fc-tabs { padding:22px 0 0; border:0; gap:8px; }
+.fc-tab { font-family:'Poppins', sans-serif; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--zl-ink); padding:7px 16px; border:2px solid var(--zl-ink); border-radius:999px; background:var(--zl-paper); margin:0; }
+.fc-tab.active, .fc-tab:hover { color:var(--zl-ink); border-color:var(--zl-ink); background:var(--zl-yellow); }
+.fc-progress-bar-wrap { padding:18px 0 0; }
+.fc-bar-bg { height:12px; background:var(--zl-paper); border:2px solid var(--zl-ink); }
+.fc-bar-fill { background:var(--zl-yellow); }
+.fc-counter { color:var(--zl-ink); font-weight:700; font-size:12px; }
+.fc-flip-hint { color:#555; font-size:11px; font-weight:600; }
+.fc-stage { padding:22px 8px 22px 0; }
+.fc-face { border-radius:0; box-shadow:8px 8px 0 var(--zl-ink); }
+.fc-front { background:var(--zl-panel); border:2px solid var(--zl-ink); }
+.fc-back { background:var(--zl-paper); border:2px solid var(--zl-ink); }
+.fc-card-top { border-bottom:2px solid var(--zl-ink); }
+.fc-tag, .fc-tag-back { font-family:'Poppins', sans-serif; font-size:11px; font-weight:700; letter-spacing:.06em; color:var(--zl-ink); background:var(--zl-yellow); border:2px solid var(--zl-ink); border-radius:0; }
+.fc-page { color:var(--zl-ink); font-weight:600; font-size:11px; }
+.fc-image-wrap { background:var(--zl-paper); border:2px solid var(--zl-ink); border-radius:0; }
+.fc-image-wrap::after { color:var(--zl-ink); background:var(--zl-yellow); border:2px solid var(--zl-ink); font-weight:600; }
+.fc-side { border:2px solid var(--zl-ink); border-radius:0; background:var(--zl-paper); }
+.fc-back .fc-side { background:var(--zl-panel); }
+.fc-q-label { color:var(--zl-ink); font-weight:700; font-size:11px; letter-spacing:.08em; }
+.fc-q-text { font-family:'Archivo Black', sans-serif; font-size:clamp(28px, 3.6vw, 44px); line-height:1.05; text-transform:uppercase; color:var(--zl-ink); }
+.fc-q-text em { font-style:normal; color:inherit; background:linear-gradient(transparent 58%, var(--zl-yellow) 58%, var(--zl-yellow) 92%, transparent 92%); }
+.fc-hint { color:#555; }
+.fc-answer-title { font-family:'Archivo Black', sans-serif; font-size:clamp(24px, 2.8vw, 34px); line-height:1.1; text-transform:uppercase; color:var(--zl-ink); }
+.fc-back-rule { width:64px; height:6px; background:var(--zl-ink); }
+.fc-features li { font-family:'Poppins', sans-serif; font-size:14px; color:#222; padding-left:32px; }
+.fc-features li::before { width:22px; height:22px; border:0; background:var(--zl-ink); color:var(--zl-yellow); font:400 10px/1 'Archivo Black', sans-serif; }
+.fc-spotter { border-top:2px solid var(--zl-ink); color:#222; font-size:13px; }
+.fc-spotter strong { color:var(--zl-ink); background:var(--zl-yellow); padding:0 4px; }
+.fc-result-bar { padding:4px 0 16px; }
+.fc-badge { font-family:'Poppins', sans-serif; font-size:12px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--zl-ink); border:2px solid var(--zl-ink); border-radius:999px; }
+.fc-badge:hover { opacity:1; transform:translate(-2px, -2px); box-shadow:4px 4px 0 var(--zl-ink); }
+.fc-badge-good { color:var(--zl-ink); border-color:var(--zl-ink); background:var(--zl-good-bg); }
+.fc-badge-bad { color:var(--zl-ink); border-color:var(--zl-ink); background:var(--zl-bad-bg); }
+.fc-badge-ok { color:var(--zl-ink); border-color:var(--zl-ink); background:var(--zl-yellow); }
+.fc-controls { padding:0 0 24px; }
+.fc-btn { font-family:'Poppins', sans-serif; font-size:12px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--zl-ink); border:2px solid var(--zl-ink); border-radius:999px; background:var(--zl-paper); transition:background .2s, transform .2s, box-shadow .2s; }
+.fc-btn:hover { color:var(--zl-ink); border-color:var(--zl-ink); background:var(--zl-yellow); transform:translate(-2px, -2px); box-shadow:4px 4px 0 var(--zl-ink); }
+.fc-btn-primary { color:var(--zl-ink); border-color:var(--zl-ink); background:var(--zl-yellow); }
+.fc-btn-primary:hover { background:var(--zl-yellow); border-color:var(--zl-ink); }
+hr.fc-divider { border-top:2px solid var(--zl-ink); margin:0 auto 24px; }
+.fc-deck-info { padding:0 0 32px; }
+.fc-stat-n { font-family:'Archivo Black', sans-serif; font-size:34px; color:var(--zl-ink); }
+.fc-stat-l { color:#555; font-weight:600; font-size:11px; }
+.fc-source { color:#555; font-size:11px; }
+.zoom-close { font-family:'Poppins', sans-serif; font-weight:700; color:var(--zl-ink); background:var(--zl-yellow); border:2px solid var(--zl-ink); }
+</style>
+<!-- ZAKIR_POP_PAGE_END -->
 </head>
 <body>
+<!-- MINIMAL_PREVIEW_NAV_START -->
+<div class="zl-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<nav class="minimal-nav" aria-label="Primary navigation">
+  <a class="zl-brand" href="../">Zakir<br>Lab</a>
+  <a href="../">Home</a>
+  <a class="active" href="../semester-1/">1st Sem</a>
+  <a class="zl-hide-sm" href="../study/">Subjects</a>
+  <a href="../recents/">Recents</a>
+  <a href="../suggest/">Contact</a>
+</nav>
+<!-- MINIMAL_PREVIEW_NAV_END -->
 <div class="fc-header">
   <span class="fc-title">Histology Spotting Deck</span>
   <span class="fc-subtitle">Inderbir Singh diagrams • high-quality flashcards</span>
