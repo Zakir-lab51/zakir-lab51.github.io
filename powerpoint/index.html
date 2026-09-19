@@ -2165,6 +2165,7 @@ footer {
 <!-- ZAKIR_POP_FONTS_START -->
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <!-- ZAKIR_POP_FONTS_END -->
+<script src="../assets/cloud.js" defer></script><!-- ZAKIR_CLOUD -->
 </head>
 <body>
 <!-- ZAKIR_NEON_AMBIENT_START -->
@@ -3335,6 +3336,7 @@ function saveZakirScore(correct, wrong, skip) {
   const history = JSON.parse(localStorage.getItem('ZAKIR_SCORE_HISTORY') || '[]');
   history.push(entry);
   localStorage.setItem('ZAKIR_SCORE_HISTORY', JSON.stringify(history.slice(-80)));
+  if (window.ZakirCloud) window.ZakirCloud.submitScore(entry); // ZAKIR_CLOUD
   window.ZAKIR_CURRENT_RESULT = entry;
 }
 

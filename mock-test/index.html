@@ -3631,6 +3631,7 @@ footer {
 <!-- ZAKIR_POP_FONTS_START -->
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <!-- ZAKIR_POP_FONTS_END -->
+<script src="../assets/cloud.js" defer></script><!-- ZAKIR_CLOUD -->
 </head>
 <body>
 <!-- ZAKIR_NEON_AMBIENT_START -->
@@ -8437,6 +8438,18 @@ function showResult(correct, wrong, skip) {
   else if (pct >= 0.4) msg = 'Fair attempt. Review the tricky ones.';
   else msg = 'Keep studying. The score will climb.';
   document.getElementById('score-msg').textContent = msg;
+  // ZAKIR_CLOUD: keep a local history and publish to the shared leaderboard
+  (function () {
+    const total = currentTest.questions.length;
+    const entry = { title: currentTest.title, correct, wrong, skip, total,
+      percent: Math.round(correct * 100 / total), date: new Date().toISOString() };
+    try {
+      const history = JSON.parse(localStorage.getItem('ZAKIR_SCORE_HISTORY') || '[]');
+      history.push(entry);
+      localStorage.setItem('ZAKIR_SCORE_HISTORY', JSON.stringify(history.slice(-80)));
+    } catch (e) {}
+    if (window.ZakirCloud) window.ZakirCloud.submitScore(entry);
+  })();
 
   const circumference = 490;
   const ring = document.getElementById('score-ring');

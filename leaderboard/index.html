@@ -1087,6 +1087,7 @@ footer {
 <!-- ZAKIR_POP_FONTS_START -->
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <!-- ZAKIR_POP_FONTS_END -->
+<script src="../assets/cloud.js" defer></script><!-- ZAKIR_CLOUD -->
 </head>
 <body>
 <!-- ZAKIR_NEON_AMBIENT_START -->
@@ -1158,28 +1159,35 @@ footer {
   <section class="hero">
     <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Quiz Scores</span></div>
     <h1>Quiz<br><span>Leaderboard</span></h1>
-    <p>A local leaderboard powered by saved quiz results from this browser.</p>
+    <p>Top quiz scores from every Zakir Lab student. Set your name below and your next test result shows up here.</p>
   </section>
   <div class="divider"></div>
   
 <section>
   <div class="panel" style="margin-bottom:16px;">
     <div class="section-row">
-      <span class="section-title">Player Name</span>
-      <span class="section-count">Stored locally</span>
+      <span class="section-title">Your Name</span>
+      <span class="section-count">Public</span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr auto;gap:12px;">
-      <input id="player-name" placeholder="Enter your name">
+    <div class="lb-name-row">
+      <input id="player-name" placeholder="Enter your name" maxlength="40" autocomplete="nickname">
       <button class="button" id="save-name">Save</button>
     </div>
+    <p class="muted lb-note" id="name-status">Shown next to your scores on the public leaderboard. Without a name, results are posted as &ldquo;Anonymous&rdquo;.</p>
   </div>
   <div class="panel">
     <div class="section-row">
       <span class="section-title">Quiz Leaderboard</span>
-      <span class="section-count">Local ranking</span>
+      <span class="section-count" id="lb-scope-label">All students</span>
     </div>
-    <div id="leaderboard-list" style="display:grid;gap:10px;"></div>
-    <p class="muted" style="margin-top:18px;font-size:13px;">For a real public leaderboard across all students, this page can later be connected to Supabase or Firebase.</p>
+    <div class="lb-controls">
+      <div class="lb-tabs" role="tablist">
+        <button class="lb-tab active" data-scope="all" role="tab" aria-selected="true">All Students</button>
+        <button class="lb-tab" data-scope="mine" role="tab" aria-selected="false">This Device</button>
+      </div>
+      <select id="lb-test" aria-label="Filter by test"><option value="">All tests</option></select>
+    </div>
+    <div id="leaderboard-list" class="lb-list"></div>
   </div>
 </section>
 <style>
@@ -1191,6 +1199,19 @@ footer {
     width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--card-bg);
     border:1px solid var(--line);font-family:'Syne',sans-serif;font-weight:800;
   }
+
+  .lb-name-row { display:grid; grid-template-columns:1fr auto; gap:12px; }
+  .lb-note { margin-top:12px; font-size:13px; }
+  .lb-controls { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .lb-tabs { display:flex; gap:8px; }
+  .lb-controls select { padding:9px 14px; min-width:220px; max-width:100%; }
+  .lb-list { display:grid; gap:10px; }
+  .rank-row { border:2px solid #111 !important; background:#fff !important; border-radius:0 !important; padding:12px 16px !important; }
+  .rank-row.top .rank-num { background:#ffd21f !important; color:#111 !important; box-shadow:0 0 0 2px #111; }
+  .rank-row .rank-score { font-family:'Archivo Black', sans-serif; font-size:18px; text-align:right; }
+  .rank-row .rank-score small { display:block; font-family:'Poppins', sans-serif; font-size:11px; font-weight:600; color:#555; }
+  .rank-meta { font-size:12px; color:#555; }
+  button.lb-tab.active { background:#ffd21f !important; }
 
 /* ZAKIR_POP_DESIGN_START */
 
@@ -1975,24 +1996,93 @@ footer {
 </style>
 <script>
   const nameInput = document.getElementById('player-name');
-  nameInput.value = localStorage.getItem('ZAKIR_PLAYER_NAME') || 'You';
+  const list = document.getElementById('leaderboard-list');
+  const testSelect = document.getElementById('lb-test');
+  let scope = 'all';
+
+  const esc = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const when = (iso) => { try { return new Date(iso).toLocaleDateString(undefined, { day:'numeric', month:'short' }); } catch (e) { return ''; } };
+  const getName = () => { try { const n = (localStorage.getItem('ZAKIR_PLAYER_NAME') || '').trim(); return n === 'You' ? '' : n; } catch (e) { return ''; } };
+
+  nameInput.value = getName();
   document.getElementById('save-name').addEventListener('click', () => {
-    localStorage.setItem('ZAKIR_PLAYER_NAME', nameInput.value.trim() || 'You');
-    renderLeaderboard();
+    const n = nameInput.value.trim().slice(0, 40);
+    try { localStorage.setItem('ZAKIR_PLAYER_NAME', n); } catch (e) {}
+    document.getElementById('name-status').textContent = n
+      ? 'Saved. Your next test results will appear as \u201c' + n + '\u201d.'
+      : 'Name cleared. Results will be posted as \u201cAnonymous\u201d.';
+    if (scope === 'mine') render();
   });
-  function renderLeaderboard(){
-    const scores = JSON.parse(localStorage.getItem('ZAKIR_SCORE_HISTORY') || '[]');
-    const player = localStorage.getItem('ZAKIR_PLAYER_NAME') || 'You';
-    const rows = scores.map(s => ({...s, name: player})).sort((a,b) => b.percent - a.percent || b.correct - a.correct).slice(0, 12);
-    document.getElementById('leaderboard-list').innerHTML = rows.length ? rows.map((r,i) => `
-      <div class="rank-row">
-        <span class="rank-num">${i+1}</span>
-        <div><strong>${r.name}</strong><div class="muted" style="font-size:12px">${r.title}</div></div>
-        <strong>${r.correct}/${r.total}</strong>
-      </div>
-    `).join('') : '<p class="muted">No leaderboard data yet. Submit a mock test result first.</p>';
+
+  document.querySelectorAll('.lb-tab').forEach(tab => tab.addEventListener('click', () => {
+    scope = tab.dataset.scope;
+    document.querySelectorAll('.lb-tab').forEach(t => {
+      t.classList.toggle('active', t === tab);
+      t.setAttribute('aria-selected', t === tab);
+    });
+    document.getElementById('lb-scope-label').textContent = scope === 'all' ? 'All students' : 'This device';
+    render();
+  }));
+  testSelect.addEventListener('change', render);
+
+  function rowsHTML(rows) {
+    return rows.map((r, i) => `
+      <div class="rank-row${i < 3 ? ' top' : ''}">
+        <span class="rank-num">${i + 1}</span>
+        <div><strong>${esc(r.player)}</strong><div class="rank-meta">${esc(r.title)}${r.date ? ' \u00b7 ' + esc(when(r.date)) : ''}</div></div>
+        <div class="rank-score">${Number(r.correct)}/${Number(r.total)}<small>${Number(r.percent)}%</small></div>
+      </div>`).join('');
   }
-  renderLeaderboard();
+
+  function localRows() {
+    let scores = [];
+    try { scores = JSON.parse(localStorage.getItem('ZAKIR_SCORE_HISTORY') || '[]'); } catch (e) {}
+    const me = getName() || 'You';
+    const t = testSelect.value;
+    return scores
+      .filter(s => s && s.total && (!t || s.title === t))
+      .map(s => ({ player: me, title: s.title, correct: s.correct, total: s.total,
+                   percent: s.percent != null ? s.percent : Math.round(s.correct * 100 / s.total), date: s.date }))
+      .sort((a, b) => b.percent - a.percent || b.correct - a.correct)
+      .slice(0, 50);
+  }
+
+  let renderId = 0;
+  async function render() {
+    const id = ++renderId;
+    if (scope === 'mine') {
+      const rows = localRows();
+      list.innerHTML = rows.length ? rowsHTML(rows)
+        : '<p class="muted">No results on this device yet. Finish a mock test first.</p>';
+      return;
+    }
+    if (!window.ZakirCloud) { list.innerHTML = '<p class="muted">Leaderboard is unavailable right now.</p>'; return; }
+    list.innerHTML = '<p class="muted">Loading scores\u2026</p>';
+    try {
+      const data = await window.ZakirCloud.topScores(testSelect.value, 50);
+      if (id !== renderId) return;
+      const rows = data.map(r => ({ ...r, date: r.created_at }));
+      list.innerHTML = rows.length ? rowsHTML(rows)
+        : '<p class="muted">No scores yet. Take a mock test and be the first on the board.</p>';
+    } catch (err) {
+      if (id !== renderId) return;
+      console.warn(err);
+      list.innerHTML = '<p class="muted">Could not load the public leaderboard. Check your connection, or switch to &ldquo;This Device&rdquo;.</p>';
+    }
+  }
+
+  async function loadTests() {
+    const titles = new Set();
+    try { JSON.parse(localStorage.getItem('ZAKIR_SCORE_HISTORY') || '[]').forEach(s => s && s.title && titles.add(s.title)); } catch (e) {}
+    try { if (window.ZakirCloud) (await window.ZakirCloud.testTitles()).forEach(t => titles.add(t)); } catch (e) {}
+    [...titles].sort().forEach(t => {
+      const o = document.createElement('option');
+      o.value = t; o.textContent = t;
+      testSelect.appendChild(o);
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => { render(); loadTests(); });
 </script>
 
   <footer>

@@ -1868,6 +1868,7 @@ footer {
 <!-- ZAKIR_POP_FONTS_START -->
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <!-- ZAKIR_POP_FONTS_END -->
+<script src="../assets/cloud.js" defer></script><!-- ZAKIR_CLOUD -->
 </head>
 <body>
 <!-- ZAKIR_NEON_AMBIENT_START -->
@@ -1939,7 +1940,7 @@ footer {
   <section class="hero">
     <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Community</span></div>
     <h1>Suggest<br><span>Resource</span></h1>
-    <p>A simple place for visitors to suggest questions, resources, topics, or improvements.</p>
+    <p>Suggest questions, notes, topics or improvements. Suggestions go straight to Zakir Lab.</p>
   </section>
   <div class="divider"></div>
   
@@ -1949,14 +1950,47 @@ footer {
     <span class="section-count">Community</span>
   </div>
   <div style="display:grid;gap:12px;">
-    <input id="suggest-name" placeholder="Your name">
-    <input id="suggest-topic" placeholder="Topic or subject">
-    <textarea id="suggest-message" placeholder="Write your question, resource idea, or improvement suggestion..."></textarea>
-    <button class="button" id="copy-suggestion">Copy Suggestion</button>
-    <p class="muted" id="suggest-status">This form works offline by copying your suggestion text. You can paste it into WhatsApp, email, or GitHub later.</p>
+    <input id="suggest-name" placeholder="Your name (optional)" maxlength="80" autocomplete="name">
+    <input id="suggest-topic" placeholder="Topic or subject" maxlength="200">
+    <textarea id="suggest-message" placeholder="Write your question, resource idea, or improvement suggestion..." maxlength="2000" required></textarea>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+      <button class="button primary-btn" id="send-suggestion">Send Suggestion</button>
+      <button class="button" id="copy-suggestion">Copy Text</button>
+    </div>
+    <p class="muted" id="suggest-status">Your suggestion is sent privately; only the site owner can read it.</p>
   </div>
 </section>
 <script>
+  const suggestStatus = document.getElementById('suggest-status');
+  const sendBtn = document.getElementById('send-suggestion');
+  sendBtn.addEventListener('click', async () => {
+    const nameEl = document.getElementById('suggest-name');
+    const topicEl = document.getElementById('suggest-topic');
+    const msgEl = document.getElementById('suggest-message');
+    if (!msgEl.value.trim()) {
+      suggestStatus.textContent = 'Please write your suggestion first.';
+      msgEl.focus();
+      return;
+    }
+    if (!window.ZakirCloud) {
+      suggestStatus.textContent = 'Sending is unavailable right now. Use “Copy Text” instead.';
+      return;
+    }
+    sendBtn.disabled = true;
+    suggestStatus.textContent = 'Sending…';
+    try {
+      await window.ZakirCloud.sendSuggestion({ name: nameEl.value, topic: topicEl.value, message: msgEl.value });
+      topicEl.value = '';
+      msgEl.value = '';
+      suggestStatus.textContent = 'Thanks! Your suggestion was sent.';
+    } catch (err) {
+      console.warn(err);
+      suggestStatus.textContent = 'Could not send right now. Check your connection, or use “Copy Text” and share it another way.';
+    } finally {
+      sendBtn.disabled = false;
+    }
+  });
+
   document.getElementById('copy-suggestion').addEventListener('click', async () => {
     const name = document.getElementById('suggest-name').value || 'Anonymous';
     const topic = document.getElementById('suggest-topic').value || 'General';
