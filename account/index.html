@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Account · Zakir Lab</title>
+<meta name="description" content="Sign in to Zakir Lab to get verified leaderboard scores and keep your progress in sync across devices."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous" defer></script>
+<script src="../assets/cloud.js" defer></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #111; --paper: #fff; --panel: #ececec; --yellow: #ffd21f; --yellow-soft: #fff4c2;
+    --muted: #555; --good: #1a7f3c; --bad: #c0392b;
+  }
+  body {
+    min-height: 100vh; background: var(--paper); color: var(--ink);
+    font: 15px/1.6 'Poppins', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  [hidden] { display: none !important; }
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+
+  .dots { display: flex; justify-content: flex-end; gap: 18px; padding: 14px 8px 12px; }
+  .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+
+  .site-header {
+    display: flex; align-items: stretch; justify-content: space-between; gap: 16px;
+    height: 72px; padding-inline: clamp(16px, 4vw, 48px); background: var(--panel);
+  }
+  .logo { display: flex; align-items: center; font: 400 15px/.95 'Archivo Black', sans-serif; text-transform: uppercase; }
+  .nav { display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a {
+    display: flex; align-items: center; padding: 0 16px; white-space: nowrap;
+    font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; transition: background .2s;
+  }
+  .nav a:hover { background: rgba(255,210,31,.4); }
+  .nav a.active { background: var(--yellow); box-shadow: inset 0 -3px 0 var(--ink); }
+
+  .hero { background: var(--panel); padding: clamp(28px, 5vw, 56px) clamp(20px, 4vw, 48px) clamp(32px, 5vw, 52px); }
+  .tag {
+    display: inline-block; padding: 5px 12px; border: 2px solid var(--ink); background: var(--yellow);
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  }
+  h1 { margin-top: 20px; font: 400 clamp(40px, 6.4vw, 84px)/1 'Archivo Black', sans-serif; text-transform: uppercase; overflow-wrap: anywhere; }
+  h1 span { background: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 92%, transparent 92%); padding: 0 .06em; }
+  .rule { height: 6px; background: var(--ink); margin: 20px 0 18px; }
+  .lede { max-width: 620px; color: #333; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 10px 22px; border: 2px solid var(--ink); border-radius: 999px; background: var(--paper);
+    color: var(--ink); font: 700 14px/1.2 'Poppins', sans-serif; letter-spacing: .03em; text-transform: uppercase;
+    cursor: pointer; transition: background .2s, transform .2s, box-shadow .2s;
+  }
+  .btn:hover:not(:disabled) { background: var(--yellow); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+  .btn:disabled { opacity: .55; cursor: default; }
+  .btn-primary { background: var(--yellow); }
+  .btn-google { padding: 12px 24px; font-size: 15px; }
+  .btn-google svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+  .section { padding-top: clamp(40px, 6vw, 64px); }
+  .sec-head { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; flex-wrap: wrap; }
+  .sec-head h2 { font: 400 clamp(22px, 2.8vw, 32px)/1 'Archivo Black', sans-serif; text-transform: uppercase; }
+  .sec-head .bar { flex: 1; min-width: 40px; height: 6px; background: var(--ink); }
+
+  .card { border: 2px solid var(--ink); background: var(--panel); padding: clamp(22px, 3vw, 34px); }
+  .perks { list-style: none; display: grid; gap: 14px; margin: 4px 0 26px; }
+  .perks li { display: flex; gap: 14px; align-items: flex-start; }
+  .perks b { display: block; text-transform: uppercase; letter-spacing: .03em; font-size: 14px; }
+  .perks small { display: block; color: var(--muted); font-size: 13px; }
+  .num {
+    flex-shrink: 0; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%;
+    background: var(--ink); color: var(--yellow); font: 400 13px 'Archivo Black', sans-serif;
+  }
+  .status { margin-top: 14px; font-size: 14px; min-height: 1.4em; }
+  .status.ok { color: var(--good); font-weight: 600; }
+  .status.err { color: var(--bad); font-weight: 600; }
+  .muted { color: var(--muted); font-size: 13px; }
+
+  .profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+  label { display: block; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; }
+  input {
+    width: 100%; padding: 10px 14px; border: 2px solid var(--ink); border-radius: 10px;
+    background: var(--paper); font: 500 15px 'Poppins', sans-serif; color: var(--ink);
+  }
+  input:focus { outline: none; box-shadow: 0 0 0 4px var(--yellow); }
+  .name-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 2px solid var(--ink); background: var(--paper); padding: 16px; text-align: center; }
+  .stat b { display: block; font: 400 30px/1.1 'Archivo Black', sans-serif; }
+  .stat span { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+  .rows { display: grid; gap: 10px; }
+  .row {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+    padding: 12px 16px; border: 2px solid var(--ink); background: var(--paper);
+  }
+  .row-title { font-weight: 700; }
+  .row-meta { font-size: 12px; color: var(--muted); }
+  .row-score { text-align: right; font: 400 18px/1.1 'Archivo Black', sans-serif; }
+  .row-score small { display: block; font: 600 11px 'Poppins', sans-serif; color: var(--muted); }
+  .empty { padding: 20px; border: 2px dashed var(--ink); text-align: center; color: var(--muted); }
+  .verified { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border: 2px solid var(--ink); border-radius: 999px; background: var(--yellow); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+
+  /* ── focused sign-in screen (signed out) ── */
+  body.pending .wrap, body.pending .gate { visibility: hidden; }
+  .gate {
+    position: relative;
+    min-height: 100vh; min-height: 100svh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 48px 20px;
+    overflow: hidden;
+  }
+  .gate-dots { position: absolute; display: flex; gap: 18px; }
+  .gate-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+  .gate-dots.tr { top: 28px; right: 28px; }
+  .gate-dots.bl { bottom: 28px; left: 28px; }
+  .gate-card { width: min(400px, 100%); }
+  .gate-logo { display: inline-block; font: 400 14px/.95 'Archivo Black', sans-serif; text-transform: uppercase; }
+  .gate-title {
+    margin: 48px 0 36px;
+    font: 400 clamp(34px, 9vw, 46px)/1.02 'Archivo Black', sans-serif;
+    text-transform: uppercase;
+  }
+  .gate-title span { background: linear-gradient(transparent 60%, var(--yellow) 60%, var(--yellow) 92%, transparent 92%); padding: 0 .04em; }
+  .gate-google {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    padding: 14px 20px;
+    border: 2px solid var(--ink); border-radius: 999px; background: var(--paper);
+    box-shadow: 4px 4px 0 var(--ink);
+    color: var(--ink); font: 600 16px/1.2 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+  .gate-google svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .gate-google:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+  .gate-google:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
+  .gate-google:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+  .gate-google:disabled { opacity: .6; cursor: default; }
+  .gate .status { margin-top: 12px; min-height: 0; }
+  .gate-stats {
+    list-style: none;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    margin-top: 40px; padding-top: 18px;
+    border-top: 2px solid var(--ink);
+  }
+  .gate-stats b { display: block; font: 400 24px/1.1 'Archivo Black', sans-serif; }
+  .gate-stats span { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+  .gate-fine { margin-top: 20px; font-size: 12px; color: var(--muted); }
+  .gate-back { margin-top: 36px; font-size: 13px; font-weight: 600; box-shadow: inset 0 -4px 0 var(--yellow); }
+  .gate-back:hover { box-shadow: inset 0 -12px 0 var(--yellow); }
+  @media (max-width: 480px) {
+    .gate { justify-content: flex-start; padding-top: 72px; }
+    .gate-title { margin: 40px 0 32px; }
+    .gate-dots.tr { top: 20px; right: 20px; }
+    .gate-dots.bl { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .gate-google { transition: none; } }
+
+  footer { padding: clamp(56px, 8vw, 96px) 0 28px; }
+  .foot { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 20px; border-top: 2px solid var(--ink); font-size: 13px; font-weight: 500; }
+
+  @media (max-width: 760px) {
+    .profile-grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .site-header { height: 60px; padding-inline: 12px; }
+    .logo { font-size: 13px; padding-right: 10px; }
+    .nav a { padding: 0 10px; font-size: 11px; }
+    .nav .hide-sm { display: none; }
+    .stat b { font-size: 24px; }
+  }
+</style>
+</head>
+<body class="pending">
+
+<!-- ── SIGNED OUT: focused sign-in screen ── -->
+<main class="gate" id="signed-out" hidden>
+  <div class="gate-dots tr" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="gate-card">
+    <a class="gate-logo" href="../" aria-label="Zakir Lab home">Zakir<br>Lab</a>
+    <h1 class="gate-title">Sign in to<br><span>start studying</span></h1>
+    <button class="gate-google" id="google-btn" type="button">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+      Continue with Google
+    </button>
+    <p class="status" id="gate-status" role="status"></p>
+    <ul class="gate-stats">
+      <li><b>43</b><span>PDF notes</span></li>
+      <li><b>17</b><span>Mock tests</span></li>
+      <li><b>5</b><span>Subjects</span></li>
+    </ul>
+    <p class="gate-fine">Only your first name appears on the leaderboard, and you can change it. Your email stays private.</p>
+  </div>
+  <a class="gate-back" href="../">&larr; Back to home</a>
+  <div class="gate-dots bl" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</main>
+
+<div class="wrap" id="member" hidden>
+  <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <header class="site-header">
+    <a class="logo" href="../" aria-label="Zakir Lab home">Zakir<br>Lab</a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="hide-sm" href="../">Home</a>
+      <a href="../semester-1/">1st Sem</a>
+      <a class="hide-sm" href="../study/">Subjects</a>
+      <a href="../recents/">Recents</a>
+      <a href="../suggest/">Contact</a>
+      <a class="active" href="./">Account</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <span class="tag" id="hero-tag">Student account</span>
+    <h1 id="hero-title">Your <span>Account</span></h1>
+    <div class="rule"></div>
+    <p class="lede" id="hero-lede">Sign in with Google to use Zakir Lab: notes, mock tests, verified leaderboard scores and progress on every device.</p>
+  </section>
+
+  <p class="status" id="page-status" role="status"></p>
+
+  <!-- ── SIGNED IN ── -->
+  <div id="signed-in" hidden>
+    <section class="section">
+      <div class="sec-head"><h2>Profile</h2><div class="bar"></div><span class="verified">&#10003; Verified</span></div>
+      <div class="profile-grid">
+        <form class="card" id="name-form">
+          <label for="display-name">Name on the leaderboard</label>
+          <div class="name-row">
+            <input id="display-name" maxlength="40" required autocomplete="nickname">
+            <button class="btn btn-primary" type="submit" id="name-btn">Save</button>
+          </div>
+          <p class="status" id="name-status"></p>
+        </form>
+        <div class="card">
+          <label>Signed in as</label>
+          <p id="email" style="overflow-wrap:anywhere;font-weight:600"></p>
+          <p class="muted" style="margin:4px 0 16px">Only you can see this.</p>
+          <button class="btn" id="sign-out" type="button">Sign out</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="sec-head"><h2>My scores</h2><div class="bar"></div></div>
+      <div class="stats" style="margin-bottom:18px">
+        <div class="stat"><b id="s-tests">0</b><span>Tests taken</span></div>
+        <div class="stat"><b id="s-best">–</b><span>Best score</span></div>
+        <div class="stat"><b id="s-avg">–</b><span>Average</span></div>
+      </div>
+      <div class="rows" id="scores"></div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="foot">
+      <span>&copy; 2026 Zakir Lab</span>
+      <a href="../leaderboard/">Leaderboard &rarr;</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const when = (iso) => new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  const setStatus = (el, text, kind) => { el.textContent = text; el.className = 'status' + (kind ? ' ' + kind : ''); };
+
+  // errors Google/Supabase send back in the URL after a failed sign-in
+  const params = new URLSearchParams(location.search + '&' + location.hash.slice(1));
+  if (params.get('error_description')) setStatus($('gate-status'), 'Sign-in failed: ' + params.get('error_description'), 'err');
+
+  // where to go after signing in (set by the sign-in wall); same-site paths only
+  const next = (() => {
+    const n = new URLSearchParams(location.search).get('next') || '';
+    return /^\/(?!\/)/.test(n) && !/^\/account\//.test(n) ? n : '';
+  })();
+
+  function ready() {
+    const cloud = window.ZakirCloud;
+    if (!cloud || !cloud.enabled) {
+      render(null);
+      $('google-btn').disabled = true;
+      setStatus($('gate-status'), 'Sign-in is unavailable right now. Check your connection and reload.', 'err');
+      return;
+    }
+
+    $('google-btn').addEventListener('click', async () => {
+      $('google-btn').disabled = true;
+      try {
+        const { error } = await cloud.signIn(location.origin + location.pathname + location.search);
+        if (error) throw error;
+      } catch (err) {
+        $('google-btn').disabled = false;
+        setStatus($('gate-status'), 'Could not start sign-in: ' + err.message, 'err');
+      }
+    });
+
+    $('sign-out').addEventListener('click', async () => {
+      await cloud.signOut();
+      render(null);
+    });
+
+    $('name-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = $('display-name').value.trim();
+      if (!name) return;
+      $('name-btn').disabled = true;
+      try {
+        await cloud.rename(name);
+        try { localStorage.setItem('ZAKIR_PLAYER_NAME', name); } catch (err) {}
+        setStatus($('name-status'), 'Saved. Your leaderboard entries now show “' + name + '”.', 'ok');
+        $('hero-title').innerHTML = 'Hi, <span>' + esc(name) + '</span>';
+      } catch (err) {
+        setStatus($('name-status'), 'Could not save: ' + err.message, 'err');
+      } finally {
+        $('name-btn').disabled = false;
+      }
+    });
+
+    window.addEventListener('zakir:auth', (e) => render(e.detail));
+    cloud.session().then(render);
+  }
+
+  let shownFor = null;
+  async function render(session) {
+    const uid = session ? session.user.id : null;
+    if (uid === shownFor && uid !== null) return;
+    shownFor = uid;
+    document.body.classList.remove('pending');
+    $('signed-out').hidden = !!session;
+    $('member').hidden = !session;
+    $('signed-in').hidden = !session;
+    document.title = session ? 'Account · Zakir Lab' : 'Sign in · Zakir Lab';
+    if (!session) {
+      $('google-btn').disabled = false;
+      return;
+    }
+    if (next) {
+      $('member').hidden = true;
+      $('signed-out').hidden = false;
+      $('google-btn').disabled = true;
+      setStatus($('gate-status'), 'Signed in. Taking you back\u2026', 'ok');
+      location.replace(next);
+      return;
+    }
+    const cloud = window.ZakirCloud;
+    $('email').textContent = session.user.email || '';
+    $('hero-tag').textContent = 'Signed in';
+    $('hero-lede').textContent = 'Your scores below come from every device you have used while signed in.';
+    try {
+      const p = await cloud.profile();
+      const name = (p && p.displayName) || 'Student';
+      $('display-name').value = name;
+      $('hero-title').innerHTML = 'Hi, <span>' + esc(name) + '</span>';
+      try { localStorage.setItem('ZAKIR_PLAYER_NAME', name); } catch (err) {}
+    } catch (err) {
+      setStatus($('page-status'), 'Could not load your profile: ' + err.message, 'err');
+    }
+    try {
+      const rows = await cloud.myScores(200);
+      $('s-tests').textContent = rows.length;
+      $('s-best').textContent = rows.length ? Math.max(...rows.map(r => r.percent)) + '%' : '–';
+      $('s-avg').textContent = rows.length ? Math.round(rows.reduce((a, r) => a + r.percent, 0) / rows.length) + '%' : '–';
+      $('scores').innerHTML = rows.length ? rows.map(r => `
+        <div class="row">
+          <div><div class="row-title">${esc(r.title)}</div><div class="row-meta">${esc(when(r.created_at))} · ${Number(r.wrong)} wrong · ${Number(r.skip)} skipped</div></div>
+          <div class="row-score">${Number(r.correct)}/${Number(r.total)}<small>${Number(r.percent)}%</small></div>
+        </div>`).join('')
+        : '<div class="empty">No scores yet. Take any mock test while signed in and it will show up here.</div>';
+    } catch (err) {
+      $('scores').innerHTML = '<div class="empty">Could not load your scores right now.</div>';
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);
+  else ready();
+})();
+</script>
+</body>
+</html>

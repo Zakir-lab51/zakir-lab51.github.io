@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="../assets/gate.js"></script><!-- ZAKIR_GATE -->
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Leaderboard — Zakir Lab</title>
@@ -1084,10 +1085,11 @@ footer {
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous" defer></script><!-- ZAKIR_AUTH -->
+<script src="../assets/cloud.js" defer></script><!-- ZAKIR_CLOUD -->
 <!-- ZAKIR_POP_FONTS_START -->
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <!-- ZAKIR_POP_FONTS_END -->
-<script src="../assets/cloud.js" defer></script><!-- ZAKIR_CLOUD -->
 </head>
 <body>
 <!-- ZAKIR_NEON_AMBIENT_START -->
@@ -1101,11 +1103,12 @@ footer {
 <div class="zl-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <nav class="minimal-nav" aria-label="Primary navigation">
   <a class="zl-brand" href="../">Zakir<br>Lab</a>
-  <a href="../">Home</a>
+  <a class="zl-hide-sm" href="../">Home</a>
   <a class="active" href="../semester-1/">1st Sem</a>
   <a class="zl-hide-sm" href="../study/">Subjects</a>
   <a href="../recents/">Recents</a>
   <a href="../suggest/">Contact</a>
+  <a data-account-link href="../account/">Account</a>
 </nav>
 <!-- MINIMAL_PREVIEW_NAV_END -->
 
@@ -1169,11 +1172,18 @@ footer {
       <span class="section-title">Your Name</span>
       <span class="section-count">Public</span>
     </div>
-    <div class="lb-name-row">
-      <input id="player-name" placeholder="Enter your name" maxlength="40" autocomplete="nickname">
-      <button class="button" id="save-name">Save</button>
+    <div id="guest-name">
+      <div class="lb-name-row">
+        <input id="player-name" placeholder="Enter your name" maxlength="40" autocomplete="nickname">
+        <button class="button" id="save-name">Save</button>
+      </div>
+      <p class="muted lb-note" id="name-status">Shown next to your scores on the public leaderboard. Without a name, results are posted as &ldquo;Anonymous&rdquo;.</p>
+      <p class="lb-note"><a class="button lb-signin" href="../account/">Sign in with Google for verified scores &rarr;</a></p>
     </div>
-    <p class="muted lb-note" id="name-status">Shown next to your scores on the public leaderboard. Without a name, results are posted as &ldquo;Anonymous&rdquo;.</p>
+    <div id="member-name" hidden>
+      <p class="lb-member">Signed in as <strong id="member-display"></strong> <span class="lb-badge">&#10003; Verified</span></p>
+      <p class="muted lb-note">Your test results are posted under this name automatically. <a href="../account/" style="text-decoration:underline !important">Change it in your account</a>.</p>
+    </div>
   </div>
   <div class="panel">
     <div class="section-row">
@@ -1185,7 +1195,10 @@ footer {
         <button class="lb-tab active" data-scope="all" role="tab" aria-selected="true">All Students</button>
         <button class="lb-tab" data-scope="mine" role="tab" aria-selected="false">This Device</button>
       </div>
-      <select id="lb-test" aria-label="Filter by test"><option value="">All tests</option></select>
+      <div class="lb-selects">
+        <select id="lb-who" aria-label="Show"><option value="">Everyone</option><option value="verified">Verified only</option></select>
+        <select id="lb-test" aria-label="Filter by test"><option value="">All tests</option></select>
+      </div>
     </div>
     <div id="leaderboard-list" class="lb-list"></div>
   </div>
@@ -1212,6 +1225,11 @@ footer {
   .rank-row .rank-score small { display:block; font-family:'Poppins', sans-serif; font-size:11px; font-weight:600; color:#555; }
   .rank-meta { font-size:12px; color:#555; }
   button.lb-tab.active { background:#ffd21f !important; }
+  .lb-selects { display:flex; flex-wrap:wrap; gap:10px; }
+  .lb-selects #lb-who { min-width:150px; }
+  .lb-badge { display:inline-flex; align-items:center; gap:4px; margin-left:6px; padding:1px 8px; border:2px solid #111; border-radius:999px; background:#ffd21f; font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; vertical-align:middle; }
+  .lb-member { font-size:16px; }
+  a.lb-signin { display:inline-flex !important; padding:8px 16px !important; font-size:12px !important; text-transform:uppercase; }
 
 /* ZAKIR_POP_DESIGN_START */
 
@@ -2024,12 +2042,27 @@ footer {
     render();
   }));
   testSelect.addEventListener('change', render);
+  const whoSelect = document.getElementById('lb-who');
+  whoSelect.addEventListener('change', render);
+
+  // signed-in students: name comes from their account, no manual name box
+  window.addEventListener('zakir:auth', (e) => showMember(e.detail));
+  async function showMember(session) {
+    const signedIn = !!session;
+    document.getElementById('guest-name').hidden = signedIn;
+    document.getElementById('member-name').hidden = !signedIn;
+    if (!signedIn || !window.ZakirCloud) return;
+    try {
+      const p = await window.ZakirCloud.profile();
+      if (p) document.getElementById('member-display').textContent = p.displayName;
+    } catch (e) {}
+  }
 
   function rowsHTML(rows) {
     return rows.map((r, i) => `
       <div class="rank-row${i < 3 ? ' top' : ''}">
         <span class="rank-num">${i + 1}</span>
-        <div><strong>${esc(r.player)}</strong><div class="rank-meta">${esc(r.title)}${r.date ? ' \u00b7 ' + esc(when(r.date)) : ''}</div></div>
+        <div><strong>${esc(r.player)}</strong>${r.verified ? '<span class="lb-badge" title="Signed-in student">&#10003; Verified</span>' : ''}<div class="rank-meta">${esc(r.title)}${r.date ? ' \u00b7 ' + esc(when(r.date)) : ''}</div></div>
         <div class="rank-score">${Number(r.correct)}/${Number(r.total)}<small>${Number(r.percent)}%</small></div>
       </div>`).join('');
   }
@@ -2050,6 +2083,7 @@ footer {
   let renderId = 0;
   async function render() {
     const id = ++renderId;
+    whoSelect.hidden = scope === 'mine';
     if (scope === 'mine') {
       const rows = localRows();
       list.innerHTML = rows.length ? rowsHTML(rows)
@@ -2059,7 +2093,7 @@ footer {
     if (!window.ZakirCloud) { list.innerHTML = '<p class="muted">Leaderboard is unavailable right now.</p>'; return; }
     list.innerHTML = '<p class="muted">Loading scores\u2026</p>';
     try {
-      const data = await window.ZakirCloud.topScores(testSelect.value, 50);
+      const data = await window.ZakirCloud.topScores(testSelect.value, 50, whoSelect.value === 'verified');
       if (id !== renderId) return;
       const rows = data.map(r => ({ ...r, date: r.created_at }));
       list.innerHTML = rows.length ? rowsHTML(rows)
@@ -2082,7 +2116,10 @@ footer {
     });
   }
 
-  window.addEventListener('DOMContentLoaded', () => { render(); loadTests(); });
+  window.addEventListener('DOMContentLoaded', () => {
+    render(); loadTests();
+    if (window.ZakirCloud) window.ZakirCloud.session().then(showMember);
+  });
 </script>
 
   <footer>
