@@ -24,7 +24,7 @@
     --text: #e8f5ee;
     --muted: #7aad8e;
     --faint: rgba(232,245,238,.06);
-    --cursor-size: 12px;
+    --cursor-size: 7px;
   }
 
   html { min-height: 100%; scroll-behavior: smooth; cursor: none; }
@@ -51,24 +51,24 @@
   }
   #cursor-ring {
     position: fixed;
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    border: 1.5px solid var(--green);
+    border: 1px solid var(--green);
     pointer-events: none;
     z-index: 9998;
     transform: translate(-50%, -50%);
     transition: width .22s ease, height .22s ease, border-color .22s ease, opacity .22s ease;
-    opacity: .55;
+    opacity: .45;
   }
   body.hovering #cursor-dot {
-    width: 18px;
-    height: 18px;
-    box-shadow: 0 0 18px 6px var(--green-glow);
+    width: 11px;
+    height: 11px;
+    box-shadow: 0 0 14px 4px var(--green-glow);
   }
   body.hovering #cursor-ring {
-    width: 54px;
-    height: 54px;
+    width: 44px;
+    height: 44px;
     border-color: var(--amber);
     opacity: .7;
   }
@@ -564,7 +564,7 @@
 
   function setColor(c) {
     dot.style.background = c;
-    dot.style.boxShadow = `0 0 10px 3px ${c}55`;
+    dot.style.boxShadow = `0 0 8px 2px ${c}55`;
     ring.style.borderColor = c;
   }
   setColor(COLORS[0]);
@@ -577,8 +577,8 @@
 
   /* ring lags behind for smooth follow */
   function animateRing() {
-    rx += (mx - rx) * .13;
-    ry += (my - ry) * .13;
+    rx += (mx - rx) * .16;
+    ry += (my - ry) * .16;
     ring.style.left = rx + 'px';
     ring.style.top  = ry + 'px';
     raf = requestAnimationFrame(animateRing);

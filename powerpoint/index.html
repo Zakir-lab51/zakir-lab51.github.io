@@ -1398,7 +1398,7 @@ footer {
   --zl-text:#e8f5ee;
   --zl-muted:#7aad8e;
   --zl-faint:rgba(232,245,238,.06);
-  --zl-cursor-size:12px;
+  --zl-cursor-size:7px;
 }
 html,
 body {
@@ -1485,25 +1485,25 @@ body::after {
   z-index:99999 !important;
   mix-blend-mode:screen !important;
   background:var(--zl-green) !important;
-  box-shadow:0 0 10px 3px rgba(80,220,140,.33) !important;
+  box-shadow:0 0 8px 2px rgba(80,220,140,.30) !important;
   transition:width .15s, height .15s, background .15s, box-shadow .15s !important;
 }
 #cursor-ring {
-  width:36px !important;
-  height:36px !important;
+  width:28px !important;
+  height:28px !important;
   z-index:99998 !important;
-  border:1.5px solid var(--zl-green) !important;
-  opacity:.55 !important;
+  border:1px solid var(--zl-green) !important;
+  opacity:.45 !important;
   transition:width .22s ease, height .22s ease, border-color .22s ease, opacity .22s ease !important;
 }
 body.hovering #cursor-dot {
-  width:18px !important;
-  height:18px !important;
-  box-shadow:0 0 18px 6px var(--zl-green-glow) !important;
+  width:11px !important;
+  height:11px !important;
+  box-shadow:0 0 14px 4px var(--zl-green-glow) !important;
 }
 body.hovering #cursor-ring {
-  width:54px !important;
-  height:54px !important;
+  width:44px !important;
+  height:44px !important;
   border-color:var(--zl-amber) !important;
   opacity:.7 !important;
 }
@@ -3624,8 +3624,8 @@ document.addEventListener('keydown', e => {
     dot.style.top = my + 'px';
   });
   function animateRing() {
-    rx += (mx - rx) * .13;
-    ry += (my - ry) * .13;
+    rx += (mx - rx) * .16;
+    ry += (my - ry) * .16;
     ring.style.left = rx + 'px';
     ring.style.top = ry + 'px';
     requestAnimationFrame(animateRing);
