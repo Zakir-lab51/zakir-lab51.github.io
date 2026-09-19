@@ -76,6 +76,15 @@
       });
     },
 
+    notesFor: function (subject) {
+      return request('notes?select=title,file_path,created_at&subject=eq.' + encodeURIComponent(subject) +
+                     '&order=created_at.desc&limit=200');
+    },
+
+    fileUrl: function (path) {
+      return URL + '/storage/v1/object/public/notes/' + path.split('/').map(encodeURIComponent).join('/');
+    },
+
     sendSuggestion: function (s) {
       return request('suggestions', {
         method: 'POST',
@@ -89,4 +98,62 @@
       });
     }
   };
+
+  /* Subject pages load this file with data-subject="anatomy" etc. and get
+     the notes uploaded from /admin/ added to the top of their PDF grid. */
+  var subject = document.currentScript && document.currentScript.getAttribute('data-subject');
+  if (!subject) return;
+
+  function esc(v) {
+    return String(v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  // same record format as the page's own recents tracker
+  function trackRecent(link) {
+    try {
+      var key = 'ZAKIR_RECENT_FILES_V1';
+      var label = document.querySelector('.eyebrow-text');
+      var section = label ? label.textContent.replace(/\s+/g, ' ').trim() : 'PDF Library';
+      var item = {
+        title: link.querySelector('h2').textContent.trim(),
+        url: link.href,
+        section: section,
+        tag: section,
+        openedAt: new Date().toISOString()
+      };
+      var list = JSON.parse(localStorage.getItem(key) || '[]');
+      list = (Array.isArray(list) ? list : []).filter(function (x) { return x && x.url !== item.url; });
+      list.unshift(item);
+      localStorage.setItem(key, JSON.stringify(list.slice(0, 20)));
+    } catch (e) {}
+  }
+
+  function mount() {
+    var grid = document.querySelector('.notes-grid');
+    if (!grid) return;
+    window.ZakirCloud.notesFor(subject).then(function (notes) {
+      if (!notes || !notes.length) return;
+      var html = notes.map(function (n) {
+        return '<a class="note-card" data-cloud-note href="' + esc(window.ZakirCloud.fileUrl(n.file_path)) +
+               '" target="_blank" rel="noopener"><h2>' + esc(n.title) + '</h2>' +
+               '<div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div></a>';
+      }).join('');
+      grid.insertAdjacentHTML('afterbegin', html);
+      grid.querySelectorAll('a[data-cloud-note]').forEach(function (a) {
+        a.addEventListener('click', function () { trackRecent(a); });
+      });
+      var count = document.querySelector('.section-row .section-count');
+      if (count) {
+        var n = grid.querySelectorAll('a.note-card').length;
+        count.textContent = n + (n === 1 ? ' file' : ' files');
+      }
+    }).catch(function (err) {
+      console.warn('[ZakirCloud] uploaded notes not loaded:', err.message);
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
+  else mount();
 })();

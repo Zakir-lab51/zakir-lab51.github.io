@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Admin · Zakir Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"
+        integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP"
+        crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #111; --paper: #fff; --panel: #ececec; --yellow: #ffd21f; --yellow-soft: #fff4c2;
+    --muted: #555; --good: #1a7f3c; --good-bg: #dcf5e3; --bad: #c0392b; --bad-bg: #fde2de;
+  }
+  body {
+    min-height: 100vh;
+    background: var(--paper);
+    color: var(--ink);
+    font: 15px/1.55 'Poppins', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; padding-bottom: 80px; }
+  [hidden] { display: none !important; }
+
+  .dots { display: flex; justify-content: flex-end; gap: 18px; padding: 14px 8px 12px; }
+  .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+
+  .site-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    min-height: 72px; padding: 0 clamp(16px, 4vw, 48px); background: var(--panel);
+  }
+  .logo { font: 400 15px/.95 'Archivo Black', sans-serif; text-transform: uppercase; text-decoration: none; }
+  .who { display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; min-width: 0; }
+  .who span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .hero { background: var(--panel); padding: clamp(20px, 4vw, 40px) clamp(20px, 4vw, 48px) clamp(28px, 4vw, 44px); }
+  .tag {
+    display: inline-block; padding: 4px 12px; border: 2px solid var(--ink); background: var(--yellow);
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  }
+  h1 {
+    margin-top: 18px; font: 400 clamp(40px, 6vw, 72px)/1 'Archivo Black', sans-serif; text-transform: uppercase;
+  }
+  h1::after { content: ""; display: block; height: 6px; margin-top: 18px; background: var(--ink); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 9px 18px; border: 2px solid var(--ink); border-radius: 999px; background: var(--paper);
+    color: var(--ink); font: 700 13px/1.2 'Poppins', sans-serif; letter-spacing: .03em; text-transform: uppercase;
+    text-decoration: none; cursor: pointer; transition: background .2s, transform .2s, box-shadow .2s;
+  }
+  .btn:hover:not(:disabled) { background: var(--yellow); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .btn-primary { background: var(--yellow); }
+  .btn-sm { padding: 5px 12px; font-size: 11px; }
+  .btn-danger:hover:not(:disabled) { background: var(--bad-bg); }
+
+  label { display: block; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; }
+  input, select {
+    width: 100%; padding: 10px 14px; border: 2px solid var(--ink); border-radius: 10px;
+    background: var(--paper); color: var(--ink); font: 500 15px 'Poppins', sans-serif;
+  }
+  input:focus, select:focus { outline: none; box-shadow: 0 0 0 4px var(--yellow); }
+  input[type="file"] { padding: 8px 10px; background: var(--yellow-soft); cursor: pointer; }
+
+  .card { border: 2px solid var(--ink); background: var(--panel); padding: clamp(20px, 3vw, 32px); }
+  .status { margin-top: 14px; font-size: 14px; min-height: 1.5em; }
+  .status.ok { color: var(--good); font-weight: 600; }
+  .status.err { color: var(--bad); font-weight: 600; }
+  .muted { color: var(--muted); font-size: 13px; }
+
+  /* login */
+  .login { max-width: 460px; margin: 40px auto 0; display: grid; gap: 16px; }
+  .login h2 { font: 400 26px/1.1 'Archivo Black', sans-serif; text-transform: uppercase; }
+
+  /* tabs */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 22px; }
+  .tabs button[aria-selected="true"] { background: var(--yellow); box-shadow: 4px 4px 0 var(--ink); transform: translate(-2px, -2px); }
+  .count { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: var(--ink); color: var(--yellow); font-size: 11px; }
+
+  .sec-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+  .sec-head h2 { font: 400 clamp(20px, 2.4vw, 28px)/1.1 'Archivo Black', sans-serif; text-transform: uppercase; }
+  .sec-head .bar { flex: 1; min-width: 40px; height: 6px; background: var(--ink); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-grid .full { grid-column: 1 / -1; }
+
+  /* lists */
+  .rows { display: grid; gap: 10px; }
+  .row {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px 16px; align-items: center;
+    padding: 14px 16px; border: 2px solid var(--ink); background: var(--paper);
+  }
+  .row.done { background: var(--panel); }
+  .row-title { font-weight: 700; overflow-wrap: anywhere; }
+  .row-meta { font-size: 12px; color: var(--muted); }
+  .row-body { margin-top: 6px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .row-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+  .row input.rename { max-width: 420px; padding: 6px 10px; font-size: 14px; }
+  .pill { display: inline-block; padding: 1px 8px; border: 2px solid var(--ink); border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: var(--yellow); }
+  .pill.done { background: var(--good-bg); }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+  .filters select { width: auto; min-width: 200px; }
+  .empty { padding: 20px; border: 2px dashed var(--ink); text-align: center; color: var(--muted); }
+  .subject-head { margin: 22px 0 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 13px; }
+  .subject-head:first-child { margin-top: 0; }
+
+  @media (max-width: 700px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 1fr; }
+    .row-actions { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <header class="site-header">
+    <a class="logo" href="../">Zakir<br>Lab</a>
+    <div class="who" id="who" hidden>
+      <span id="who-email"></span>
+      <button class="btn btn-sm" id="sign-out">Sign out</button>
+    </div>
+  </header>
+  <section class="hero">
+    <span class="tag">Owner only</span>
+    <h1>Admin</h1>
+  </section>
+
+  <!-- ── LOGIN ── -->
+  <form class="card login" id="login" hidden>
+    <h2>Sign in</h2>
+    <div><label for="email">Email</label><input id="email" type="email" autocomplete="username" required></div>
+    <div><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+    <button class="btn btn-primary" type="submit" id="login-btn">Sign in &rarr;</button>
+    <p class="status" id="login-status"></p>
+  </form>
+
+  <!-- ── NOT AN ADMIN ── -->
+  <div class="card login" id="denied" hidden>
+    <h2>No admin access</h2>
+    <p>This account is signed in but isn&rsquo;t on the admins list. Add it with the SQL step in the setup instructions, then reload.</p>
+  </div>
+
+  <!-- ── DASHBOARD ── -->
+  <main id="app" hidden>
+    <nav class="tabs" role="tablist">
+      <button class="btn" role="tab" data-tab="upload" aria-selected="true">Upload notes</button>
+      <button class="btn" role="tab" data-tab="notes" aria-selected="false">Uploaded notes <span class="count" id="c-notes">0</span></button>
+      <button class="btn" role="tab" data-tab="suggestions" aria-selected="false">Suggestions <span class="count" id="c-sugg">0</span></button>
+      <button class="btn" role="tab" data-tab="scores" aria-selected="false">Leaderboard</button>
+    </nav>
+
+    <!-- upload -->
+    <section data-panel="upload">
+      <div class="sec-head"><h2>Upload a PDF</h2><div class="bar"></div></div>
+      <form class="card" id="upload-form">
+        <div class="form-grid">
+          <div>
+            <label for="up-subject">Subject</label>
+            <select id="up-subject" required>
+              <option value="anatomy">Anatomy</option>
+              <option value="physiology">Physiology</option>
+              <option value="biochemistry">Biochemistry</option>
+              <option value="hdpc">HDPC</option>
+              <option value="communication-skills">Communication Skills</option>
+            </select>
+          </div>
+          <div>
+            <label for="up-file">PDF file (max 50 MB)</label>
+            <input id="up-file" type="file" accept="application/pdf,.pdf" required>
+          </div>
+          <div class="full">
+            <label for="up-title">Title shown on the site</label>
+            <input id="up-title" maxlength="120" placeholder="e.g. Brachial Plexus" required>
+          </div>
+        </div>
+        <div style="margin-top:18px"><button class="btn btn-primary" type="submit" id="up-btn">Upload &amp; publish &rarr;</button></div>
+        <p class="status" id="up-status"></p>
+      </form>
+      <p class="muted" style="margin-top:14px">Uploaded PDFs appear at the top of the subject&rsquo;s page straight away. PDFs that were added to the site&rsquo;s code earlier stay as they are and aren&rsquo;t listed here.</p>
+    </section>
+
+    <!-- uploaded notes -->
+    <section data-panel="notes" hidden>
+      <div class="sec-head"><h2>Uploaded notes</h2><div class="bar"></div></div>
+      <div id="notes-list" class="rows"></div>
+    </section>
+
+    <!-- suggestions -->
+    <section data-panel="suggestions" hidden>
+      <div class="sec-head"><h2>Suggestions</h2><div class="bar"></div></div>
+      <div class="filters">
+        <select id="sugg-filter" aria-label="Show">
+          <option value="open">Open only</option>
+          <option value="all">All suggestions</option>
+        </select>
+      </div>
+      <div id="sugg-list" class="rows"></div>
+    </section>
+
+    <!-- scores -->
+    <section data-panel="scores" hidden>
+      <div class="sec-head"><h2>Leaderboard entries</h2><div class="bar"></div></div>
+      <p class="muted" style="margin-bottom:14px">Newest 200 entries. Delete fake or junk scores; deletions can&rsquo;t be undone.</p>
+      <div id="scores-list" class="rows"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  const SUPABASE_URL = 'https://sxnkgfxodpnxpxrhyqzx.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_m0WTfbZtSKNInLbEhTB4og_4GlXwXv8';
+  const SUBJECTS = { 'anatomy': 'Anatomy', 'physiology': 'Physiology', 'biochemistry': 'Biochemistry', 'hdpc': 'HDPC', 'communication-skills': 'Communication Skills' };
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const when = (iso) => new Date(iso).toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const size = (b) => b == null ? '' : b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
+  const setStatus = (el, text, kind) => { el.textContent = text; el.className = 'status' + (kind ? ' ' + kind : ''); };
+  const empty = (text) => `<div class="empty">${esc(text)}</div>`;
+
+  if (!window.supabase || !window.supabase.createClient) {
+    document.querySelector('.hero').insertAdjacentHTML('afterend', '<div class="card login"><p>Could not load the Supabase library. Check your connection and reload.</p></div>');
+    return;
+  }
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: true, storageKey: 'zakir-admin-auth' }
+  });
+
+  // ── auth flow ──
+  async function show(session) {
+    $('login').hidden = $('denied').hidden = $('app').hidden = true;
+    $('who').hidden = !session;
+    if (!session) { $('login').hidden = false; return; }
+    $('who-email').textContent = session.user.email || '';
+    const { data: isAdmin, error } = await db.rpc('is_admin');
+    if (error || !isAdmin) { $('denied').hidden = false; return; }
+    $('app').hidden = false;
+    loadNotes(); loadSuggestions(); loadScores();
+  }
+
+  $('login').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('login-btn').disabled = true;
+    setStatus($('login-status'), 'Signing in…');
+    const { data, error } = await db.auth.signInWithPassword({ email: $('email').value.trim(), password: $('password').value });
+    $('login-btn').disabled = false;
+    if (error) { setStatus($('login-status'), 'Sign-in failed: ' + error.message, 'err'); return; }
+    $('password').value = '';
+    setStatus($('login-status'), '');
+    show(data.session);
+  });
+
+  $('sign-out').addEventListener('click', async () => { await db.auth.signOut(); show(null); });
+
+  db.auth.getSession().then(({ data }) => show(data.session));
+
+  // ── tabs ──
+  document.querySelectorAll('[data-tab]').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b === btn));
+    document.querySelectorAll('[data-panel]').forEach(p => p.hidden = p.dataset.panel !== btn.dataset.tab);
+  }));
+
+  // ── upload ──
+  $('up-file').addEventListener('change', () => {
+    const f = $('up-file').files[0];
+    if (f && !$('up-title').value.trim()) {
+      $('up-title').value = f.name.replace(/\.pdf$/i, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim()
+        .replace(/\b\w/g, c => c.toUpperCase()).slice(0, 120);
+    }
+  });
+
+  $('upload-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = $('up-status');
+    const file = $('up-file').files[0];
+    const subject = $('up-subject').value;
+    const title = $('up-title').value.trim();
+    if (!file) return setStatus(status, 'Choose a PDF first.', 'err');
+    if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) return setStatus(status, 'Only PDF files can be uploaded.', 'err');
+    if (file.size > 50 * 1024 * 1024) return setStatus(status, 'That file is over 50 MB, which is the limit.', 'err');
+    if (!title) return setStatus(status, 'Add a title.', 'err');
+
+    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'note';
+    const path = `${subject}/${Date.now()}-${slug}.pdf`;
+    $('up-btn').disabled = true;
+    setStatus(status, `Uploading ${size(file.size)}…`);
+
+    const up = await db.storage.from('notes').upload(path, file, { contentType: 'application/pdf', upsert: false });
+    if (up.error) { $('up-btn').disabled = false; return setStatus(status, 'Upload failed: ' + up.error.message, 'err'); }
+
+    const ins = await db.from('notes').insert({ subject, title, file_path: path, size_bytes: file.size });
+    $('up-btn').disabled = false;
+    if (ins.error) {
+      await db.storage.from('notes').remove([path]);
+      return setStatus(status, 'Saving failed: ' + ins.error.message, 'err');
+    }
+    setStatus(status, `Published “${title}” to ${SUBJECTS[subject]}.`, 'ok');
+    $('up-file').value = '';
+    $('up-title').value = '';
+    loadNotes();
+  });
+
+  // ── uploaded notes ──
+  const fileUrl = (p) => db.storage.from('notes').getPublicUrl(p).data.publicUrl;
+
+  async function loadNotes() {
+    const list = $('notes-list');
+    const { data, error } = await db.from('notes').select('*').order('subject').order('created_at', { ascending: false });
+    if (error) { list.innerHTML = empty('Could not load notes: ' + error.message); return; }
+    $('c-notes').textContent = data.length;
+    if (!data.length) { list.innerHTML = empty('Nothing uploaded yet.'); return; }
+    let html = '', last = '';
+    data.forEach(n => {
+      if (n.subject !== last) { html += `<div class="subject-head">${esc(SUBJECTS[n.subject] || n.subject)}</div>`; last = n.subject; }
+      html += `
+        <div class="row" data-id="${esc(n.id)}" data-path="${esc(n.file_path)}">
+          <div>
+            <div class="row-title">${esc(n.title)}</div>
+            <div class="row-meta">${esc(when(n.created_at))} · ${esc(size(n.size_bytes))}</div>
+          </div>
+          <div class="row-actions">
+            <a class="btn btn-sm" href="${esc(fileUrl(n.file_path))}" target="_blank" rel="noopener">Open</a>
+            <button class="btn btn-sm" data-act="rename">Rename</button>
+            <button class="btn btn-sm btn-danger" data-act="delete">Delete</button>
+          </div>
+        </div>`;
+    });
+    list.innerHTML = html;
+  }
+
+  $('notes-list').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    const row = btn.closest('.row');
+    const id = row.dataset.id, path = row.dataset.path;
+    const titleEl = row.querySelector('.row-title');
+
+    if (btn.dataset.act === 'rename') {
+      const input = document.createElement('input');
+      input.className = 'rename'; input.maxLength = 120; input.value = titleEl.textContent;
+      titleEl.replaceWith(input); input.focus(); input.select();
+      btn.textContent = 'Save'; btn.dataset.act = 'save-title';
+      return;
+    }
+    if (btn.dataset.act === 'save-title') {
+      const title = row.querySelector('input.rename').value.trim();
+      if (!title) return;
+      btn.disabled = true;
+      const { error } = await db.from('notes').update({ title }).eq('id', id);
+      btn.disabled = false;
+      if (error) return alert('Rename failed: ' + error.message);
+      loadNotes();
+      return;
+    }
+    if (btn.dataset.act === 'delete') {
+      if (!confirm(`Delete “${titleEl.textContent}”? The PDF is removed from the site permanently.`)) return;
+      btn.disabled = true;
+      const { error } = await db.from('notes').delete().eq('id', id);
+      if (error) { btn.disabled = false; return alert('Delete failed: ' + error.message); }
+      await db.storage.from('notes').remove([path]);
+      loadNotes();
+    }
+  });
+
+  // ── suggestions ──
+  async function loadSuggestions() {
+    const list = $('sugg-list');
+    let q = db.from('suggestions').select('*').order('created_at', { ascending: false }).limit(300);
+    if ($('sugg-filter').value === 'open') q = q.eq('handled', false);
+    const { data, error } = await q;
+    if (error) { list.innerHTML = empty('Could not load suggestions: ' + error.message); return; }
+    const open = await db.from('suggestions').select('id', { count: 'exact', head: true }).eq('handled', false);
+    $('c-sugg').textContent = open.count ?? data.length;
+    if (!data.length) { list.innerHTML = empty($('sugg-filter').value === 'open' ? 'No open suggestions.' : 'No suggestions yet.'); return; }
+    list.innerHTML = data.map(s => `
+      <div class="row${s.handled ? ' done' : ''}" data-id="${esc(s.id)}">
+        <div>
+          <div class="row-title">${esc(s.topic || 'General')} ${s.handled ? '<span class="pill done">Handled</span>' : '<span class="pill">Open</span>'}</div>
+          <div class="row-meta">${esc(s.name || 'Anonymous')} · ${esc(when(s.created_at))}${s.page ? ' · from ' + esc(s.page) : ''}</div>
+          <div class="row-body">${esc(s.message)}</div>
+        </div>
+        <div class="row-actions">
+          <button class="btn btn-sm" data-act="toggle" data-handled="${s.handled}">${s.handled ? 'Reopen' : 'Mark handled'}</button>
+          <button class="btn btn-sm btn-danger" data-act="delete">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+  $('sugg-filter').addEventListener('change', loadSuggestions);
+
+  $('sugg-list').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    const id = btn.closest('.row').dataset.id;
+    btn.disabled = true;
+    let error;
+    if (btn.dataset.act === 'toggle') {
+      ({ error } = await db.from('suggestions').update({ handled: btn.dataset.handled !== 'true' }).eq('id', id));
+    } else {
+      if (!confirm('Delete this suggestion permanently?')) { btn.disabled = false; return; }
+      ({ error } = await db.from('suggestions').delete().eq('id', id));
+    }
+    if (error) { btn.disabled = false; return alert('Failed: ' + error.message); }
+    loadSuggestions();
+  });
+
+  // ── scores ──
+  async function loadScores() {
+    const list = $('scores-list');
+    const { data, error } = await db.from('scores').select('*').order('created_at', { ascending: false }).limit(200);
+    if (error) { list.innerHTML = empty('Could not load scores: ' + error.message); return; }
+    if (!data.length) { list.innerHTML = empty('No leaderboard entries yet.'); return; }
+    list.innerHTML = data.map(s => `
+      <div class="row" data-id="${esc(s.id)}">
+        <div>
+          <div class="row-title">${esc(s.player)} — ${Number(s.correct)}/${Number(s.total)} (${Number(s.percent)}%)</div>
+          <div class="row-meta">${esc(s.title)} · ${esc(when(s.created_at))}</div>
+        </div>
+        <div class="row-actions"><button class="btn btn-sm btn-danger" data-act="delete">Delete</button></div>
+      </div>`).join('');
+  }
+
+  $('scores-list').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-act="delete"]');
+    if (!btn) return;
+    if (!confirm('Delete this leaderboard entry permanently?')) return;
+    btn.disabled = true;
+    const { error } = await db.from('scores').delete().eq('id', btn.closest('.row').dataset.id);
+    if (error) { btn.disabled = false; return alert('Delete failed: ' + error.message); }
+    loadScores();
+  });
+})();
+</script>
+</body>
+</html>

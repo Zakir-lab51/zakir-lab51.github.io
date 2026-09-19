@@ -39,7 +39,8 @@ create policy "anyone can add a score"
   with check (created_at between now() - interval '1 minute' and now() + interval '1 minute');
 
 grant select, insert on public.scores to anon, authenticated;
-revoke update, delete, truncate on public.scores from anon, authenticated;
+revoke update, delete, truncate on public.scores from anon;
+revoke update, truncate on public.scores from authenticated;  -- admin deletes: see admin.sql
 
 -- ─────────────────────────────────────────────
 -- 2. Suggestions (Suggest form)
@@ -63,4 +64,5 @@ create policy "anyone can send a suggestion"
   with check (created_at between now() - interval '1 minute' and now() + interval '1 minute');
 
 grant insert on public.suggestions to anon, authenticated;
-revoke select, update, delete, truncate on public.suggestions from anon, authenticated;
+revoke select, update, delete, truncate on public.suggestions from anon;
+revoke truncate on public.suggestions from authenticated;  -- admin access: see admin.sql
