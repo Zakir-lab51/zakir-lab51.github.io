@@ -1862,6 +1862,68 @@ footer {
 @media (prefers-reduced-motion:reduce) {
   *, *::before, *::after { transition-duration:.01ms !important; animation-duration:.01ms !important; }
 }
+/* ZAKIR_SUBJECTS_MENU_START */
+.zl-nav-wrap { position:relative; z-index:30; }
+.zl-caret {
+  display:inline-block;
+  width:0; height:0;
+  margin-left:6px;
+  border-left:4px solid transparent;
+  border-right:4px solid transparent;
+  border-top:5px solid currentColor;
+  transition:transform .2s ease;
+}
+.zl-drop-toggle.open .zl-caret { transform:rotate(180deg); }
+/* the menu sits outside <nav>, which scrolls sideways and would clip it */
+.zl-drop-menu {
+  position:absolute;
+  top:100%; left:50%;
+  z-index:40;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 22px;
+  width:min(440px, calc(100vw - 32px));
+  padding:16px 18px 14px;
+  background:#fff;
+  border:2px solid #111;
+  box-shadow:6px 6px 0 #111;
+  opacity:0;
+  visibility:hidden;
+  transform:translate(-50%, 6px);
+  transition:opacity .18s ease, transform .18s ease, visibility .18s ease;
+  font:600 12px/1.3 'Poppins', sans-serif;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  text-align:left;
+}
+.zl-drop-menu.open { opacity:1; visibility:visible; transform:translate(-50%, 0); }
+.zl-drop-head {
+  display:block;
+  margin-bottom:6px;
+  padding-bottom:6px;
+  border-bottom:2px solid #111;
+  font-size:10px;
+  letter-spacing:.12em;
+  color:#555;
+}
+.zl-drop-menu a {
+  display:block;
+  margin:0 -10px;
+  padding:7px 10px;
+  color:#111 !important;
+  text-decoration:none !important;
+  white-space:normal;
+}
+.zl-drop-menu a::after { display:none !important; }
+.zl-drop-menu a:hover { background:#ffd21f; }
+.zl-drop-all {
+  grid-column:1 / -1;
+  margin-top:10px !important;
+  padding-top:12px !important;
+  border-top:2px solid #ececec;
+  font-weight:700;
+}
+/* ZAKIR_SUBJECTS_MENU_END */
 /* ZAKIR_POP_DESIGN_END */
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
@@ -1880,15 +1942,63 @@ footer {
 
 <!-- MINIMAL_PREVIEW_NAV_START -->
 <div class="zl-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="zl-nav-wrap">
 <nav class="minimal-nav" aria-label="Primary navigation">
   <a class="zl-brand" href="../">Zakir<br>Lab</a>
   <a class="zl-hide-sm" href="../">Home</a>
   <a href="../semester-1/">1st Sem</a>
-  <a class="zl-hide-sm" href="../study/">Subjects</a>
+  <a class="zl-hide-sm zl-drop-toggle" data-drop-toggle href="../study/" aria-haspopup="true" aria-expanded="false">Subjects<span class="zl-caret" aria-hidden="true"></span></a>
   <a href="../recents/">Recents</a>
   <a href="../suggest/">Contact</a>
   <a data-account-link href="../account/">Account</a>
 </nav>
+<div class="zl-drop-menu" id="zl-subjects-menu">
+  <div class="zl-drop-col">
+    <span class="zl-drop-head">1st Semester</span>
+    <a href="../anatomy/">Anatomy</a>
+    <a href="../physiology/">Physiology</a>
+    <a href="../biochemistry/">Biochemistry</a>
+    <a href="../hdpc/">HDPC</a>
+    <a href="../communication-skills/">Communication Skills</a>
+  </div>
+  <div class="zl-drop-col">
+    <span class="zl-drop-head">2nd Semester</span>
+    <a href="../anatomy-2/">Anatomy II</a>
+    <a href="../physiology-2/">Physiology II</a>
+    <a href="../microbiology/">Microbiology</a>
+    <a href="../hdpc-2/">HDPC II</a>
+    <a href="../evs/">EVS</a>
+    <a href="../community-health/">Community Health</a>
+  </div>
+  <a class="zl-drop-all" href="../study/">All subjects &rarr;</a>
+</div>
+</div>
+<script>
+/* Subjects menu: hover for a mouse, tap on a touch screen, Escape to close */
+(function () {
+  var toggle = document.querySelector('[data-drop-toggle]');
+  var menu = document.getElementById('zl-subjects-menu');
+  if (!toggle || !menu) return;
+  var hideTimer;
+  function setOpen(open) {
+    clearTimeout(hideTimer);
+    menu.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  }
+  function leave() { hideTimer = setTimeout(function () { setOpen(false); }, 140); }
+  [toggle, menu].forEach(function (el) {
+    el.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') setOpen(true); });
+    el.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') leave(); });
+    el.addEventListener('focusin', function () { setOpen(true); });
+  });
+  toggle.addEventListener('click', function (e) { e.preventDefault(); setOpen(!menu.classList.contains('open')); });
+  document.addEventListener('click', function (e) {
+    if (!toggle.contains(e.target) && !menu.contains(e.target)) setOpen(false);
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+})();
+</script>
 <!-- MINIMAL_PREVIEW_NAV_END -->
 
 
