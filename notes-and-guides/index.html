@@ -1117,7 +1117,8 @@ footer {
 
 /* ZAKIR POP DESIGN SYSTEM — black / white / yellow, matches the homepage */
 :root,
-html[data-theme="light"] {
+html[data-theme="light"],
+html[data-theme="dark"] {
   /* legacy page variables, re-pointed at the new palette */
   --cream:#ffffff;
   --ink:#111111;
@@ -1151,75 +1152,6 @@ html[data-theme="light"] {
   --zl-coral:#c0392b;
   --zl-text:#111111;
   --zl-faint:#ffffff;
-  --zl-on-yellow:#111111;
-}
-/* ── DARK THEME ── the same design at night: near-black paper, pale ink,
-   the yellow unchanged because it reads well on both. Anything sitting
-   ON the yellow keeps dark text (--zl-on-yellow). */
-html[data-theme="dark"] {
-  --cream:#101010;
-  --ink:#f2f2f2;
-  --accent:#f2f2f2;
-  --gold:#ffd21f;
-  --muted:#a8a8a8;
-  --card-bg:#1b1b1b;
-  --line:rgba(242,242,242,.2);
-  --correct:#4ec97e;
-  --wrong:#ff6f61;
-  --skip:#e0b341;
-  --zl-ink:#f2f2f2;
-  --zl-paper:#101010;
-  --zl-panel:#1b1b1b;
-  --zl-panel-2:#242424;
-  --zl-yellow:#ffd21f;
-  --zl-yellow-soft:#3b3105;
-  --zl-muted:#a8a8a8;
-  --zl-good:#4ec97e;
-  --zl-good-bg:#12331f;
-  --zl-bad:#ff6f61;
-  --zl-bad-bg:#3a1a17;
-  --zl-on-yellow:#111111;
-  --zl-bg:#101010;
-  --zl-surface:#1b1b1b;
-  --zl-card:#1b1b1b;
-  --zl-border:#f2f2f2;
-  --zl-border-bright:#f2f2f2;
-  --zl-green:#f2f2f2;
-  --zl-amber:#ffd21f;
-  --zl-coral:#ff6f61;
-  --zl-text:#f2f2f2;
-  --zl-faint:#101010;
-}
-html[data-theme="dark"] ::selection { color:var(--zl-on-yellow) !important; }
-html[data-theme="dark"] :is(
-  .minimal-nav a.active, .review-header, .home-badge, .section-count,
-  .pill.active, .timer-chip.active, .timer-chip.selected,
-  .q-num, .timer-kicker, .result-badge, .start-kicker,
-  .primary-btn, .submit-btn, .opt-btn.selected,
-  .primary-btn:hover, .secondary-btn:hover, .submit-btn:hover,
-  .review-close:hover, .clear-recents:hover
-) { color:var(--zl-on-yellow) !important; }
-html[data-theme="dark"] :is(.hero, .page-header) > :is(.eyebrow, .kicker) { color:var(--zl-on-yellow) !important; }
-/* the arrow discs are ink-on-yellow in light mode; in dark the disc would
-   go pale with a yellow glyph on it, so they swap round */
-html[data-theme="dark"] body :is(.note-arrow,.test-card-arrow,.back-arrow) {
-  background:var(--zl-yellow) !important;
-  color:var(--zl-on-yellow) !important;
-}
-html[data-theme="dark"] body :is(a,button,[onclick]):hover :is(.note-arrow,.test-card-arrow) {
-  background:var(--zl-ink) !important;
-  color:var(--zl-paper) !important;
-}
-html[data-theme="dark"] :is(.hero h1 span, .page-title span, .home-title span, .hero-title span) {
-  /* in light mode the yellow is a marker stripe under the text; on a dark
-     page the part above the stripe would be black on black, so the whole
-     word sits on yellow instead */
-  color:var(--zl-on-yellow) !important;
-  -webkit-text-fill-color:var(--zl-on-yellow) !important;
-  background:var(--zl-yellow) !important;
-  padding:0 .08em;
-  -webkit-box-decoration-break:clone;
-  box-decoration-break:clone;
 }
 html,
 body {
@@ -1497,7 +1429,7 @@ h1,
 .home-sub {
   max-width:620px !important;
   margin:22px 0 0 !important;
-  color:var(--zl-muted) !important;
+  color:#333 !important;
   font:400 clamp(14px, 1.4vw, 16px)/1.65 'Poppins', sans-serif !important;
   letter-spacing:0 !important;
   text-align:left !important;
@@ -1740,7 +1672,7 @@ body :is(.q-num,.timer-kicker,.result-badge,.start-kicker) {
 }
 #home .start-kicker, .result-card .result-badge, .timer-box .timer-kicker { align-self:center; margin-inline:auto; }
 body :is(.note-card p,.chapter-card p,.test-card p,.full-length-card p,.study-tool-card p,.card-desc,.tile p,.mini p,.mini-link p,.feature-card p,.section-card p,.update-line,.ch-desc,.full-desc,.test-desc,.note-footer,.test-card-footer,.review-q-text,.timer-sub,.score-msg,.result-card p,.panel p,form p,.form-card p,.muted) {
-  color:var(--zl-muted) !important;
+  color:#333 !important;
   line-height:1.55 !important;
 }
 body :is(.note-footer,.test-card-footer,.card-arrow,.ch-arrow,.full-arrow) {
@@ -1835,7 +1767,7 @@ textarea:focus,
 select:focus {
   box-shadow:0 0 0 4px var(--zl-yellow) !important;
 }
-input::placeholder, textarea::placeholder { color:var(--zl-muted) !important; }
+input::placeholder, textarea::placeholder { color:#888 !important; }
 
 /* ── QUIZ ── */
 .progress-bar-outer,
@@ -1961,27 +1893,6 @@ footer {
   *, *::before, *::after { transition-duration:.01ms !important; animation-duration:.01ms !important; }
 }
 /* ZAKIR_SUBJECTS_MENU_START */
-/* theme switch in the nav */
-.zl-theme {
-  display:inline-grid;
-  place-items:center;
-  width:30px; height:30px;
-  padding:0;
-  border:2px solid var(--zl-ink, #111);
-  border-radius:50%;
-  background:transparent;
-  color:var(--zl-ink, #111);
-  font-size:13px;
-  line-height:1;
-  cursor:pointer;
-  align-self:center;
-  flex:none;
-  transition:background .2s, color .2s;
-}
-.zl-theme:hover { background:var(--zl-yellow, #ffd21f); color:var(--zl-on-yellow, #111); }
-.zl-theme-moon { display:none; }
-html[data-theme="dark"] .zl-theme-sun { display:none; }
-html[data-theme="dark"] .zl-theme-moon { display:block; }
 .zl-nav-wrap { position:relative; z-index:30; }
 .zl-caret {
   display:inline-block;
@@ -2003,9 +1914,9 @@ html[data-theme="dark"] .zl-theme-moon { display:block; }
   gap:0 22px;
   width:min(440px, calc(100vw - 32px));
   padding:16px 18px 14px;
-  background:var(--zl-paper);
-  border:2px solid var(--zl-ink);
-  box-shadow:6px 6px 0 var(--zl-ink);
+  background:#fff;
+  border:2px solid #111;
+  box-shadow:6px 6px 0 #111;
   opacity:0;
   visibility:hidden;
   transform:translate(-50%, 6px);
@@ -2020,26 +1931,26 @@ html[data-theme="dark"] .zl-theme-moon { display:block; }
   display:block;
   margin-bottom:6px;
   padding-bottom:6px;
-  border-bottom:2px solid var(--zl-ink);
+  border-bottom:2px solid #111;
   font-size:10px;
   letter-spacing:.12em;
-  color:var(--zl-muted);
+  color:#555;
 }
 .zl-drop-menu a {
   display:block;
   margin:0 -10px;
   padding:7px 10px;
-  color:var(--zl-ink) !important;
+  color:#111 !important;
   text-decoration:none !important;
   white-space:normal;
 }
 .zl-drop-menu a::after { display:none !important; }
-.zl-drop-menu a:hover { background:var(--zl-yellow); color:var(--zl-on-yellow) !important; }
+.zl-drop-menu a:hover { background:#ffd21f; }
 .zl-drop-all {
   grid-column:1 / -1;
   margin-top:10px !important;
   padding-top:12px !important;
-  border-top:2px solid var(--zl-panel);
+  border-top:2px solid #ececec;
   font-weight:700;
 }
 /* ZAKIR_SUBJECTS_MENU_END */
@@ -2050,7 +1961,6 @@ html[data-theme="dark"] .zl-theme-moon { display:block; }
 <!-- ZAKIR_POP_FONTS_START -->
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <!-- ZAKIR_POP_FONTS_END -->
-<script src="../assets/theme.js"></script><!-- ZAKIR_THEME_JS -->
 </head>
 <body>
 <!-- ZAKIR_NEON_AMBIENT_START -->
@@ -2071,7 +1981,6 @@ html[data-theme="dark"] .zl-theme-moon { display:block; }
   <a href="../recents/">Recents</a>
   <a href="../suggest/">Contact</a>
   <a data-account-link href="../account/">Account</a>
-  <button class="zl-theme" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark mode"><span class="zl-theme-sun" aria-hidden="true">☀</span><span class="zl-theme-moon" aria-hidden="true">☾</span></button>
 </nav>
 <div class="zl-drop-menu" id="zl-subjects-menu">
   <div class="zl-drop-col">
