@@ -1970,6 +1970,48 @@ footer {
 <!-- ZAKIR_POP_FONTS_START -->
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <!-- ZAKIR_POP_FONTS_END -->
+<script src="../assets/counts.js" defer></script><!-- ZAKIR_COUNTS -->
+<style>
+/* ── NOTE SEARCH ── */
+.note-search { margin: 26px 0 8px; }
+.note-search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  background: #fff;
+  border: 2px solid #111;
+}
+.note-search-box svg { width: 18px; height: 18px; flex: none; }
+#note-search-input {
+  flex: 1;
+  padding: 15px 0;
+  /* the page styles every input, so these have to win */
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  -webkit-appearance: none;
+  appearance: none;
+  font: 500 15px/1.2 'Poppins', sans-serif;
+  color: #111;
+  outline: none;
+}
+#note-search-input::placeholder { color: #777; }
+.note-search-hint {
+  margin-top: 10px;
+  font: 600 11px/1.4 'Poppins', sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #555;
+}
+.note-search-hint:empty { display: none; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+</style>
 </head>
 <body>
 <!-- ZAKIR_NEON_AMBIENT_START -->
@@ -1986,7 +2028,7 @@ footer {
   <a class="zl-brand" href="../">Zakir<br>Lab</a>
   <a class="zl-hide-sm" href="../">Home</a>
   <a href="../semester-1/">1st Sem</a>
-  <a class="zl-hide-sm zl-drop-toggle active" data-drop-toggle href="../study/" aria-haspopup="true" aria-expanded="false">Subjects<span class="zl-caret" aria-hidden="true"></span></a>
+  <a class="zl-drop-toggle active" data-drop-toggle href="../study/" aria-haspopup="true" aria-expanded="false">Subjects<span class="zl-caret" aria-hidden="true"></span></a>
   <a href="../recents/">Recents</a>
   <a href="../suggest/">Contact</a>
   <a data-account-link href="../account/">Account</a>
@@ -2092,6 +2134,19 @@ footer {
     <p>Every subject page from both semesters, eleven in all.</p>
   </section>
 
+
+  <section class="note-search">
+    <label class="sr-only" for="note-search-input">Search notes</label>
+    <div class="note-search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6"></path>
+      </svg>
+      <input id="note-search-input" type="search" autocomplete="off" spellcheck="false"
+             placeholder="Search every note &mdash; try culture media, axilla, excel">
+    </div>
+    <p class="note-search-hint" id="note-search-hint"></p>
+    <div class="notes-grid" id="note-search-results" hidden></div>
+  </section>
   <div class="divider"></div>
 
   <section>
@@ -2289,5 +2344,69 @@ footer {
 </script>
 <!-- ZAKIR_NEON_CURSOR_SCRIPT_END -->
 
+<script src="../assets/cloud.js" defer></script><!-- ZAKIR_CLOUD -->
+<script>
+/* Search every note by title. The repo's notes come from a file built by
+   tools/refresh-site-data.py; notes uploaded in /admin/ are merged in live. */
+(function () {
+  var input = document.getElementById('note-search-input');
+  var results = document.getElementById('note-search-results');
+  var hint = document.getElementById('note-search-hint');
+  var sections = Array.prototype.filter.call(
+    document.querySelectorAll('main section, .page > section'),
+    function (el) { return !el.classList.contains('note-search') && !el.classList.contains('hero'); });
+  var notes = [];
+
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  fetch('../assets/notes-index.json')
+    .then(function (r) { return r.json(); })
+    .then(function (rows) { notes = notes.concat(rows); })
+    .catch(function () {})
+    .then(function () {
+      if (!window.ZakirCloud || !window.ZakirCloud.allNotes) return;
+      return window.ZakirCloud.allNotes().then(function (rows) {
+        (rows || []).forEach(function (n) {
+          notes.push({ title: n.title, subject: n.subject, url: window.ZakirCloud.fileUrl(n.file_path) });
+        });
+      }).catch(function () {});
+    })
+    .then(function () { if (input.value.trim()) render(input.value); });
+
+  function render(query) {
+    var q = query.trim().toLowerCase();
+    if (!q) {
+      results.hidden = true;
+      results.innerHTML = '';
+      hint.textContent = '';
+      sections.forEach(function (el) { el.hidden = false; });
+      return;
+    }
+    var hits = notes.filter(function (n) {
+      return (n.title + ' ' + n.subject).toLowerCase().indexOf(q) !== -1;
+    }).slice(0, 60);
+    sections.forEach(function (el) { el.hidden = true; });
+    results.hidden = false;
+    hint.textContent = hits.length
+      ? hits.length + (hits.length === 1 ? ' note found' : ' notes found')
+      : 'Nothing matches ' + query.trim();
+    results.innerHTML = hits.map(function (n, i) {
+      return '<a class="note-card" href="' + esc(n.url) + '" target="_blank" rel="noopener" data-num="' +
+        (i + 1 < 10 ? '0' : '') + (i + 1) + '"><h2>' + esc(n.title) + '</h2>' +
+        '<div class="note-footer"><span>' + esc(n.subject) + '</span>' +
+        '<span class="note-arrow">&rarr;</span></div></a>';
+    }).join('');
+  }
+
+  input.addEventListener('input', function () { render(input.value); });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { input.value = ''; render(''); }
+  });
+})();
+</script>
 </body>
 </html>

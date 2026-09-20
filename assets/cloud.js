@@ -195,6 +195,11 @@
     },
 
     /* ── uploaded notes ── */
+    // every uploaded note, for the search box on the All Subjects page
+    allNotes: function () {
+      return request('notes?select=subject,title,file_path&order=created_at.desc&limit=1000');
+    },
+
     notesFor: function (subject) {
       return request('notes?select=title,file_path,created_at&subject=eq.' + encodeURIComponent(subject) +
                      '&order=created_at.desc&limit=200');
