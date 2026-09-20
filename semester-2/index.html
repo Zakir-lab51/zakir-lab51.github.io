@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="../assets/theme.js"></script><!-- ZAKIR_THEME_JS -->
 <script src="../assets/gate.js"></script><!-- ZAKIR_GATE -->
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -13,6 +14,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
+    --body-text: #333333;
     --ink: #111111;
     --paper: #ffffff;
     --panel: #ececec;
@@ -20,6 +22,71 @@
     --yellow-soft: #fff4c2;
     --muted: #555555;
   }
+  /* ── DARK THEME ── same design at night; the yellow is unchanged, and
+     anything sitting ON the yellow keeps dark text (--on-yellow). */
+  html[data-theme="dark"] {
+    --body-text: #c9c9c9;
+    --ink: #f2f2f2;
+    --paper: #101010;
+    --panel: #1b1b1b;
+    --panel-2: #242424;
+    --yellow: #ffd21f;
+    --yellow-soft: #3b3105;
+    --muted: #a8a8a8;
+    --good: #4ec97e;
+    --good-bg: #12331f;
+    --bad: #ff6f61;
+    --bad-bg: #3a1a17;
+  }
+  :root { --on-yellow: #111111; }
+  html[data-theme="dark"] ::selection { color: var(--on-yellow); }
+  /* only things actually painted yellow get dark text: a plain .btn keeps
+     the paper background, so forcing dark text on it made it invisible */
+  html[data-theme="dark"] :is(.tag, .btn-primary, .nav a.active, .count, .new-badge,
+    .sem:hover .btn, .btn:hover, .drop-menu a:hover, .num) { color: var(--on-yellow) !important; }
+  /* discs are ink-with-yellow-glyph in light mode; inverted they would be
+     yellow on near-white, so in dark they become yellow discs with dark glyphs */
+  html[data-theme="dark"] :is(.card-icon, .card-arrow i) {
+    background: var(--yellow);
+    color: var(--on-yellow);
+  }
+  /* the semester badge keeps a dark face so the yellow numeral still reads */
+  html[data-theme="dark"] .hero-badge { background: var(--panel-2); border-color: var(--ink); }
+  html[data-theme="dark"] .hb-num { color: var(--yellow); }
+  html[data-theme="dark"] .hb-line { background: var(--ink); }
+  html[data-theme="dark"] .hb-label { color: var(--ink); }
+  /* the marker stripe sits under the text; on a dark page the part above it
+     would be pale-on-black, so the whole word sits on yellow instead */
+  html[data-theme="dark"] :is(h1 span, .gate-title span, .sem-title span) {
+    background: var(--yellow) !important;
+    color: var(--on-yellow) !important;
+    -webkit-text-fill-color: var(--on-yellow) !important;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* theme switch in the nav */
+  .zl-theme {
+    display: inline-grid;
+    place-items: center;
+    align-self: center;
+    flex: none;
+    width: 30px; height: 30px;
+    margin-left: 8px;
+    padding: 0;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+  }
+  .zl-theme:hover { background: var(--yellow); color: var(--on-yellow); }
+  .zl-theme-moon { display: none; }
+  html[data-theme="dark"] .zl-theme-sun { display: none; }
+  html[data-theme="dark"] .zl-theme-moon { display: block; }
 
   html { scroll-behavior: smooth; }
   body {
@@ -301,7 +368,7 @@
     letter-spacing: .02em;
   }
   .card-title { font-weight: 700; font-size: 15px; letter-spacing: .03em; text-transform: uppercase; }
-  .card-desc { font-size: 13px; color: #333; line-height: 1.5; }
+  .card-desc { font-size: 13px; color: var(--body-text); line-height: 1.5; }
   .card-arrow {
     margin-top: auto;
     padding-top: 8px;
@@ -484,6 +551,7 @@
       <a href="../recents/">Recents</a>
       <a href="../suggest/">Contact</a>
       <a href="../account/">Account</a>
+    <button class="zl-theme" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark mode"><span class="zl-theme-sun" aria-hidden="true">☀</span><span class="zl-theme-moon" aria-hidden="true">☾</span></button>
     </nav>
       <div class="drop-menu" id="subjects-menu">
         <div class="drop-col">

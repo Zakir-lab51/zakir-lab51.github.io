@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="../assets/theme.js"></script><!-- ZAKIR_THEME_JS -->
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Account · Zakir Lab</title>
@@ -13,9 +14,75 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
+    --body-text: #333333;
     --ink: #111; --paper: #fff; --panel: #ececec; --yellow: #ffd21f; --yellow-soft: #fff4c2;
     --muted: #555; --good: #1a7f3c; --bad: #c0392b;
   }
+  /* ── DARK THEME ── same design at night; the yellow is unchanged, and
+     anything sitting ON the yellow keeps dark text (--on-yellow). */
+  html[data-theme="dark"] {
+    --body-text: #c9c9c9;
+    --ink: #f2f2f2;
+    --paper: #101010;
+    --panel: #1b1b1b;
+    --panel-2: #242424;
+    --yellow: #ffd21f;
+    --yellow-soft: #3b3105;
+    --muted: #a8a8a8;
+    --good: #4ec97e;
+    --good-bg: #12331f;
+    --bad: #ff6f61;
+    --bad-bg: #3a1a17;
+  }
+  :root { --on-yellow: #111111; }
+  html[data-theme="dark"] ::selection { color: var(--on-yellow); }
+  /* only things actually painted yellow get dark text: a plain .btn keeps
+     the paper background, so forcing dark text on it made it invisible */
+  html[data-theme="dark"] :is(.tag, .btn-primary, .nav a.active, .count, .new-badge,
+    .sem:hover .btn, .btn:hover, .drop-menu a:hover, .num) { color: var(--on-yellow) !important; }
+  /* discs are ink-with-yellow-glyph in light mode; inverted they would be
+     yellow on near-white, so in dark they become yellow discs with dark glyphs */
+  html[data-theme="dark"] :is(.card-icon, .card-arrow i) {
+    background: var(--yellow);
+    color: var(--on-yellow);
+  }
+  /* the semester badge keeps a dark face so the yellow numeral still reads */
+  html[data-theme="dark"] .hero-badge { background: var(--panel-2); border-color: var(--ink); }
+  html[data-theme="dark"] .hb-num { color: var(--yellow); }
+  html[data-theme="dark"] .hb-line { background: var(--ink); }
+  html[data-theme="dark"] .hb-label { color: var(--ink); }
+  /* the marker stripe sits under the text; on a dark page the part above it
+     would be pale-on-black, so the whole word sits on yellow instead */
+  html[data-theme="dark"] :is(h1 span, .gate-title span, .sem-title span) {
+    background: var(--yellow) !important;
+    color: var(--on-yellow) !important;
+    -webkit-text-fill-color: var(--on-yellow) !important;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* theme switch in the nav */
+  .zl-theme {
+    display: inline-grid;
+    place-items: center;
+    align-self: center;
+    flex: none;
+    width: 30px; height: 30px;
+    margin-left: 8px;
+    padding: 0;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+  }
+  .zl-theme:hover { background: var(--yellow); color: var(--on-yellow); }
+  .zl-theme-moon { display: none; }
+  html[data-theme="dark"] .zl-theme-sun { display: none; }
+  html[data-theme="dark"] .zl-theme-moon { display: block; }
   body {
     min-height: 100vh; background: var(--paper); color: var(--ink);
     font: 15px/1.6 'Poppins', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden;
@@ -49,7 +116,7 @@
   h1 { margin-top: 20px; font: 400 clamp(40px, 6.4vw, 84px)/1 'Archivo Black', sans-serif; text-transform: uppercase; overflow-wrap: anywhere; }
   h1 span { background: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 92%, transparent 92%); padding: 0 .06em; }
   .rule { height: 6px; background: var(--ink); margin: 20px 0 18px; }
-  .lede { max-width: 620px; color: #333; }
+  .lede { max-width: 620px; color: var(--body-text); }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
@@ -215,6 +282,7 @@
       <a href="../recents/">Recents</a>
       <a href="../suggest/">Contact</a>
       <a class="active" href="./">Account</a>
+    <button class="zl-theme" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark mode"><span class="zl-theme-sun" aria-hidden="true">☀</span><span class="zl-theme-moon" aria-hidden="true">☾</span></button>
     </nav>
   </header>
 

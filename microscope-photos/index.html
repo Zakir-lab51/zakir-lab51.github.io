@@ -191,6 +191,7 @@ html, body { background:var(--zl-paper) !important; color:var(--zl-ink) !importa
 .footer-note { color:#555; }
 </style>
 <!-- ZAKIR_POP_PAGE_END -->
+<script src="../assets/theme.js"></script><!-- ZAKIR_THEME_JS -->
 </head>
 <body>
 <!-- MINIMAL_PREVIEW_NAV_START -->
@@ -204,6 +205,7 @@ html, body { background:var(--zl-paper) !important; color:var(--zl-ink) !importa
   <a href="../recents/">Recents</a>
   <a href="../suggest/">Contact</a>
   <a data-account-link href="../account/">Account</a>
+  <button class="zl-theme" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark mode"><span class="zl-theme-sun" aria-hidden="true">☀</span><span class="zl-theme-moon" aria-hidden="true">☾</span></button>
 </nav>
 <div class="zl-drop-menu" id="zl-subjects-menu">
   <div class="zl-drop-col">
@@ -228,6 +230,27 @@ html, body { background:var(--zl-paper) !important; color:var(--zl-ink) !importa
 </div>
 <style>
 .zl-nav-wrap { position:relative; z-index:30; }
+/* theme switch in the nav */
+.zl-theme {
+  display:inline-grid;
+  place-items:center;
+  width:30px; height:30px;
+  padding:0;
+  border:2px solid var(--zl-ink, #111);
+  border-radius:50%;
+  background:transparent;
+  color:var(--zl-ink, #111);
+  font-size:13px;
+  line-height:1;
+  cursor:pointer;
+  align-self:center;
+  flex:none;
+  transition:background .2s, color .2s;
+}
+.zl-theme:hover { background:var(--zl-yellow, #ffd21f); color:var(--zl-on-yellow, #111); }
+.zl-theme-moon { display:none; }
+html[data-theme="dark"] .zl-theme-sun { display:none; }
+html[data-theme="dark"] .zl-theme-moon { display:block; }
 .zl-caret {
   display:inline-block;
   width:0; height:0;
