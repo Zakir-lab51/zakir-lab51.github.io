@@ -147,3 +147,44 @@ create policy "students update own progress" on public.progress for update
 
 revoke all on public.progress from anon, authenticated;
 grant select, insert, update on public.progress to authenticated;
+
+-- ─────────────────────────────────────────────
+-- 4. Students list for the admin page
+-- ─────────────────────────────────────────────
+-- Sign-in times and emails live in auth.users, which the browser can never read
+-- directly. This function reads them on the admin's behalf and returns nothing
+-- at all to anyone who is not in public.admins.
+create or replace function public.admin_students()
+returns table (
+  id            uuid,
+  display_name  text,
+  email         text,
+  joined        timestamptz,
+  last_sign_in  timestamptz,
+  provider      text,
+  tests         bigint,
+  last_test     timestamptz
+)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select p.id,
+         p.display_name,
+         u.email::text,
+         u.created_at,
+         u.last_sign_in_at,
+         coalesce(u.raw_app_meta_data ->> 'provider', 'email'),
+         count(s.id),
+         max(s.created_at)
+  from public.profiles p
+  join auth.users u on u.id = p.id
+  left join public.scores s on s.user_id = p.id
+  where (select public.is_admin())
+  group by p.id, p.display_name, u.email, u.created_at, u.last_sign_in_at, u.raw_app_meta_data
+  order by u.last_sign_in_at desc nulls last;
+$$;
+
+revoke execute on function public.admin_students() from public, anon;
+grant execute on function public.admin_students() to authenticated;
