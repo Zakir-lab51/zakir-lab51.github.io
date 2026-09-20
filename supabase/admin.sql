@@ -38,12 +38,19 @@ grant execute on function public.is_admin() to authenticated;
 -- ─────────────────────────────────────────────
 create table if not exists public.notes (
   id          uuid primary key default gen_random_uuid(),
-  subject     text not null check (subject in ('anatomy', 'physiology', 'biochemistry', 'hdpc', 'communication-skills')),
+  subject     text not null check (subject in ('anatomy', 'physiology', 'biochemistry', 'hdpc', 'communication-skills',
+                   'microbiology', 'anatomy-2', 'physiology-2', 'hdpc-2', 'evs', 'community-health')),
   title       text not null check (char_length(btrim(title)) between 1 and 120),
   file_path   text not null unique check (char_length(file_path) between 1 and 300),
   size_bytes  bigint check (size_bytes >= 0),
   created_at  timestamptz not null default now()
 );
+-- keep the allowed subjects in step with the site
+alter table public.notes drop constraint if exists notes_subject_check;
+alter table public.notes add constraint notes_subject_check
+  check (subject in ('anatomy', 'physiology', 'biochemistry', 'hdpc', 'communication-skills',
+                   'microbiology', 'anatomy-2', 'physiology-2', 'hdpc-2', 'evs', 'community-health'));
+
 create index if not exists notes_subject_idx on public.notes (subject, created_at desc);
 alter table public.notes enable row level security;
 

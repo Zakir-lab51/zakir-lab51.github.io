@@ -165,11 +165,21 @@
           <div>
             <label for="up-subject">Subject</label>
             <select id="up-subject" required>
-              <option value="anatomy">Anatomy</option>
-              <option value="physiology">Physiology</option>
-              <option value="biochemistry">Biochemistry</option>
-              <option value="hdpc">HDPC</option>
-              <option value="communication-skills">Communication Skills</option>
+              <optgroup label="1st Semester">
+                <option value="anatomy">Anatomy</option>
+                <option value="physiology">Physiology</option>
+                <option value="biochemistry">Biochemistry</option>
+                <option value="hdpc">HDPC</option>
+                <option value="communication-skills">Communication Skills</option>
+              </optgroup>
+              <optgroup label="2nd Semester">
+                <option value="anatomy-2">Anatomy II</option>
+                <option value="physiology-2">Physiology II</option>
+                <option value="microbiology">Microbiology</option>
+                <option value="hdpc-2">HDPC II</option>
+                <option value="evs">EVS</option>
+                <option value="community-health">Community Health</option>
+              </optgroup>
             </select>
           </div>
           <div>
@@ -218,7 +228,7 @@
 (function () {
   const SUPABASE_URL = 'https://sxnkgfxodpnxpxrhyqzx.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_m0WTfbZtSKNInLbEhTB4og_4GlXwXv8';
-  const SUBJECTS = { 'anatomy': 'Anatomy', 'physiology': 'Physiology', 'biochemistry': 'Biochemistry', 'hdpc': 'HDPC', 'communication-skills': 'Communication Skills' };
+  const SUBJECTS = { 'anatomy': 'Anatomy', 'physiology': 'Physiology', 'biochemistry': 'Biochemistry', 'hdpc': 'HDPC', 'communication-skills': 'Communication Skills', 'microbiology': 'Microbiology', 'anatomy-2': 'Anatomy II', 'physiology-2': 'Physiology II', 'hdpc-2': 'HDPC II', 'evs': 'EVS', 'community-health': 'Community Health' };
 
   const $ = (id) => document.getElementById(id);
   const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

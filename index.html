@@ -73,6 +73,57 @@
     transition: background .2s;
   }
   .nav a:hover { background: rgba(255,210,31,.35); }
+
+  /* ── SEMESTERS DROPDOWN ── */
+  .nav-drop { position: relative; display: flex; }
+  .caret {
+    width: 0; height: 0;
+    margin-left: 7px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid currentColor;
+    transition: transform .2s;
+  }
+  .drop-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 40;
+    width: 260px;
+    max-width: calc(100vw - 32px);
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity .18s, transform .18s, visibility .18s;
+  }
+  .nav-drop.open .drop-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+  .nav-drop.open .caret { transform: rotate(180deg); }
+  .drop-menu a {
+    display: block;
+    padding: 13px 16px;
+    border-bottom: 2px solid var(--panel);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .drop-menu a:last-child { border-bottom: 0; }
+  .drop-menu a:hover { background: var(--yellow); }
+  .drop-menu b {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .drop-menu small {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--muted);
+  }
   .nav a.active { background: var(--yellow); color: var(--ink); box-shadow: inset 0 -3px 0 var(--ink); }
 
   .hero {
@@ -237,35 +288,17 @@
   .sem-list b { display: block; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 14px; }
   .sem-list small { display: block; color: var(--muted); font-size: 13px; line-height: 1.45; }
 
-  /* upcoming semester: not clickable, dashed and flat */
-  .sem-soon {
-    margin-top: 24px;
-    border-style: dashed;
-    background: var(--paper);
+  .sem-grid { display: grid; gap: 24px; grid-auto-rows: 1fr; }
+
+  /* right-hand list of the 2nd semester tile: 6 subjects, 2 columns, 3 rows */
+  .sem-list-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+    align-content: center;
   }
-  .sem-soon:hover { transform: none; box-shadow: none; }
-  .sem-soon .sem-num { color: #b5b5b5; }
-  .sem-soon .sem-num .o::before { background: var(--panel-2); }
-  .tag-soon { background: var(--paper); border-style: dashed; }
-  .sem-soon-side {
-    display: flex;
-    align-items: center;
-    padding: clamp(24px, 4vw, 44px);
-    border-left: 2px dashed var(--ink);
-    background: repeating-linear-gradient(-45deg, var(--panel) 0 12px, var(--paper) 12px 24px);
-  }
-  .soon-box {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    padding: 22px;
-    border: 2px solid var(--ink);
-    background: var(--paper);
-  }
-  .soon-box b { font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 14px; }
-  .soon-box small { color: var(--muted); font-size: 13px; line-height: 1.5; }
-  .soon-box .btn { margin-top: 10px; font-size: 13px; padding: 8px 18px; }
+  .sem-list-2col li:nth-last-child(-n+2) { border-bottom: 0; }
+  .sem-list-2col small { font-size: 12px; }
 
   /* ── FOOTER ── */
   footer { padding-top: clamp(56px, 8vw, 96px); padding-bottom: 28px; }
@@ -301,12 +334,17 @@
     .hero-art svg { max-width: 360px; }
     .sem { grid-template-columns: 1fr; }
     .sem-list { border-left: 0; border-top: 2px solid var(--ink); }
-    .sem-soon-side { border-left: 0; border-top: 2px dashed var(--ink); }
+    .sem-grid { grid-auto-rows: auto; }
+    .sem-list-2col { grid-template-columns: 1fr; }
+    .sem-list-2col li:nth-last-child(-n+2) { border-bottom: 2px solid var(--panel); }
+    .sem-list-2col li:last-child { border-bottom: 0; }
   }
   @media (max-width: 600px) {
     .site-header { padding-inline: 16px; height: 64px; }
     .nav a { padding: 0 10px; font-size: 11px; }
     .nav .hide-sm { display: none; }
+    .drop-menu { width: 200px; }
+    .drop-menu small { display: none; }
   }
 </style>
 </head>
@@ -320,7 +358,13 @@
       <a class="logo" href="./" aria-label="Zakir Lab home"><span>Zakir<br>Lab</span></a>
       <nav class="nav" aria-label="Primary navigation">
         <a class="active" href="./">Home</a>
-        <a href="#semesters">Semesters</a>
+        <div class="nav-drop" data-nav-drop>
+          <a class="drop-toggle" href="#semesters" aria-haspopup="true" aria-expanded="false">Semesters<span class="caret" aria-hidden="true"></span></a>
+          <div class="drop-menu">
+            <a href="semester-1/"><b>1st Semester</b><small>Core subjects, practice and computer application</small></a>
+            <a href="semester-2/"><b>2nd Semester</b><small>Six second-term subjects</small></a>
+          </div>
+        </div>
         <a class="hide-sm" href="whats-new/">What&rsquo;s New</a>
         <a href="suggest/">Contact</a>
         <a href="account/">Account</a>
@@ -421,6 +465,7 @@
       <div class="bar"></div>
     </div>
 
+    <div class="sem-grid">
     <a class="sem" href="semester-1/">
       <div class="sem-main">
         <span class="tag">Current</span>
@@ -436,21 +481,42 @@
         <li><span class="num">09</span><div><b>Computer Application</b><small>Topic tests, mixed mocks, full-length paper</small></div></li>      </ul>
     </a>
 
-    <div class="sem sem-soon" aria-label="2nd Semester, coming soon">
+    <a class="sem" href="semester-2/">
       <div class="sem-main">
-        <span class="tag tag-soon">Coming Soon</span>
+        <span class="tag">New</span>
         <div class="sem-num"><span class="o">0</span>2</div>
         <div class="sem-title">2nd Semester</div>
-        <p class="sem-desc">Notes, practice tools and mock tests for the second term will appear here as the semester gets underway.</p>
+        <p class="sem-desc">All six second-term subjects: anatomy, physiology, microbiology, HDPC, EVS and community health.</p>
+        <span class="btn">Open Semester &rarr;</span>
       </div>
 
-      <div class="sem-soon-side">
-        <div class="soon-box">
-          <b>In preparation</b>
-          <small>Have something you want covered first? Suggest a topic and it gets priority.</small>
-          <a class="btn" href="suggest/">Suggest a Topic &rarr;</a>
-        </div>
-      </div>
+      <ul class="sem-list sem-list-2col">
+        <li>
+          <span class="num">01</span>
+          <div><b>Anatomy II</b><small>Systems and structures</small></div>
+        </li>
+        <li>
+          <span class="num">02</span>
+          <div><b>Physiology II</b><small>Body systems at work</small></div>
+        </li>
+        <li>
+          <span class="num">03</span>
+          <div><b>Microbiology</b><small>Bacteria, viruses, immunity</small></div>
+        </li>
+        <li>
+          <span class="num">04</span>
+          <div><b>HDPC II</b><small>Second-term HDPC notes</small></div>
+        </li>
+        <li>
+          <span class="num">05</span>
+          <div><b>EVS</b><small>Environment and public health</small></div>
+        </li>
+        <li>
+          <span class="num">06</span>
+          <div><b>Community Health</b><small>Care, sanitation, programmes</small></div>
+        </li>
+      </ul>
+    </a>
     </div>
   </section>
 
@@ -469,6 +535,40 @@
     </div>
   </footer>
 </div>
+
+<script>
+  // Semesters menu: opens on hover, on tap and on keyboard focus.
+  // One 'open' class drives it, so clicking the label always closes it again
+  // even while the pointer is still sitting on top of it.
+  (function () {
+    var drop = document.querySelector('[data-nav-drop]');
+    if (!drop) return;
+    var toggle = drop.querySelector('.drop-toggle');
+
+    function setOpen(open) {
+      drop.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    }
+
+    // hover only opens for a real mouse: on a touch screen the tap below opens it
+    drop.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') setOpen(true); });
+    drop.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') setOpen(false); });
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      setOpen(!drop.classList.contains('open'));
+    });
+    drop.addEventListener('focusin', function () { setOpen(true); });
+    drop.addEventListener('focusout', function (e) {
+      if (!drop.contains(e.relatedTarget)) setOpen(false);
+    });
+    document.addEventListener('click', function (e) {
+      if (!drop.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  })();
+</script>
 
 <script>
   // visitors without a student session are invited to sign in first

@@ -280,6 +280,8 @@
                '<div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div></a>';
       }).join('');
       grid.insertAdjacentHTML('afterbegin', html);
+      var emptyNote = document.getElementById('empty-notes');
+      if (emptyNote) emptyNote.hidden = true;
       grid.querySelectorAll('a[data-cloud-note]').forEach(function (a) {
         a.addEventListener('click', function () { trackRecent(a); });
       });

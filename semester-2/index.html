@@ -4,8 +4,8 @@
 <script src="../assets/gate.js"></script><!-- ZAKIR_GATE -->
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>1st Semester · Zakir Lab</title>
-<meta name="description" content="1st semester study hub: anatomy, physiology, biochemistry, HDPC, communication skills, practice tools, computer application mock tests and resources."/>
+<title>2nd Semester · Zakir Lab</title>
+<meta name="description" content="2nd semester study hub: microbiology notes and more subjects as the term goes on."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -137,8 +137,39 @@
 
   /* ── HERO ── */
   .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(24px, 5vw, 56px);
     background: var(--panel);
     padding: clamp(28px, 5vw, 56px) clamp(20px, 4vw, 48px) clamp(36px, 5vw, 56px);
+  }
+  .hero-badge {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 14px;
+    width: clamp(160px, 21vw, 236px);
+    aspect-ratio: 1;
+    background: var(--ink);
+    border: 2px solid var(--ink);
+    box-shadow: 10px 10px 0 var(--yellow);
+    transition: transform .22s, box-shadow .22s;
+  }
+  .hero-badge:hover { transform: translate(-4px, -4px); box-shadow: 14px 14px 0 var(--yellow); }
+  .hb-num {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(62px, 9vw, 104px);
+    line-height: .9;
+    color: var(--yellow);
+  }
+  .hb-line { width: 46px; height: 3px; background: var(--paper); }
+  .hb-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--paper);
   }
   .tag {
     display: inline-block;
@@ -172,15 +203,7 @@
     z-index: -1;
   }
   .rule { height: 6px; background: var(--ink); margin: 20px 0 22px; }
-  .hero-foot {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 20px 32px;
-    flex-wrap: wrap;
-  }
-  .lede { max-width: 560px; color: #333; }
-  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
 
   .btn {
     display: inline-flex;
@@ -373,6 +396,7 @@
   .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ink); }
   .chip:hover { background: var(--yellow); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
 
+
   /* ── RESOURCES ── */
   .res {
     display: flex;
@@ -430,6 +454,8 @@
   }
   @media (max-width: 760px) {
     .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero { grid-template-columns: 1fr; }
+    .hero-badge { width: 136px; justify-self: start; box-shadow: 8px 8px 0 var(--yellow); }
   }
   @media (max-width: 600px) {
     .site-header { height: 60px; padding-inline: 12px; }
@@ -451,7 +477,7 @@
     <a class="logo" href="../" aria-label="Zakir Lab home">Zakir<br>Lab</a>
     <nav class="nav" aria-label="Primary navigation">
       <a class="hide-sm" href="../">Home</a>
-      <a class="active" href="./">1st Sem</a>
+      <a class="active" href="./">2nd Sem</a>
       <div class="nav-drop hide-sm">
         <a class="drop-toggle" data-drop-toggle href="../study/" aria-haspopup="true" aria-expanded="false">Subjects<span class="caret" aria-hidden="true"></span></a>
       </div>
@@ -482,24 +508,18 @@
   </header>
 
   <section class="hero">
-    <span class="tag rise d1">Zakir Lab &middot; Semester 01</span>
-    <h1 class="rise d2">1st Semester</h1>
-    <div class="rule rise d2"></div>
-    <div class="hero-foot rise d3">
-      <p class="lede">Notes, flashcards and mock tests for anatomy, physiology, biochemistry, HDPC and communication skills &mdash; plus the full computer application syllabus.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="../study/">Start Studying &rarr;</a>
-        <a class="btn" href="../recents/">Recent Files</a>
-      </div>
+    <div class="hero-copy">
+      <span class="tag rise d1">Zakir Lab &middot; Semester 02</span>
+      <h1 class="rise d2">2nd Semester</h1>
+      <div class="rule rise d2"></div>
+    </div>
+    <div class="hero-badge rise d3">
+      <span class="hb-num">02</span>
+      <span class="hb-line"></span>
+      <span class="hb-label">Six Subjects</span>
     </div>
   </section>
 
-  <nav class="jump" aria-label="On this page">
-    <a href="#subjects">Subjects</a>
-    <a href="#practice">Practice</a>
-    <a href="#tests">Computer Application</a>
-    <a href="#resources">Resources</a>
-  </nav>
 
   <main>
 
@@ -509,189 +529,45 @@
         <span class="sec-num">01</span>
         <h2 id="subjects-h">Subjects</h2>
         <div class="bar"></div>
-        <span class="count">5 subjects</span>
-      </div>
-
-      <div class="grid grid-5">
-        <a class="card" href="../anatomy/">
-          <div class="card-icon">AN</div>
-          <div class="card-title">Anatomy</div>
-          <div class="card-desc">Structure, regions and surface landmarks.</div>
-          <div class="card-arrow">Open <i>&rarr;</i></div>
-        </a>
-
-        <a class="card" href="../physiology/">
-          <div class="card-icon">PH</div>
-          <div class="card-title">Physiology</div>
-          <div class="card-desc">Systems, mechanisms and regulation.</div>
-          <div class="card-arrow">Open <i>&rarr;</i></div>
-        </a>
-
-        <a class="card" href="../biochemistry/">
-          <div class="card-icon">BC</div>
-          <div class="card-title">Biochemistry</div>
-          <div class="card-desc">Metabolism, enzymes and molecular pathways.</div>
-          <div class="card-arrow">Open <i>&rarr;</i></div>
-        </a>
-
-        <a class="card" href="../hdpc/">
-          <div class="card-icon">HD</div>
-          <div class="card-title">HDPC</div>
-          <div class="card-desc">Health, development and patient care notes.</div>
-          <div class="card-arrow">Open <i>&rarr;</i></div>
-        </a>
-
-        <a class="card" href="../communication-skills/">
-          <span class="new-badge">New</span>
-          <div class="card-icon">CS</div>
-          <div class="card-title">Communication</div>
-          <div class="card-desc">Patient interaction and communication skills.</div>
-          <div class="card-arrow">Open <i>&rarr;</i></div>
-        </a>
-      </div>
-    </section>
-
-    <!-- ── PRACTICE ── -->
-    <section class="section" id="practice" aria-labelledby="practice-h">
-      <div class="sec-head">
-        <span class="sec-num">02</span>
-        <h2 id="practice-h">Practice</h2>
-        <div class="bar"></div>
-        <span class="count">Flashcards &amp; spotting</span>
+        <span class="count">6 subjects</span>
       </div>
 
       <div class="grid grid-3">
-        <a class="card" href="../spotting/">
-          <div class="card-icon">SP</div>
-          <div class="feature-title">Spotting</div>
-          <div class="feature-sub">Anatomy</div>
-          <div class="card-desc">Timed spotting practice on histology and anatomy specimens.</div>
+        <a class="card" href="../anatomy-2/">
+          <div class="card-icon">AN</div>
+          <div class="card-title">Anatomy II</div>
+          <div class="card-desc">Second-term anatomy: systems, structures and regional study.</div>
           <div class="card-arrow">Open <i>&rarr;</i></div>
         </a>
-
-        <a class="card" href="../microscope-photos/">
-          <div class="card-icon">MP</div>
-          <div class="feature-title">Microscope</div>
-          <div class="feature-sub">Histology slides</div>
-          <div class="card-desc">Identify real microscope slides from photo flashcards.</div>
+        <a class="card" href="../physiology-2/">
+          <div class="card-icon">PH</div>
+          <div class="card-title">Physiology II</div>
+          <div class="card-desc">How each body system works, second-term syllabus.</div>
           <div class="card-arrow">Open <i>&rarr;</i></div>
         </a>
-
-        <a class="card" href="../flashcards/">
-          <div class="card-icon">FC</div>
-          <div class="feature-title">Flashcards</div>
-          <div class="feature-sub">All subjects</div>
-          <div class="card-desc">Quick recall decks across every subject in the lab.</div>
+        <a class="card" href="../microbiology/">
+          <div class="card-icon">MB</div>
+          <div class="card-title">Microbiology</div>
+          <div class="card-desc">Bacteria, viruses, fungi, immunity and infection control.</div>
           <div class="card-arrow">Open <i>&rarr;</i></div>
         </a>
-      </div>
-    </section>
-
-    <!-- ── COMPUTER APPLICATION TESTS ── -->
-    <section class="section" id="tests" aria-labelledby="tests-h">
-      <div class="sec-head">
-        <span class="sec-num">03</span>
-        <h2 id="tests-h">Computer Application</h2>
-        <div class="bar"></div>
-        <span class="count">Mock tests</span>
-      </div>
-
-      <div class="panel">
-        <div class="panel-lead">
-          <h3>Mock tests, topic by topic</h3>
-          <p>Work through a single topic, mix them together, or sit a full-length paper under exam conditions.</p>
-          <div class="panel-actions">
-            <a class="btn btn-primary" href="../mock-test/">Mixed Mock Tests &rarr;</a>
-            <a class="btn" href="../full-length-test/">Full Length</a>
-          </div>
-        </div>
-
-        <div class="chips">
-          <a class="chip" href="../introduction-to-computer/">Introduction to Computers</a>
-          <a class="chip" href="../basics-of-operating-systems/">Basics of Operating Systems</a>
-          <a class="chip" href="../windows-operating-system/">Windows OS</a>
-          <a class="chip" href="../ms-word/">MS Word</a>
-          <a class="chip" href="../excel/">Excel</a>
-          <a class="chip" href="../powerpoint/">PowerPoint</a>
-          <a class="chip" href="../internet-and-internet-applications/">Internet &amp; Applications</a>
-          <a class="chip" href="../computer-virus/">Computer Virus</a>
-          <a class="chip" href="../computer-class/">Computer Class</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── RESOURCES ── -->
-    <section class="section" id="resources" aria-labelledby="resources-h">
-      <div class="sec-head">
-        <span class="sec-num">04</span>
-        <h2 id="resources-h">Resources</h2>
-        <div class="bar"></div>
-        <span class="count">Notes, papers &amp; more</span>
-      </div>
-
-      <div class="grid grid-4">
-        <a class="res" href="../notes-and-guides/">
-          <div class="res-icon">📘</div>
-          <div>
-            <div class="res-name">Notes &amp; Guides</div>
-            <div class="res-desc">Long-form notes and study guides</div>
-          </div>
+        <a class="card" href="../hdpc-2/">
+          <div class="card-icon">HD</div>
+          <div class="card-title">HDPC II</div>
+          <div class="card-desc">Second-term HDPC notes and class material.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
         </a>
-
-        <a class="res" href="../cheatsheets/">
-          <div class="res-icon">⚡</div>
-          <div>
-            <div class="res-name">Cheatsheets</div>
-            <div class="res-desc">Condensed one-page revision</div>
-          </div>
+        <a class="card" href="../evs/">
+          <div class="card-icon">EV</div>
+          <div class="card-title">EVS</div>
+          <div class="card-desc">Environment, ecosystems, pollution and public health.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
         </a>
-
-        <a class="res" href="../pyqs/">
-          <div class="res-icon">📄</div>
-          <div>
-            <div class="res-name">PYQs</div>
-            <div class="res-desc">Previous year question papers</div>
-          </div>
-        </a>
-
-        <a class="res" href="../whats-new/">
-          <div class="res-icon">✨</div>
-          <div>
-            <div class="res-name">What&rsquo;s New</div>
-            <div class="res-desc">Latest additions to the lab</div>
-          </div>
-        </a>
-
-        <a class="res" href="../recents/">
-          <div class="res-icon">🕒</div>
-          <div>
-            <div class="res-name">Recents</div>
-            <div class="res-desc">Recently uploaded files</div>
-          </div>
-        </a>
-
-        <a class="res" href="../leaderboard/">
-          <div class="res-icon">🏆</div>
-          <div>
-            <div class="res-name">Leaderboard</div>
-            <div class="res-desc">Test scores and rankings</div>
-          </div>
-        </a>
-
-        <a class="res" href="../dev-log/">
-          <div class="res-icon">🛠</div>
-          <div>
-            <div class="res-name">Dev Log</div>
-            <div class="res-desc">Changes and build notes</div>
-          </div>
-        </a>
-
-        <a class="res" href="../suggest/">
-          <div class="res-icon">💬</div>
-          <div>
-            <div class="res-name">Suggest</div>
-            <div class="res-desc">Request notes or report an issue</div>
-          </div>
+        <a class="card" href="../community-health/">
+          <div class="card-icon">CH</div>
+          <div class="card-title">Community Health</div>
+          <div class="card-desc">Community care, sanitation, nutrition and health programmes.</div>
+          <div class="card-arrow">Open <i>&rarr;</i></div>
         </a>
       </div>
     </section>
