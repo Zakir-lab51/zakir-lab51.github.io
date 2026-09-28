@@ -24,7 +24,12 @@
 
   function request(path, options) {
     options = options || {};
-    return session().then(function (s) {
+    // options.anon: public reads skip the student's session. An expired
+    // session that can't refresh (an iPhone home-screen app waking up with
+    // no signal) keeps getSession() retrying for a long time, and a public
+    // list shouldn't wait on that.
+    var auth = options.anon ? Promise.resolve(null) : session();
+    return auth.then(function (s) {
       var headers = {
         apikey: KEY,
         Authorization: 'Bearer ' + (s ? s.access_token : KEY),
@@ -197,12 +202,12 @@
     /* ── uploaded notes ── */
     // every uploaded note, for the search box on the All Subjects page
     allNotes: function () {
-      return request('notes?select=subject,title,file_path&order=created_at.desc&limit=1000');
+      return request('notes?select=subject,title,file_path&order=created_at.desc&limit=1000', { anon: true });
     },
 
     notesFor: function (subject) {
       return request('notes?select=title,file_path,created_at&subject=eq.' + encodeURIComponent(subject) +
-                     '&order=created_at.desc&limit=200');
+                     '&order=created_at.desc&limit=200', { anon: true });
     },
 
     fileUrl: function (path) {
@@ -274,27 +279,32 @@
     } catch (e) {}
   }
 
+  var loadedAt = 0;
+
   function mount() {
     var grid = document.querySelector('.notes-grid');
     if (!grid) return;
+    loadedAt = Date.now();
     window.ZakirCloud.notesFor(subject).then(function (notes) {
-      if (!notes || !notes.length) return;
+      notes = notes || [];
+      // on a reload, swap out the cards from the last load
+      var old = grid.querySelectorAll('a[data-cloud-note]');
+      if (!notes.length && !old.length) return;
+      old.forEach(function (a) { a.remove(); });
       var html = notes.map(function (n) {
         return '<a class="note-card" data-cloud-note href="' + esc(window.ZakirCloud.fileUrl(n.file_path)) +
                '" target="_blank" rel="noopener"><h2>' + esc(n.title) + '</h2>' +
                '<div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div></a>';
       }).join('');
       grid.insertAdjacentHTML('afterbegin', html);
-      var emptyNote = document.getElementById('empty-notes');
-      if (emptyNote) emptyNote.hidden = true;
       grid.querySelectorAll('a[data-cloud-note]').forEach(function (a) {
         a.addEventListener('click', function () { trackRecent(a); });
       });
+      var n = grid.querySelectorAll('a.note-card').length;
+      var emptyNote = document.getElementById('empty-notes');
+      if (emptyNote) emptyNote.hidden = n > 0;
       var count = document.querySelector('.section-row .section-count');
-      if (count) {
-        var n = grid.querySelectorAll('a.note-card').length;
-        count.textContent = n + (n === 1 ? ' file' : ' files');
-      }
+      if (count) count.textContent = n + (n === 1 ? ' file' : ' files');
     }).catch(function (err) {
       console.warn('[ZakirCloud] uploaded notes not loaded:', err.message);
     });
@@ -302,4 +312,12 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
   else mount();
+
+  // The home-screen app on iPhone doesn't reload when it's reopened: it comes
+  // back on the same page, with the list from whenever that page first loaded.
+  // Fetch again when the page comes back, so newly uploaded notes show up.
+  window.addEventListener('pageshow', function (e) { if (e.persisted) mount(); });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && Date.now() - loadedAt > 30000) mount();
+  });
 })();
